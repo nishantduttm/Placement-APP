@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
+        Toast.makeText(MainActivity.this,"Hello",Toast.LENGTH_SHORT).show();
         return super.onOptionsItemSelected(item);
+
     }
 }
