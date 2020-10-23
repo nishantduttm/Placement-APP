@@ -1,8 +1,5 @@
 package com.example.placementapp.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,14 +14,17 @@ import android.widget.Toast;
 import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
+import com.example.placementapp.helper.GMailSender;
 import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.pojo.User;
-import com.example.placementapp.helper.GMailSender;
 import com.example.placementapp.utils.StringUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, ValueEventListener {
 
@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         "nishantduttmishra@gmail.com",
                         "nishantd.mishra@gmail.com");
             } catch (Exception e) {
-                Log.e("SendMail", e.getMessage(), e);
+                Log.e("SendMail ", e.getMessage(), e);
             }
 
 
