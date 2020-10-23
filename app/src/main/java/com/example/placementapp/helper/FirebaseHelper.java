@@ -1,7 +1,7 @@
 package com.example.placementapp.helper;
 
-        import com.google.firebase.database.DatabaseReference;
-        import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public  abstract class FirebaseHelper {
 
