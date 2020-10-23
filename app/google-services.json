@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "488399325623",
+    "firebase_url": "https://icem-placement.firebaseio.com",
+    "project_id": "icem-placement",
+    "storage_bucket": "icem-placement.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488399325623:android:b6e210f411271b9c6f8032",
+        "android_client_info": {
+          "package_name": "com.example.placementapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "488399325623-uc7npslqbv1l0sbk5dnlec7vsidjkd2d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjifDZpaIyda-E7k2yzCf-jri1KhWELjs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "488399325623-uc7npslqbv1l0sbk5dnlec7vsidjkd2d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
