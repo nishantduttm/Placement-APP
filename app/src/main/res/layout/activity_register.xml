@@ -1,21 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#010523">
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="332dp"
-        android:layout_height="166dp"
-        android:layout_marginTop="52dp"
+        android:layout_width="363dp"
+        android:layout_height="234dp"
+        android:layout_margin="5dp"
+        android:layout_marginTop="10dp"
         android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@id/registerHereView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05"
         app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/registerHereView"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/aldrich"
+        android:paddingLeft="30dp"
+        android:text="Register Here"
+        android:textColor="#F9F9FA"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/cardview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView2" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/registerHereView"
+        android:background="@drawable/rounded_corners"
+        android:layout_margin="25dp"
+        android:padding="5dp"
+        app:cardBackgroundColor="#F8F6F7"
+        app:cardCornerRadius="15dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp"
+           >
+
+
+            <EditText
+                android:id="@+id/editTextTextUserName"
+                android:drawableStart="@"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="User Name"
+                android:inputType="textPersonName"
+                android:paddingBottom="8dp"
+                android:textColorHint="#101010"
+                android:layout_gravity="left"
+             />
+
+
+            <EditText
+                android:id="@+id/editTextEmailId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:ems="10"
+                android:hint="Email"
+                android:inputType="textPersonName"
+                android:paddingBottom="8dp"
+                android:textColorHint="#121111"
+                />
+            <EditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="textPersonName"
+                android:paddingBottom="8dp"
+                android:textColorHint="#121111"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Register"
+                android:layout_gravity="right"
+                android:background="@drawable/rounded_corners"
+                android:textColor="@color/cardview_light_background"
+                android:backgroundTint="#0052CD"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
-import com.example.placementapp.helper.GMailSender;
 import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.pojo.User;
 import com.example.placementapp.utils.StringUtils;
@@ -36,31 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public String username;
     public String password;
 
-    private class MyTask extends AsyncTask<Void, Void, Void> {
-        String result;
 
-        @Override
-        protected Void doInBackground(Void... voids) {
-            GMailSender sender = new GMailSender("nishantduttmishra@gmail.com", "9709848722");
-            try {
-                sender.sendMail("This is Subject",
-                        "This is Body",
-                        "nishantduttmishra@gmail.com",
-                        "nishantd.mishra@gmail.com");
-            } catch (Exception e) {
-                Log.e("SendMail ", e.getMessage(), e);
-            }
-
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-
-            super.onPostExecute(aVoid);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +49,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
         loginButton.setOnClickListener(this);
-        new MyTask().execute();
 }
 
     @Override
