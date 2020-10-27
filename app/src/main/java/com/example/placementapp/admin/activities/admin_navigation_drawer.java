@@ -30,8 +30,8 @@ public class admin_navigation_drawer extends AppCompatActivity implements Naviga
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_navigation_drawer);
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_admin_navigation_drawer);
 
         // 6 - Configure all views
 
@@ -62,8 +62,7 @@ public class admin_navigation_drawer extends AppCompatActivity implements Naviga
 
         switch (id){
             case R.id.admin_navigation_drawer_add_placement_drive :
-                toolbar.setTitle("My Account");
-                Toast.makeText(this, "Presses", Toast.LENGTH_SHORT).show();
+                toolbar.setTitle("Add Placement drive");
                 this.showFragment(ADD_PLACEMENT_DRIVE_FRAGMENT);
                 break;
             case R.id.admin_navigation_drawer_notifications:
