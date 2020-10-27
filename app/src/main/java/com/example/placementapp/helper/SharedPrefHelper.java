@@ -15,4 +15,10 @@ public abstract class SharedPrefHelper {
         editor.putString(key,value);
         editor.apply();
     }
+
+    public static String getEntryfromSharedPreferences(Context context, String key)
+    {
+        sharedPreferences = context.getSharedPreferences(Constants.SharedPrefConstants.SHARED_PREF,context.MODE_PRIVATE);
+        return sharedPreferences.getString(key,null);
+    }
 }
