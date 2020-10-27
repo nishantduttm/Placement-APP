@@ -1,11 +1,9 @@
-package com.example.placementapp.admin.fragment;
+package com.example.placementapp.fragments.admin.fragment;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.os.CancellationSignal;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +13,6 @@ import android.widget.EditText;
 import com.example.placementapp.R;
 
 import java.util.ArrayList;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 /**
  * A simple {@link Fragment} subclass.

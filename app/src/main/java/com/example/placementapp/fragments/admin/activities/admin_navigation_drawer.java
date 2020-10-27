@@ -1,9 +1,8 @@
-package com.example.placementapp.admin.activities;
+package com.example.placementapp.fragments.admin.activities;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.example.placementapp.admin.fragment.*;
+import com.example.placementapp.fragments.admin.fragment.*;
 
 import com.example.placementapp.R;
 import com.google.android.material.navigation.NavigationView;

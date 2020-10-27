@@ -9,6 +9,7 @@ public abstract class Constants {
 
     public class FirebaseConstants{
         public static final String PATH_LOGIN = "Login";
+        public static final String PATH_NOTIFICATIONS = "Notification";
     }
 
     public class SharedPrefConstants{
