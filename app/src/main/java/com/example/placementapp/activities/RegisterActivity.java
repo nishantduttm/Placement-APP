@@ -69,10 +69,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
         //------nishant
-        dropdown = (Spinner) findViewById(R.id.stream_dropdown);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.stream_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        String[] dropdownArray={"Select Stream","Computer","Mechnaical","Civil","Mechanical Sandwich"};
+        dropdown = (Spinner) findViewById(R.id.streamDropdown);
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this,R.layout.spinnert_row,R.id.streamDropdown,dropdownArray);
         dropdown.setAdapter(adapter);
         dropdown.setOnItemSelectedListener(this);
         //-------
@@ -165,8 +164,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        String[] checkboxMenu = getResources().getStringArray(R.array.stream_array );
-        Toast.makeText(this,checkboxMenu[i],Toast.LENGTH_SHORT).show();
+       String gender=String.valueOf(dropdown.getSelectedItem());
+       if(i==0)
+       {
+           dropdown.setSelection(1);
+       }
+
 
     }
 

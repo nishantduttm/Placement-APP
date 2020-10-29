@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     android:background="#010523"
     tools:context=".activities.RegisterActivity">
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
 
     <LinearLayout
@@ -87,7 +94,7 @@
             android:textColor="#FFFFFF" />
 
         <Spinner
-            android:id="@+id/stream_dropdown"
+            android:id="@+id/streamDropdown"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginStart="50dp"
@@ -95,12 +102,11 @@
             android:layout_marginEnd="50dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/spinner_rect"
-            android:drawablePadding="10dp"
             android:paddingLeft="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:backgroundTint="#433993"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            />
 
 
         <EditText
@@ -154,6 +160,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
+    </ScrollView>
 
     <ProgressBar
         android:id="@+id/progressBar"
