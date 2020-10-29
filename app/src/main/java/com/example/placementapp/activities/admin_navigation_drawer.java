@@ -1,4 +1,4 @@
-package com.example.placementapp.fragments.admin.activities;
+package com.example.placementapp.activities;
 import android.os.Bundle;
 import android.view.MenuItem;
 
