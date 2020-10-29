@@ -5,9 +5,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.placementapp.Animation.MyBounceInterpolator;
 import com.example.placementapp.R;
 
 import com.android.volley.AuthFailureError;
@@ -73,6 +77,10 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
+        Animation myAnim = AnimationUtils.loadAnimation(this.getContext(), R.anim.bounce_animation);
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.05, 5);
+        myAnim.setInterpolator(interpolator);
+        v.startAnimation(myAnim);
         String companyNamevalue = companyName.getText().toString();
         String messagevalue = message.getText().toString();
         if (companyNamevalue.length() == 0)

@@ -6,6 +6,7 @@ import com.example.placementapp.fragments.admin.fragment.*;
 
 import com.example.placementapp.R;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,10 +22,9 @@ public class admin_navigation_drawer extends AppCompatActivity implements Naviga
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
-    private Fragment fragmentAddPlacementDrive;
+    private Fragment fragment;
 
 
-    private static final int ADD_PLACEMENT_DRIVE_FRAGMENT = 0;
 
 
     @Override
@@ -39,6 +39,8 @@ public class admin_navigation_drawer extends AppCompatActivity implements Naviga
         this.configureDrawerLayout();
 
         this.configureNavigationView();
+
+        FirebaseMessaging.getInstance().subscribeToTopic("Students");
     }
 
     @Override
@@ -58,38 +60,21 @@ public class admin_navigation_drawer extends AppCompatActivity implements Naviga
         // 4 - Handle Navigation Item Click
         int id = item.getItemId();
 
-
         switch (id){
-            case R.id.admin_navigation_drawer_add_placement_drive :
-                toolbar.setTitle("Add Placement drive");
-                this.showFragment(ADD_PLACEMENT_DRIVE_FRAGMENT);
-                break;
-            case R.id.admin_navigation_drawer_notifications:
+            case R.id.admin_navigation_drawer_send_notifications:
+                toolbar.setTitle("Send Notifications");
+                fragment = new SendNotificationFragment();
+                startTransactionFragment(fragment);
                 break;
             default:
-
                 break;
         }
 
         this.drawerLayout.closeDrawer(GravityCompat.START);
-
         return true;
     }
 
-    private void showFragment(int fragmentIdentifier){
-        switch (fragmentIdentifier){
-            case ADD_PLACEMENT_DRIVE_FRAGMENT :
-                this.addPlacementDriveFragment();
-                break;
 
-            default:
-                break;
-        }
-    }
-    private void addPlacementDriveFragment(){
-        if (this.fragmentAddPlacementDrive == null) this.fragmentAddPlacementDrive =AddPlacementDriveFragment.newInstance();
-        this.startTransactionFragment(this.fragmentAddPlacementDrive);
-    }
     // ---------------------
     // CONFIGURATION
     // ---------------------
@@ -114,7 +99,7 @@ public class admin_navigation_drawer extends AppCompatActivity implements Naviga
         navigationView.setNavigationItemSelectedListener(this);
     }
     private void startTransactionFragment(Fragment fragment){
-        if (!fragment.isVisible()){
+        if (!fragment.isVisible() && fragment!=null){
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.activity_main_frame_layout, fragment).commit();
         }
