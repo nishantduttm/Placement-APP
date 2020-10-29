@@ -1,4 +1,4 @@
-package com.example.placementapp.fragments.admin.fragment;
+package com.example.placementapp.admin.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +18,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.placementapp.admin.helper.MySingleton;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.pojo.Notification;

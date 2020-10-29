@@ -2,7 +2,7 @@ package com.example.placementapp.activities;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.example.placementapp.fragments.admin.fragment.*;
+import com.example.placementapp.admin.fragments.SendNotificationFragment;
 
 import com.example.placementapp.R;
 import com.google.android.material.navigation.NavigationView;

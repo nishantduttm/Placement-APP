@@ -1,8 +1,8 @@
-package com.example.placementapp.fragments.admin.fragment;
+package com.example.placementapp.admin.fragments;
 
 import android.os.Bundle;
 
-import Adapters.NotificationAdapter;
+import com.example.placementapp.Adapters.RecyclerViewAdapterViewNotifcation;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -28,7 +28,7 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
 
     private DatabaseReference ref;
     private RecyclerView recyclerView;
-    private NotificationAdapter notificationAdapter;
+    private RecyclerViewAdapterViewNotifcation notificationAdapter;
     private List<Notification> notificationList;
 
     public ViewNotificationList() {
@@ -49,7 +49,7 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_notification_list, container, false);
         recyclerView = v.findViewById(R.id.recycler_view);
-        notificationAdapter = new NotificationAdapter(notificationList,this);
+        notificationAdapter = new RecyclerViewAdapterViewNotifcation(notificationList);
         RecyclerView.LayoutManager manager = new GridLayoutManager(getContext(), 1);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(notificationAdapter);
