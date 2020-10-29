@@ -26,7 +26,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             View itemView = LayoutInflater.from(viewGroup.getContext())
-                    .inflate(R.layout.fragment_notification, viewGroup, false);
+                    .inflate(R.layout.notification_format, viewGroup, false);
             return new MyViewHolder(itemView);
         }
 
@@ -54,8 +54,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             public MyViewHolder(View itemView) {
                 super(itemView);
                 parent = itemView.findViewById(R.id.parent);
-                companyName = itemView.findViewById(R.id.companyname);
-                comapanyDescription = itemView.findViewById(R.id.companydescription);
+                companyName = itemView.findViewById(R.id.companyName);
+                comapanyDescription = itemView.findViewById(R.id.companyDescription);
             }
         }
     }
