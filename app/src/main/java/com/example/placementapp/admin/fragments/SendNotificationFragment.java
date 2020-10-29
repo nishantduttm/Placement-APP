@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -40,6 +41,10 @@ import androidx.fragment.app.Fragment;
 public class SendNotificationFragment extends Fragment implements View.OnClickListener {
 
     private EditText companyName;
+    private CheckBox compBox;
+    private CheckBox mechBox;
+    private CheckBox mechSandBox;
+    private CheckBox civilBox;
     private EditText message;
     private Button sendNotificationButton;
     private DatabaseReference databaseReference;
@@ -72,8 +77,24 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         super.onViewCreated(view, savedInstanceState);
         companyName = view.findViewById(R.id.companyName);
         message = view.findViewById(R.id.message);
+        compBox = view.findViewById(R.id.compBox);
+        civilBox = view.findViewById(R.id.civilBox);
+        mechBox = view.findViewById(R.id.mechBox);
+        mechSandBox = view.findViewById(R.id.mechSandBox);
         sendNotificationButton = view.findViewById(R.id.sendNotificationButton);
         sendNotificationButton.setOnClickListener(this);
+    }
+
+    public void onCheckboxClick(View v)
+    {
+        boolean checked = ((CheckBox) v).isChecked();
+
+        switch(v.getId()) {
+            case R.id.compBox:
+            {
+
+            }
+        }
     }
 
     @Override
