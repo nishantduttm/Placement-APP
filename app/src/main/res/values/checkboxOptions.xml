@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="stream_array">
+        <item>Computer</item>
+        <item>Mechanical</item>
+        <item>Mechanical Sandwich</item>
+        <item>Civil</item>
+    </string-array>
+</resources>

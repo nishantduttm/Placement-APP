@@ -7,9 +7,12 @@ package com.example.placementapp.activities;
         import android.view.Window;
         import android.view.animation.Animation;
         import android.view.animation.AnimationUtils;
+        import android.widget.AdapterView;
+        import android.widget.ArrayAdapter;
         import android.widget.Button;
         import android.widget.EditText;
         import android.widget.ProgressBar;
+        import android.widget.Spinner;
         import android.widget.TextView;
         import android.widget.Toast;
 
@@ -32,7 +35,7 @@ package com.example.placementapp.activities;
         import androidx.annotation.Nullable;
         import androidx.appcompat.app.AppCompatActivity;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, ValueEventListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, ValueEventListener, AdapterView.OnItemSelectedListener {
 
     public FirebaseAuth auth;
     public DatabaseReference ref;
@@ -40,6 +43,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public EditText passwordView;
     public EditText emailView;
     public ProgressBar progressBar;
+    //nishant
+    public Spinner dropdown;
+    //---
     public String password;
     public String email;
     public int check;
@@ -59,6 +65,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
         auth = FirebaseAuth.getInstance();
+
+
+
+        //------nishant
+        dropdown = (Spinner) findViewById(R.id.stream_dropdown);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.stream_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dropdown.setAdapter(adapter);
+        dropdown.setOnItemSelectedListener(this);
+        //-------
+
+
         loginView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -136,8 +155,24 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+
+
+    //nishant
     @Override
     public void onCancelled(@NonNull DatabaseError error) {
 
     }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        String[] checkboxMenu = getResources().getStringArray(R.array.stream_array );
+        Toast.makeText(this,checkboxMenu[i],Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+    //-----
 }
