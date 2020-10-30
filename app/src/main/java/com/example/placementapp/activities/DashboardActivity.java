@@ -31,7 +31,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_navigation_drawer);
-
         // 6 - Configure all views
 
         this.configureToolBar();

@@ -92,7 +92,10 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         switch(v.getId()) {
             case R.id.compBox:
             {
+                if(checked)
+                {
 
+                }
             }
         }
     }

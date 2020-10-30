@@ -4,6 +4,7 @@ public class Notification {
     public String companyName;
     public String message;
     public String timestamp;
+    public String[] branch;
 
     public Notification(String companyName, String message, String timestamp) {
         this.companyName = companyName;
