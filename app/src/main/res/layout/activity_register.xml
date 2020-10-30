@@ -149,13 +149,14 @@
 
         <TextView
             android:id="@+id/loginHereView"
-            android:layout_width="wrap_content"
-            android:layout_height="23dp"
-            android:layout_gravity="center"
+            android:layout_width="349dp"
+            android:layout_height="29dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginStart="70dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="70dp"
             android:text="Already an User? Login here"
+            android:textAlignment="center"
             android:textColor="#1C4BF6"
             android:textSize="18sp"
             android:textStyle="bold" />
