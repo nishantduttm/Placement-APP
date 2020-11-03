@@ -15,6 +15,8 @@ public abstract class Constants {
     public class SharedPrefConstants{
         public static final String SHARED_PREF = "MyPreferences";
         public static final String KEY_PASSWORD = "password";
+        public static final String KEY_NAME = "name";
+        public static final String KEY_BRANCH = "branch";
         public static final String KEY_MAIL = "mail";
         public static final String KEY_TYPE = "type";
     }

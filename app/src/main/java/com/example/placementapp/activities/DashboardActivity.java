@@ -1,10 +1,13 @@
 package com.example.placementapp.activities;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.placementapp.admin.fragments.SendNotificationFragment;
 
 import com.example.placementapp.R;
+import com.example.placementapp.constants.Constants;
+import com.example.placementapp.helper.SharedPrefHelper;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -23,7 +26,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     private NavigationView navigationView;
 
     private Fragment fragment;
-
+    private String userBranch;
+    private String userType;
 
 
 
@@ -32,14 +36,50 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_navigation_drawer);
         // 6 - Configure all views
-
         this.configureToolBar();
 
         this.configureDrawerLayout();
 
         this.configureNavigationView();
 
-        FirebaseMessaging.getInstance().subscribeToTopic("Students");
+        userType = SharedPrefHelper.getEntryfromSharedPreferences(this.getApplicationContext(),Constants.SharedPrefConstants.KEY_TYPE);
+
+        if(userType.equals(Constants.UserTypes.STUDENT)) {
+            userBranch = SharedPrefHelper.getEntryfromSharedPreferences(this.getApplicationContext(), Constants.SharedPrefConstants.KEY_BRANCH);
+            if(userBranch!=null)
+                allotStudentsToTopic(userBranch);
+            else
+                Log.i("Info","Null");
+        }
+    }
+
+    private void allotStudentsToTopic(String userBranch) {
+        switch(userBranch)
+        {
+            case "Comp":
+            {
+                FirebaseMessaging.getInstance().subscribeToTopic("Comp");
+                break;
+            }
+
+            case "Mech":
+            {
+                FirebaseMessaging.getInstance().subscribeToTopic("Mech");
+                break;
+            }
+
+            case "Civil":
+            {
+                FirebaseMessaging.getInstance().subscribeToTopic("Civil");
+                break;
+            }
+
+            case "MechSandwich":
+            {
+                FirebaseMessaging.getInstance().subscribeToTopic("MechSandwich");
+                break;
+            }
+        }
     }
 
     @Override

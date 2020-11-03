@@ -85,20 +85,20 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         sendNotificationButton.setOnClickListener(this);
     }
 
-    public void onCheckboxClick(View v)
-    {
-        boolean checked = ((CheckBox) v).isChecked();
-
-        switch(v.getId()) {
-            case R.id.compBox:
-            {
-                if(checked)
-                {
-
-                }
-            }
-        }
-    }
+//    public void onCheckboxClick(View v)
+//    {
+//        boolean checked = ((CheckBox) v).isChecked();
+//
+//        switch(v.getId()) {
+//            case R.id.compBox:
+//            {
+//                if(checked)
+//                {
+//
+//                }
+//            }
+//        }
+//    }
 
     @Override
     public void onClick(View v) {

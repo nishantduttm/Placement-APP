@@ -18,6 +18,7 @@ import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.helper.SharedPrefHelper;
+import com.example.placementapp.pojo.StudentUser;
 import com.example.placementapp.pojo.User;
 import com.example.placementapp.utils.StringUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,10 +52,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login);
-        String check = SharedPrefHelper.getEntryfromSharedPreferences(this.getApplicationContext(),Constants.SharedPrefConstants.KEY_MAIL);
-        if(check!=null)
-        {
-            Intent intent = new Intent(LoginActivity.this,DashboardActivity.class);
+
+        String check = SharedPrefHelper.getEntryfromSharedPreferences(this.getApplicationContext(), Constants.SharedPrefConstants.KEY_MAIL);
+        if (check != null) {
+            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
             startActivity(intent);
         }
         loginButton = findViewById(R.id.loginButton);
@@ -68,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         registerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(LoginActivity.this,RegisterActivity.class);
+                Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(i);
             }
         });
@@ -87,10 +88,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void checkLoginStatus(String username, String password) {
         if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
-            String [] temp = emailView.getText().toString().split("@");
+            String[] temp = emailView.getText().toString().split("@");
             String firstValue = temp[0];
             String[] temp1 = firstValue.split("\\.");
-            emailCropped = temp1[0]+temp1[1];
+            emailCropped = temp1[0] + temp1[1];
             ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN + "/" + emailCropped);
             progressBar.setVisibility(View.VISIBLE);
             ref.addListenerForSingleValueEvent(this);
@@ -99,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 emailView.setError("Cannot Be Blank");
                 Toast.makeText(LoginActivity.this, "Email or Password cannot be empty", Toast.LENGTH_SHORT).show();
             }
-            if (!StringUtils.isNotBlank(username)) {
+            if (!StringUtils.isNotBlank(password)) {
                 passwordView.setError("Cannot Be Blank");
                 Toast.makeText(LoginActivity.this, "Email or Password cannot be empty", Toast.LENGTH_SHORT).show();
             }
@@ -108,43 +109,73 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
-        final User u = snapshot.getValue(User.class);
-        if (u != null) {
-            if (password.equals(u.getPassword())) {
-                auth.signInWithEmailAndPassword(u.getMail(),password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                progressBar.setVisibility(View.GONE);
-                                if(task.isSuccessful())
-                                {
-                                    if(auth.getCurrentUser().isEmailVerified()){
-                                        Toast.makeText(LoginActivity.this, "Logged In Successfully", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                                        SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_PASSWORD, password);
-                                        SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_MAIL, u.getMail());
-                                        SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_TYPE, String.valueOf(u.getType()));
-                                        startActivity(intent);
-                                    }
-                                    else {
-                                        Toast.makeText(LoginActivity.this, "Please Verify your email Address", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }
-                        });
-            } else {
+        StudentUser su = snapshot.getValue(StudentUser.class);
+        if (su != null) {
+            if (checkPassword(password,su)) {
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(LoginActivity.this, "Wrong Password", Toast.LENGTH_SHORT).show();
-                passwordView.setError("Wrong Password!");
+                storeInSharedPref(su);
+                Toast.makeText(LoginActivity.this, "Logged In Successfully", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            progressBar.setVisibility(View.GONE);
-            Toast.makeText(LoginActivity.this, "No User Registered..Please Register", Toast.LENGTH_SHORT).show();
+            else {
+                progressBar.setVisibility(View.GONE);
+                passwordView.setError("Incorrect Password!");
+                Toast.makeText(LoginActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else
+        {
+            User u = snapshot.getValue(User.class);
+            if(u!=null)
+            {
+                if(checkPassword(password,u))
+                {
+                    progressBar.setVisibility(View.GONE);
+                    storeInSharedPref(u);
+                    Toast.makeText(LoginActivity.this, "Logged In Successfully", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    progressBar.setVisibility(View.GONE);
+                    passwordView.setError("Incorrect Password!");
+                    Toast.makeText(LoginActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else{
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(LoginActivity.this, "No Account Registered! Please Register First!", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
-    public Context getContext()
+    public boolean checkPassword(String password, User u)
     {
+        return password.equals(u.getPassword());
+    }
+
+    public void storeInSharedPref(User u)
+    {
+        SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_NAME, u.getName());
+        if(u instanceof StudentUser)
+        {
+            StudentUser su = (StudentUser) u;
+            SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_BRANCH, su.getBranch());
+        }
+        SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_PASSWORD, password);
+        SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_MAIL, u.getMail());
+        SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_TYPE, String.valueOf(u.getType()));
+        redirectIntent();
+    }
+
+
+    public void redirectIntent()
+    {
+        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+        startActivity(intent);
+    }
+
+
+    public Context getContext() {
         return this.getApplicationContext();
     }
 

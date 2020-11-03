@@ -19,3 +19,6 @@
 //        Log.i(TAG, "onTokenRefresh completed with token: " + token);
 //    }
 //}
+
+
+//Uncomment in AndroidManifest.xml too

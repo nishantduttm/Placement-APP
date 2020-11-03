@@ -20,6 +20,7 @@ import com.example.placementapp.Animation.MyBounceInterpolator;
 import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
+import com.example.placementapp.pojo.StudentUser;
 import com.example.placementapp.pojo.User;
 import com.example.placementapp.utils.StringUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -54,7 +55,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     public int check;
     private TextView loginView;
-    public User u;
+    public StudentUser su;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         auth = FirebaseAuth.getInstance();
 
 
-        String[] dropdownArray = {"Select Stream", "Computer", "Mechanical", "Civil", "Mechanical San."};
+        String[] dropdownArray = {"Select Stream", "Comp", "Mech", "Civil", "MechSandwich"};
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, R.layout.spinnert_row, R.id.streamDropdown, dropdownArray);
         dropdown.setAdapter(adapter);
         dropdown.setOnItemSelectedListener(this);
@@ -106,32 +107,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             check = 1;
             ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN + "/" + email);
             ref.addListenerForSingleValueEvent(this);
-            if (check == 1) {
-                auth.createUserWithEmailAndPassword(emailView.getText().toString(), password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            auth.getCurrentUser().sendEmailVerification()
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                u = new User(emailView.getText().toString(), password, name, branch, Constants.UserTypes.STUDENT);
-                                                ref.setValue(u);
-                                                progressBar.setVisibility(View.GONE);
-                                                Toast.makeText(RegisterActivity.this, "Registered Successfully..Please Check your Email and Login Again", Toast.LENGTH_SHORT).show();
-                                                Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
-                                                startActivity(i);
-                                            } else {
-                                                Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                                progressBar.setVisibility(View.GONE);
-                                            }
-                                        }
-                                    });
-                        }
-                    }
-                });
-            }
         } else {
             if (!StringUtils.isNotBlank(email)) {
                 emailView.setError("Cannot Be Blank");
@@ -150,12 +125,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
-        u = snapshot.getValue(User.class);
-        if (u != null) {
+        su = snapshot.getValue(StudentUser.class);
+        if (su != null) {
             progressBar.setVisibility(View.GONE);
-            emailView.setError("Email Already Registered");
-            Toast.makeText(RegisterActivity.this, "Email Already Registered.!", Toast.LENGTH_SHORT).show();
+            emailView.setError("Account Already Registered");
+            Toast.makeText(RegisterActivity.this, "Account Already Registered.!", Toast.LENGTH_SHORT).show();
             check = 0;
+        } else {
+            su = new StudentUser(emailView.getText().toString(), password, name,Constants.UserTypes.STUDENT,branch);
+            ref.setValue(su);
+            progressBar.setVisibility(View.GONE);
+            Toast.makeText(RegisterActivity.this, "Registered Successfully..Please Login now", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(i);
         }
     }
 
