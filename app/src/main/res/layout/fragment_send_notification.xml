@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bgimage3">
+    android:background="@drawable/bgimage3"
+    tools:context=".admin.fragments.SendNotificationFragment">
 
     <TextView
         android:id="@+id/textView"
@@ -68,15 +69,15 @@
                 android:id="@+id/branchView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="195dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="154dp"
                 android:text="Select Branch"
                 android:textColor="#000000"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/message"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.062"
+                app:layout_constraintHorizontal_bias="0.065"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/companyName" />
 
@@ -85,8 +86,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="76dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="66dp"
+                android:layout_marginBottom="202dp"
                 android:background="@drawable/rounded_corners"
                 android:backgroundTint="#2B2468"
                 android:ems="10"
@@ -97,22 +99,21 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.298" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/messageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="196dp"
-                android:layout_marginBottom="18dp"
+                android:layout_marginTop="147dp"
+                android:layout_marginBottom="23dp"
                 android:text="Enter Message"
                 android:textColor="#000000"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/message"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.068"
+                app:layout_constraintHorizontal_bias="0.064"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/companyName" />
 
@@ -121,9 +122,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="356dp"
+                android:layout_marginTop="67dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="22dp"
                 android:background="@drawable/rounded_corners"
                 android:backgroundTint="#2B2468"
                 android:ems="10"
@@ -133,18 +133,21 @@
                 android:minLines="3"
                 android:padding="5dp"
                 android:textColor="#FFFFFF"
-                app:layout_constraintBottom_toTopOf="@+id/sendNotificationButton"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+                app:layout_constraintVertical_bias="0.0" />
 
             <Button
                 android:id="@+id/sendNotificationButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="60dp"
+                android:layout_marginTop="49dp"
                 android:layout_marginRight="60dp"
+                android:layout_marginBottom="40dp"
                 android:background="@drawable/rounded_corners"
                 android:fontFamily="@font/aclonica"
                 android:text="Send Notification"
@@ -153,75 +156,63 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/message" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.966" />
+                app:layout_constraintVertical_bias="0.402">
 
-            <CheckBox
-                android:id="@+id/mechSandBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="127dp"
-                android:layout_marginEnd="46dp"
-                android:layout_marginRight="46dp"
-                android:layout_marginBottom="88dp"
-                android:text="MECHANICAL SANDWICH"
-                android:textStyle="bold"
-                android:onClick="onCheckboxClick"
-                app:layout_constraintBottom_toTopOf="@+id/message"
-                app:layout_constraintEnd_toStartOf="@+id/compBox"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/companyName" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <CheckBox
-                android:id="@+id/mechBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="71dp"
-                android:layout_marginEnd="120dp"
-                android:layout_marginRight="120dp"
-                android:layout_marginBottom="144dp"
-                android:text="MECHANICAL"
-                android:textStyle="bold"
-                android:onClick="onCheckboxClick"
-                app:layout_constraintBottom_toTopOf="@+id/message"
-                app:layout_constraintEnd_toStartOf="@+id/civilBox"
-                app:layout_constraintHorizontal_bias="0.941"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/companyName"
-                app:layout_constraintVertical_bias="0.0" />
 
-            <CheckBox
-                android:id="@+id/civilBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="71dp"
-                android:layout_marginBottom="144dp"
-                android:text="CIVIL"
-                android:textStyle="bold"
-                android:onClick="onCheckboxClick"
-                app:layout_constraintBottom_toTopOf="@+id/message"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.79"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/companyName"
-                app:layout_constraintVertical_bias="0.0" />
+                    <RadioButton
+                        android:id="@+id/compBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Comp" />
 
-            <CheckBox
-                android:id="@+id/compBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="127dp"
-                android:layout_marginBottom="88dp"
-                android:text="COMP"
-                android:textStyle="bold"
-                android:onClick="onCheckboxClick"
-                app:layout_constraintBottom_toTopOf="@+id/message"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.805"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/companyName"
-                app:layout_constraintVertical_bias="0.0" />
+                    <RadioButton
+                        android:id="@+id/mechBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mech" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <RadioButton
+                        android:id="@+id/mechSandBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MechSandwich" />
+
+                    <RadioButton
+                        android:id="@+id/civilBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Civil" />
+
+                </LinearLayout>
+
+            </RadioGroup>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

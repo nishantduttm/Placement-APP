@@ -10,6 +10,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.placementapp.Animation.MyBounceInterpolator;
@@ -41,10 +43,11 @@ import androidx.fragment.app.Fragment;
 public class SendNotificationFragment extends Fragment implements View.OnClickListener {
 
     private EditText companyName;
-    private CheckBox compBox;
-    private CheckBox mechBox;
-    private CheckBox mechSandBox;
-    private CheckBox civilBox;
+    private RadioButton compBox;
+    private RadioButton mechBox;
+    private RadioButton mechSandBox;
+    private RadioButton civilBox;
+    private RadioGroup radioGroup;
     private EditText message;
     private Button sendNotificationButton;
     private DatabaseReference databaseReference;
@@ -81,24 +84,43 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         civilBox = view.findViewById(R.id.civilBox);
         mechBox = view.findViewById(R.id.mechBox);
         mechSandBox = view.findViewById(R.id.mechSandBox);
+        radioGroup = view.findViewById(R.id.radioGroup);
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkid) {
+                switch(checkid)
+                {
+                    case R.id.compBox:
+                    {
+                        TOPIC = "/topics/Comp";
+                        break;
+                    }
+
+                    case R.id.mechBox:
+                    {
+                        TOPIC = "/topics/Mech";
+                        break;
+                    }
+
+                    case R.id.mechSandBox:
+                    {
+                        TOPIC = "/topics/MechSandwich";
+                        break;
+                    }
+
+                    case R.id.civilBox:
+                    {
+                        TOPIC = "/topics/Civil";
+                        break;
+                    }
+                }
+            }
+        });
         sendNotificationButton = view.findViewById(R.id.sendNotificationButton);
         sendNotificationButton.setOnClickListener(this);
     }
 
-//    public void onCheckboxClick(View v)
-//    {
-//        boolean checked = ((CheckBox) v).isChecked();
-//
-//        switch(v.getId()) {
-//            case R.id.compBox:
-//            {
-//                if(checked)
-//                {
-//
-//                }
-//            }
-//        }
-//    }
 
     @Override
     public void onClick(View v) {
@@ -126,7 +148,6 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
             databaseReference = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_NOTIFICATIONS + "/" + time);
             databaseReference.setValue(notif);
 
-            TOPIC = "/topics/Students"; //topic must match with what the receiver subscribed to
             NOTIFICATION_TITLE = companyNamevalue;
             NOTIFICATION_MESSAGE = messagevalue;
 
