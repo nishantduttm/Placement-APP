@@ -1,8 +1,10 @@
 package com.example.placementapp.admin.fragments;
 
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -40,13 +42,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class SendNotificationFragment extends Fragment implements View.OnClickListener {
+public class SendNotificationFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
 
     private EditText companyName;
-    private RadioButton compBox;
-    private RadioButton mechBox;
-    private RadioButton mechSandBox;
-    private RadioButton civilBox;
+    private RadioButton radioButton;
     private RadioGroup radioGroup;
     private EditText message;
     private Button sendNotificationButton;
@@ -80,43 +79,17 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         super.onViewCreated(view, savedInstanceState);
         companyName = view.findViewById(R.id.companyName);
         message = view.findViewById(R.id.message);
-        compBox = view.findViewById(R.id.compBox);
-        civilBox = view.findViewById(R.id.civilBox);
-        mechBox = view.findViewById(R.id.mechBox);
-        mechSandBox = view.findViewById(R.id.mechSandBox);
+
+        if (message != null) {
+            message.setVerticalScrollBarEnabled(true);
+            message.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+            message.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
+            message.setMovementMethod(ScrollingMovementMethod.getInstance());
+
+            message.setOnTouchListener(this);
+        }
+
         radioGroup = view.findViewById(R.id.radioGroup);
-
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checkid) {
-                switch(checkid)
-                {
-                    case R.id.compBox:
-                    {
-                        TOPIC = "/topics/Comp";
-                        break;
-                    }
-
-                    case R.id.mechBox:
-                    {
-                        TOPIC = "/topics/Mech";
-                        break;
-                    }
-
-                    case R.id.mechSandBox:
-                    {
-                        TOPIC = "/topics/MechSandwich";
-                        break;
-                    }
-
-                    case R.id.civilBox:
-                    {
-                        TOPIC = "/topics/Civil";
-                        break;
-                    }
-                }
-            }
-        });
         sendNotificationButton = view.findViewById(R.id.sendNotificationButton);
         sendNotificationButton.setOnClickListener(this);
     }
@@ -128,16 +101,24 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         MyBounceInterpolator interpolator = new MyBounceInterpolator(0.05, 5);
         myAnim.setInterpolator(interpolator);
         v.startAnimation(myAnim);
+
         String companyNamevalue = companyName.getText().toString();
         String messagevalue = message.getText().toString();
         if (companyNamevalue.length() == 0)
             companyName.setError("This field cannot be empty");
         if (messagevalue.length() == 0)
             message.setError("This field cannot be empty");
+        if(radioGroup.getCheckedRadioButtonId() == -1)
+            Toast.makeText(this.getContext(), "Please SELECT A BRANCH!!", Toast.LENGTH_SHORT).show();
 
-        if (companyNamevalue.length() != 0 && messagevalue.length() != 0) {
+        if (companyNamevalue.length() != 0 && messagevalue.length() != 0 && radioGroup.getCheckedRadioButtonId() != -1) {
+
             Long time;
             String timestamp;
+
+            int selectedId = radioGroup.getCheckedRadioButtonId();
+            radioButton = this.getView().findViewById(selectedId);
+            TOPIC = "/topics/" + radioButton.getText();
 
             time = System.currentTimeMillis();
             DateFormat simple = new SimpleDateFormat("dd MMM yyyy HH:mm");
@@ -193,6 +174,15 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         };
 
         MySingleton.getInstance(getContext()).addToRequestQueue(jsonObjectRequest);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        v.getParent().requestDisallowInterceptTouchEvent(true);
+        if ((event.getAction() & MotionEvent.ACTION_UP) != 0 && (event.getActionMasked() & MotionEvent.ACTION_UP) != 0) {
+            v.getParent().requestDisallowInterceptTouchEvent(false);
+        }
+        return false;
     }
 }
 

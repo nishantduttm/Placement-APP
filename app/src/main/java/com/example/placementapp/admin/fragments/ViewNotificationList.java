@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
@@ -30,6 +31,7 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
     private RecyclerView recyclerView;
     private RecyclerViewAdapterViewNotifcation notificationAdapter;
     private List<Notification> notificationList;
+    private ProgressBar progressBar;
 
     public ViewNotificationList() {
         // Required empty public constructor
@@ -49,7 +51,10 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_notification_list, container, false);
         recyclerView = v.findViewById(R.id.recycler_view);
-        notificationAdapter = new RecyclerViewAdapterViewNotifcation(notificationList);
+        recyclerView.setVisibility(View.GONE);
+        progressBar = v.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
+        notificationAdapter = new RecyclerViewAdapterViewNotifcation(notificationList,this);
         RecyclerView.LayoutManager manager = new GridLayoutManager(getContext(), 1);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(notificationAdapter);
@@ -63,6 +68,10 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
             Notification notification = childsnapshot.getValue(Notification.class);
             if(notification!=null)
                 notificationList.add(new Notification(notification.getCompanyName(),notification.getMessage(),notification.getTimestamp()));
+        }
+
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
         }
 
         if (recyclerView != null && notificationAdapter != null) {

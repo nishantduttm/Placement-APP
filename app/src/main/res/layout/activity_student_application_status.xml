@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".student.StudentApplicationStatusActivity"
+    android:background="@drawable/splash">
+    
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="100dp"
+        app:cardBackgroundColor="#010523">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/email_address_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email Address:"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"/>
+
+                <EditText
+                    android:id="@+id/email_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rounded_corners"
+                    android:backgroundTint="#2B2468"
+                    android:hint="Student's Email Address"
+                    android:gravity="start"
+                    android:padding="5dp"
+                    android:textColor="#FFFFFF"
+                    android:inputType="none"
+                    android:layout_below="@id/email_address_view"/>
+
+                <TextView
+                    android:id="@+id/student_name_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Student Name:"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@id/email_address"/>
+
+                <EditText
+                    android:id="@+id/student_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rounded_corners"
+                    android:backgroundTint="#2B2468"
+                    android:hint="Student's Name"
+                    android:gravity="start"
+                    android:padding="5dp"
+                    android:textColor="#FFFFFF"
+                    android:inputType="none"
+                    android:layout_below="@id/student_name_view"/>
+
+                <TextView
+                    android:id="@+id/student_branch_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Student Branch:"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@id/student_name"/>
+
+                <EditText
+                    android:id="@+id/student_branch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rounded_corners"
+                    android:backgroundTint="#2B2468"
+                    android:hint="Student's Branch"
+                    android:gravity="start"
+                    android:padding="5dp"
+                    android:textColor="#BAB7B7"
+                    android:inputType="none"
+                    android:layout_below="@id/student_branch_view"/>
+
+                <TextView
+                    android:id="@+id/applied_company_name_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Company Name (Applied For):"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@id/student_branch"/>
+
+                <EditText
+                    android:id="@+id/applied_company_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rounded_corners"
+                    android:backgroundTint="#2B2468"
+                    android:hint="Applied Company Name"
+                    android:gravity="start"
+                    android:padding="5dp"
+                    android:textColor="#BAB7B7"
+                    android:inputType="none"
+                    android:layout_below="@id/applied_company_name_view"/>
+
+                <View
+                    android:id="@+id/line1"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="#03971B"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/applied_company_name"
+                    android:layout_centerHorizontal="true" />
+                <View
+                    android:id="@+id/line2"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="#03971B"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@id/line1"
+                    android:layout_centerHorizontal="true" />
+
+                <TextView
+                    android:id="@+id/process_round_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Process Round: "
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@id/line2"/>
+
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@id/process_round_view">
+
+                    <RadioButton
+                        android:id="@+id/company_presentation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/adamina"
+                        android:text="Company Presentation"
+                        android:paddingLeft="8dp"
+                        android:textColor="#FFFFFF"
+                        android:buttonTint="#FA0707"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/aptitude"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/adamina"
+                        android:text="Aptitude"
+                        android:paddingLeft="8dp"
+                        android:textColor="#FFFFFF"
+                        android:buttonTint="#FA0707"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+
+                    <RadioButton
+                        android:id="@+id/technical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/adamina"
+                        android:text="Technical"
+                        android:paddingLeft="8dp"
+                        android:textColor="#FFFFFF"
+                        android:buttonTint="#FA0707"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/pi_hr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/adamina"
+                        android:text="PI/HR"
+                        android:paddingLeft="8dp"
+                        android:textColor="#FFFFFF"
+                        android:buttonTint="#FA0707"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/other"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/adamina"
+                        android:text="Other"
+                        android:paddingLeft="8dp"
+                        android:textColor="#FFFFFF"
+                        android:buttonTint="#FA0707"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/process_date_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Process Date: "
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@id/radioGroup"/>
+
+                <EditText
+                    android:id="@+id/process_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rounded_corners"
+                    android:backgroundTint="#2B2468"
+                    android:drawableRight="@drawable/ic_calendar"
+                    android:drawableTint="#F3D104"
+                    android:hint="Select Date"
+                    android:gravity="start"
+                    android:padding="5dp"
+                    android:textColor="#FFFFFF"
+                    android:inputType="none"
+                    android:layout_below="@id/process_date_view"/>
+
+            </RelativeLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

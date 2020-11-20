@@ -13,7 +13,6 @@ public class MyFirebaseInstanceIDService extends FirebaseMessagingService {
 
     private String branch;
     private static final String TAG = "mFirebaseIIDService";
-//    private static final String SUBSCRIBE_TO = "Students";
 
     @Override
     public void onNewToken(@NonNull String token) {

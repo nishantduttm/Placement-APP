@@ -9,10 +9,8 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="322dp"
-        android:layout_height="89dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="351dp"
+        android:layout_height="97dp"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="#550909"
         android:fontFamily="@font/aldrich"
@@ -30,7 +28,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
-        android:layout_width="393dp"
+        android:layout_width="match_parent"
         android:layout_height="531dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -49,105 +47,99 @@
             android:background="@drawable/bgimage4">
 
             <TextView
-                android:id="@+id/titleView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:layout_marginBottom="16dp"
-                android:text="Enter Company Name"
-                android:textColor="#000000"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/companyName"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.096"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.13" />
-
-            <TextView
                 android:id="@+id/branchView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="154dp"
                 android:text="Select Branch"
                 android:textColor="#000000"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/message"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.065"
+                app:layout_constraintHorizontal_bias="0.066"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/companyName" />
+                app:layout_constraintTop_toBottomOf="@+id/companyName"
+                app:layout_constraintVertical_bias="0.078" />
+
+            <TextView
+                android:id="@+id/titleView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enter Company Name"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/companyName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.101"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/companyName"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="76dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="202dp"
                 android:background="@drawable/rounded_corners"
                 android:backgroundTint="#2B2468"
                 android:ems="10"
                 android:inputType="none"
                 android:padding="5dp"
+                android:paddingLeft="8dp"
                 android:textColor="#FFFFFF"
-                app:layout_constraintBottom_toTopOf="@+id/message"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.112" />
 
             <TextView
                 android:id="@+id/messageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="147dp"
-                android:layout_marginBottom="23dp"
                 android:text="Enter Message"
                 android:textColor="#000000"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/message"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.064"
+                app:layout_constraintHorizontal_bias="0.068"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/companyName" />
+                app:layout_constraintTop_toBottomOf="@+id/companyName"
+                app:layout_constraintVertical_bias="0.917" />
 
             <EditText
                 android:id="@+id/message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="67dp"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/rounded_corners"
                 android:backgroundTint="#2B2468"
                 android:ems="10"
+                android:clickable="true"
                 android:gravity="start"
                 android:inputType="textMultiLine"
                 android:maxLines="3"
                 android:minLines="3"
                 android:padding="5dp"
+                android:paddingLeft="8dp"
                 android:textColor="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.398" />
 
             <Button
                 android:id="@+id/sendNotificationButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="60dp"
-                android:layout_marginTop="49dp"
                 android:layout_marginRight="60dp"
-                android:layout_marginBottom="40dp"
                 android:background="@drawable/rounded_corners"
                 android:fontFamily="@font/aclonica"
                 android:text="Send Notification"
@@ -155,8 +147,10 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.504"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/message" />
+                app:layout_constraintTop_toBottomOf="@+id/message"
+                app:layout_constraintVertical_bias="0.614" />
 
             <RadioGroup
                 android:id="@+id/radioGroup"
@@ -164,53 +158,52 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.402">
+                app:layout_constraintVertical_bias="0.409">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+
+                <RadioButton
+                    android:id="@+id/compBox"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:fontFamily="@font/adamina"
+                    android:text="Comp"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-
-                    <RadioButton
-                        android:id="@+id/compBox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Comp" />
-
-                    <RadioButton
-                        android:id="@+id/mechBox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Mech" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <RadioButton
+                    android:id="@+id/mechBox"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:fontFamily="@font/adamina"
+                    android:text="Mech"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
 
-                    <RadioButton
-                        android:id="@+id/mechSandBox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="MechSandwich" />
+                <RadioButton
+                    android:id="@+id/mechSandBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/adamina"
+                    android:text="MechSandwich"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                    <RadioButton
-                        android:id="@+id/civilBox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Civil" />
+                <RadioButton
+                    android:id="@+id/civilBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/adamina"
+                    android:text="Civil"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                </LinearLayout>
 
             </RadioGroup>
 

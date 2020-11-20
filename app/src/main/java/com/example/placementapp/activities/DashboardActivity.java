@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import com.example.placementapp.admin.fragments.SendNotificationFragment;
 
 import com.example.placementapp.R;
+import com.example.placementapp.admin.fragments.ViewNotificationList;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.SharedPrefHelper;
 import com.google.android.material.navigation.NavigationView;
@@ -88,7 +89,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             this.drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            finishAffinity();
+            finish();
         }
     }
 
@@ -101,10 +103,20 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
         switch (id){
             case R.id.admin_navigation_drawer_send_notifications:
+            {
                 toolbar.setTitle("Send Notifications");
                 fragment = new SendNotificationFragment();
                 startTransactionFragment(fragment);
                 break;
+            }
+            case R.id.admin_navigation_drawer_view_all_notifications:
+            {
+                toolbar.setTitle("View All Notifications");
+                fragment = new ViewNotificationList();
+                startTransactionFragment(fragment);
+                break;
+            }
+
             default:
                 break;
         }
