@@ -1,5 +1,6 @@
 package com.example.placementapp.admin.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.placementapp.Adapters.RecyclerViewAdapterViewNotifcation;
@@ -17,6 +18,7 @@ import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.pojo.Notification;
+import com.example.placementapp.student.StudentApplicationStatusActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

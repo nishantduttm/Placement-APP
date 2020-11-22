@@ -24,7 +24,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/email_address_view"
+                    android:id="@+id/student_email_address_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Email Address:"
@@ -35,7 +35,7 @@
                     android:layout_marginLeft="10dp"/>
 
                 <EditText
-                    android:id="@+id/email_address"
+                    android:id="@+id/student_email_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -48,7 +48,7 @@
                     android:padding="5dp"
                     android:textColor="#FFFFFF"
                     android:inputType="none"
-                    android:layout_below="@id/email_address_view"/>
+                    android:layout_below="@id/student_email_address_view"/>
 
                 <TextView
                     android:id="@+id/student_name_view"
@@ -60,7 +60,7 @@
                     android:textSize="20sp"
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_below="@id/email_address"/>
+                    android:layout_below="@id/student_email_address"/>
 
                 <EditText
                     android:id="@+id/student_name"
@@ -107,7 +107,7 @@
                     android:layout_below="@id/student_branch_view"/>
 
                 <TextView
-                    android:id="@+id/applied_company_name_view"
+                    android:id="@+id/company_name_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Company Name (Applied For):"
@@ -119,7 +119,7 @@
                     android:layout_below="@id/student_branch"/>
 
                 <EditText
-                    android:id="@+id/applied_company_name"
+                    android:id="@+id/company_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -132,7 +132,7 @@
                     android:padding="5dp"
                     android:textColor="#BAB7B7"
                     android:inputType="none"
-                    android:layout_below="@id/applied_company_name_view"/>
+                    android:layout_below="@id/company_name_view"/>
 
                 <View
                     android:id="@+id/line1"
@@ -140,7 +140,7 @@
                     android:layout_height="3dp"
                     android:background="#03971B"
                     android:layout_marginTop="20dp"
-                    android:layout_below="@id/applied_company_name"
+                    android:layout_below="@id/company_name"
                     android:layout_centerHorizontal="true" />
                 <View
                     android:id="@+id/line2"
@@ -265,6 +265,133 @@
                     android:textColor="#FFFFFF"
                     android:inputType="none"
                     android:layout_below="@id/process_date_view"/>
+
+                <TextView
+                    android:id="@+id/process_status_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Placement Status: "
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@id/process_date"/>
+
+                <RadioGroup
+                    android:id="@+id/radioGroup2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@id/process_status_view">
+
+                    <RadioButton
+                        android:id="@+id/yes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/adamina"
+                        android:text="Placed"
+                        android:paddingLeft="8dp"
+                        android:textColor="#FFFFFF"
+                        android:buttonTint="#FA0707"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/no"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/adamina"
+                        android:text="Not Placed"
+                        android:paddingLeft="8dp"
+                        android:textColor="#FFFFFF"
+                        android:buttonTint="#FA0707"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+
+                    <RadioButton
+                        android:id="@+id/hold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/adamina"
+                        android:text="Hold"
+                        android:paddingLeft="8dp"
+                        android:textColor="#FFFFFF"
+                        android:buttonTint="#FA0707"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/in_process"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/adamina"
+                        android:text="In Process"
+                        android:paddingLeft="8dp"
+                        android:textColor="#FFFFFF"
+                        android:buttonTint="#FA0707"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/upload_file_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Upload Proof(Email Communication/ Process Notice/ Offer Letter)"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@id/radioGroup2"/>
+
+                <EditText
+                    android:id="@+id/upload_file"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rounded_corners"
+                    android:backgroundTint="#2B2468"
+                    android:text="Upload File"
+                    android:textStyle="bold"
+                    android:gravity="start"
+                    android:paddingRight="15dp"
+                    android:textColor="#FFFFFF"
+                    android:inputType="none"
+                    android:layout_below="@id/upload_file_view"
+                    android:drawableLeft="@drawable/ic_upload"
+                    android:drawablePadding="20dp" />
+
+                <Button
+                    android:id="@+id/save_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
+                    android:background="@drawable/rounded_corners"
+                    android:text="SAVE"
+                    android:layout_below="@id/upload_file" />
+
+                <Button
+                    android:id="@+id/reset_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
+                    android:background="@drawable/rounded_corners"
+                    android:text="RESET"
+                    android:layout_below="@id/save_button" />
 
             </RelativeLayout>
 

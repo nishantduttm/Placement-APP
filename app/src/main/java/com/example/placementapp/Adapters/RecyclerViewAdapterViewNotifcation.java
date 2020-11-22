@@ -1,15 +1,26 @@
 package com.example.placementapp.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.placementapp.Animation.MyBounceInterpolator;
 import com.example.placementapp.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -19,8 +30,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.placementapp.admin.fragments.ViewNotificationList;
 import com.example.placementapp.pojo.Notification;
+import com.example.placementapp.student.StudentApplicationStatusActivity;
 
-public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<RecyclerViewAdapterViewNotifcation.MyViewHolder> {
+public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<RecyclerViewAdapterViewNotifcation.MyViewHolder> implements View.OnClickListener {
 
     private Context context;
     private List<Notification> notificationList;
@@ -52,12 +64,38 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         holder.companyName.setText(notification.companyName);
         holder.comapanyDescription.setText(notification.message);
         holder.timestamp.setText("Posted On: " + notification.timestamp);
-
+        holder.itemView.setTag(position);
+        holder.itemView.setOnClickListener((View.OnClickListener)this);
     }
 
     @Override
     public int getItemCount() {
         return notificationList.size();
+    }
+
+    @Override
+    public void onClick(View view) {
+        Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);
+        myAnim.setInterpolator(interpolator);
+        view.startAnimation(myAnim);
+        int pos = (int) view.getTag();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm");
+        Date date = null;
+        try {
+            date = sdf.parse(notificationList.get(pos).getTimestamp());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long millis = date.getTime();
+        Log.i("milli:",String.valueOf(millis));
+
+        new Handler().postDelayed(() -> {
+            Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
+            i.putExtra("id", millis);
+            view.getContext().startActivity(i);
+        }, 1000);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
