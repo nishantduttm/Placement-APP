@@ -32,7 +32,7 @@ import com.example.placementapp.admin.fragments.ViewNotificationList;
 import com.example.placementapp.pojo.Notification;
 import com.example.placementapp.student.StudentApplicationStatusActivity;
 
-public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<RecyclerViewAdapterViewNotifcation.MyViewHolder> implements View.OnClickListener {
+public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<RecyclerViewAdapterViewNotifcation.MyViewHolder>  {
 
     private Context context;
     private List<Notification> notificationList;
@@ -65,7 +65,19 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         holder.comapanyDescription.setText(notification.message);
         holder.timestamp.setText("Posted On: " + notification.timestamp);
         holder.itemView.setTag(position);
-        holder.itemView.setOnClickListener((View.OnClickListener)this);
+        holder.itemView.setOnClickListener(view -> {
+            Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);
+            MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);
+            myAnim.setInterpolator(interpolator);
+            view.startAnimation(myAnim);
+            int pos = (int) view.getTag();
+
+            new Handler().postDelayed(() -> {
+                Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
+                i.putExtra("companyName", notificationList.get(pos).getCompanyName());
+                view.getContext().startActivity(i);
+            }, 1000);
+      });
     }
 
     @Override
@@ -73,30 +85,7 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         return notificationList.size();
     }
 
-    @Override
-    public void onClick(View view) {
-        Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);
-        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);
-        myAnim.setInterpolator(interpolator);
-        view.startAnimation(myAnim);
-        int pos = (int) view.getTag();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm");
-        Date date = null;
-        try {
-            date = sdf.parse(notificationList.get(pos).getTimestamp());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        long millis = date.getTime();
-        Log.i("milli:",String.valueOf(millis));
-
-        new Handler().postDelayed(() -> {
-            Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
-            i.putExtra("id", millis);
-            view.getContext().startActivity(i);
-        }, 1000);
-    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView companyName, comapanyDescription, timestamp;

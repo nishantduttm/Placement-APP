@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
@@ -16,10 +17,10 @@ import java.util.Calendar;
 
 public class StudentApplicationStatusActivity extends AppCompatActivity {
 
-    private EditText studentName;
-    private EditText studentEmail;
-    private EditText studentBranch;
-    private EditText companyName;
+    private TextView studentName;
+    private TextView studentEmail;
+    private TextView studentBranch;
+    private TextView companyName;
     private EditText processDate;
     private DatePickerDialog datePicker;
 
@@ -31,6 +32,7 @@ public class StudentApplicationStatusActivity extends AppCompatActivity {
         studentEmail = findViewById(R.id.student_email_address);
         companyName = findViewById(R.id.company_name);
         studentBranch = findViewById(R.id.student_branch);
+        processDate=findViewById(R.id.process_date);
 
         setValuesForNonEditable();  //For Setting Values on Non-Editable EditText Views..1
 
