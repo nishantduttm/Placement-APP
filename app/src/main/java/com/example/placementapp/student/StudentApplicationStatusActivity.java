@@ -3,10 +3,12 @@ package com.example.placementapp.student;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.placementapp.R;
@@ -22,6 +24,8 @@ public class StudentApplicationStatusActivity extends AppCompatActivity {
     private TextView studentBranch;
     private TextView companyName;
     private EditText processDate;
+    private RadioGroup radioGroup1;
+    private RadioGroup radioGroup2;
     private DatePickerDialog datePicker;
 
     @Override
@@ -32,19 +36,29 @@ public class StudentApplicationStatusActivity extends AppCompatActivity {
         studentEmail = findViewById(R.id.student_email_address);
         companyName = findViewById(R.id.company_name);
         studentBranch = findViewById(R.id.student_branch);
-        processDate=findViewById(R.id.process_date);
+        processDate = findViewById(R.id.process_date);
+        radioGroup1 = findViewById(R.id.radioGroup);
+        radioGroup2 = findViewById(R.id.radioGroup2);
 
         setValuesForNonEditable();  //For Setting Values on Non-Editable EditText Views..1
+        
+        getandSetCompanyNameFromIntent();  //For Setting Company Name on EditText..2
 
         processDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dateDialogInitializer();   //Initializing DateDialog Panel..2
+                dateDialogInitializer();   //Initializing DateDialog Panel..3
             }
         });
     }
 
-//    2
+    //    2
+    private void getandSetCompanyNameFromIntent() {
+        Intent intent = getIntent();
+        companyName.setText(intent.getStringExtra("companyName"));
+    }
+
+    //    3
     private void dateDialogInitializer() {
         Calendar calendar = Calendar.getInstance();
 

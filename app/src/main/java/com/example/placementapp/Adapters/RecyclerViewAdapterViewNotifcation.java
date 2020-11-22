@@ -32,7 +32,7 @@ import com.example.placementapp.admin.fragments.ViewNotificationList;
 import com.example.placementapp.pojo.Notification;
 import com.example.placementapp.student.StudentApplicationStatusActivity;
 
-public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<RecyclerViewAdapterViewNotifcation.MyViewHolder>  {
+public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<RecyclerViewAdapterViewNotifcation.MyViewHolder> implements View.OnClickListener {
 
     private Context context;
     private List<Notification> notificationList;
@@ -65,19 +65,7 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         holder.comapanyDescription.setText(notification.message);
         holder.timestamp.setText("Posted On: " + notification.timestamp);
         holder.itemView.setTag(position);
-        holder.itemView.setOnClickListener(view -> {
-            Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);
-            MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);
-            myAnim.setInterpolator(interpolator);
-            view.startAnimation(myAnim);
-            int pos = (int) view.getTag();
-
-            new Handler().postDelayed(() -> {
-                Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
-                i.putExtra("companyName", notificationList.get(pos).getCompanyName());
-                view.getContext().startActivity(i);
-            }, 1000);
-      });
+        holder.itemView.setOnClickListener(this);
     }
 
     @Override
@@ -85,7 +73,20 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         return notificationList.size();
     }
 
+    @Override
+    public void onClick(View view) {
+        Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);
+        myAnim.setInterpolator(interpolator);
+        view.startAnimation(myAnim);
+        int pos = (int) view.getTag();
 
+        new Handler().postDelayed(() -> {
+            Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
+            i.putExtra("companyName", notificationList.get(pos).getCompanyName());
+            view.getContext().startActivity(i);
+        }, 1000);
+    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView companyName, comapanyDescription, timestamp;
