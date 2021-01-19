@@ -24,7 +24,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.623" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
@@ -36,10 +37,10 @@
         app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.886">
+        app:layout_constraintVertical_bias="0.79">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -85,7 +86,7 @@
                 android:backgroundTint="#2B2468"
                 android:ems="10"
                 android:inputType="none"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:textColor="#FFFFFF"
                 app:layout_constraintBottom_toTopOf="@+id/message"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -122,7 +123,7 @@
                 android:inputType="textMultiLine"
                 android:maxLines="3"
                 android:minLines="3"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:textColor="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -168,14 +169,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Comp"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
 
                 <RadioButton
                     android:id="@+id/mechBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Mech"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
 
 
                 <RadioButton
@@ -183,14 +184,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="MechSandwich"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
 
                 <RadioButton
                     android:id="@+id/civilBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Civil"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
 
 
             </RadioGroup>
