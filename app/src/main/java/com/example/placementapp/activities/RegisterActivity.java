@@ -54,7 +54,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public String email;
     public String name;
     public String branch;
-
     private TextView loginView;
     public StudentUser su;
 

@@ -3,13 +3,12 @@ package com.example.placementapp.pojo;
 public class Notification {
     public String companyName;
     public String message;
-    public String timestamp;
-    public String[] branch;
+    public String branch;
 
-    public Notification(String companyName, String message, String timestamp) {
+    public Notification(String companyName, String message, String branch) {
         this.companyName = companyName;
         this.message = message;
-        this.timestamp = timestamp;
+        this.branch = branch;
     }
 
     public Notification() {
@@ -31,11 +30,12 @@ public class Notification {
         this.message = message;
     }
 
-    public String getTimestamp() {
-        return timestamp;
+
+    public String getBranch() {
+        return branch;
     }
 
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
+    public void setBranch(String branch) {
+        this.branch = branch;
     }
 }

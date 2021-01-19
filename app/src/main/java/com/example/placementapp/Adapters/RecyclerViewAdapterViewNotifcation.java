@@ -63,7 +63,6 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         holder.parent.setAnimation(AnimationUtils.loadAnimation(fragment.getContext(), R.anim.fade_scale_animation));
         holder.companyName.setText(notification.companyName);
         holder.comapanyDescription.setText(notification.message);
-        holder.timestamp.setText("Posted On: " + notification.timestamp);
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(this);
     }
@@ -89,7 +88,7 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView companyName, comapanyDescription, timestamp;
+        TextView companyName, comapanyDescription;
         CardView parent;
 
         public MyViewHolder(View itemView) {
@@ -97,7 +96,6 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
             parent = itemView.findViewById(R.id.parent);
             companyName = itemView.findViewById(R.id.company_name);
             comapanyDescription = itemView.findViewById(R.id.company_description);
-            timestamp = itemView.findViewById(R.id.time);
         }
     }
 }

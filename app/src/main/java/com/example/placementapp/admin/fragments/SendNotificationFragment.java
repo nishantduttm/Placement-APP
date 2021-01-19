@@ -121,11 +121,8 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
             TOPIC = "/topics/" + radioButton.getText();
 
             time = System.currentTimeMillis();
-            DateFormat simple = new SimpleDateFormat("dd MMM yyyy HH:mm");
-            Date result = new Date(time);
-            timestamp = simple.format(result);
 
-            Notification notif = new Notification(companyNamevalue,messagevalue,timestamp);
+            Notification notif = new Notification(companyNamevalue,messagevalue,radioButton.getText().toString());
             databaseReference = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_NOTIFICATIONS + "/" + time);
             databaseReference.setValue(notif);
 

@@ -16,16 +16,16 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/smartdp">
+            android:background="@drawable/bgimage4">
 
 
             <TextView
                 android:id="@+id/company_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="text"
                 android:layout_marginLeft="3dp"
-                android:textColor="#FFFFFF"
+                android:text="text"
+                android:textColor="#000000"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -33,22 +33,12 @@
                 android:id="@+id/company_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/company_name"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="27dp"
                 android:text="textView"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:layout_below="@id/company_name"/>
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/company_description"
-                android:layout_marginTop="25dp"
-                android:layout_marginLeft="5dp"
-                android:text="Date: "
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textSize="16sp" />
+
         </RelativeLayout>
 </androidx.cardview.widget.CardView>
