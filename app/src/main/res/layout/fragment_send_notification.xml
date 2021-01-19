@@ -167,26 +167,30 @@
                     android:id="@+id/compBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Comp" />
+                    android:text="Comp"
+                    android:textSize="20sp"/>
 
                 <RadioButton
                     android:id="@+id/mechBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mech" />
+                    android:text="Mech"
+                    android:textSize="20sp"/>
 
 
                 <RadioButton
                     android:id="@+id/mechSandBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="MechSandwich" />
+                    android:text="MechSandwich"
+                    android:textSize="20sp"/>
 
                 <RadioButton
                     android:id="@+id/civilBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Civil" />
+                    android:text="Civil"
+                    android:textSize="20sp"/>
 
 
             </RadioGroup>
