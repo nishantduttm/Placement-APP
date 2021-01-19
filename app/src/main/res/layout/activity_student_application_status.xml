@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".student.StudentApplicationStatusActivity"
-    android:background="@drawable/splash">
+    android:background="@drawable/bgimage3">
     
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -13,12 +13,12 @@
         app:cardCornerRadius="30dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="100dp"
-        app:cardBackgroundColor="#010523">
+        android:layout_marginTop="100dp">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/bgimage4">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -29,7 +29,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Email Address:"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#000000"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:layout_marginTop="20dp"
@@ -46,8 +46,8 @@
                     android:backgroundTint="#2B2468"
                     android:hint="Student's Email Address"
                     android:gravity="start"
-                    android:padding="5dp"
-                    android:textColor="#FFFFFF"
+                    android:padding="10dp"
+                    android:textColor="#000000"
                     android:inputType="none"
                     android:layout_below="@id/student_email_address_view"/>
 
@@ -56,7 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Student Name:"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#000000"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:layout_marginTop="20dp"
@@ -74,8 +74,8 @@
                     android:backgroundTint="#2B2468"
                     android:hint="Student's Name"
                     android:gravity="start"
-                    android:padding="5dp"
-                    android:textColor="#FFFFFF"
+                    android:padding="10dp"
+                    android:textColor="#000000"
                     android:inputType="none"
                     android:layout_below="@id/student_name_view"/>
 
@@ -84,7 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Student Branch:"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#000000"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:layout_marginTop="20dp"
@@ -102,8 +102,8 @@
                     android:backgroundTint="#2B2468"
                     android:hint="Student's Branch"
                     android:gravity="start"
-                    android:padding="5dp"
-                    android:textColor="#BAB7B7"
+                    android:padding="10dp"
+                    android:textColor="#000000"
                     android:inputType="none"
                     android:layout_below="@id/student_branch_view"/>
 
@@ -112,7 +112,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Company Name (Applied For):"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#000000"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:layout_marginTop="20dp"
@@ -130,8 +130,8 @@
                     android:backgroundTint="#2B2468"
                     android:hint="Applied Company Name"
                     android:gravity="start"
-                    android:padding="5dp"
-                    android:textColor="#BAB7B7"
+                    android:padding="10dp"
+                    android:textColor="#000000"
                     android:inputType="none"
                     android:layout_below="@id/company_name_view"/>
 
@@ -157,7 +157,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Process Round: "
-                    android:textColor="#FFFFFF"
+                    android:textColor="#000000"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:layout_marginTop="20dp"
@@ -181,7 +181,7 @@
                         android:fontFamily="@font/adamina"
                         android:text="Company Presentation"
                         android:paddingLeft="8dp"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#000000"
                         android:buttonTint="#FA0707"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -193,7 +193,7 @@
                         android:fontFamily="@font/adamina"
                         android:text="Aptitude"
                         android:paddingLeft="8dp"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#000000"
                         android:buttonTint="#FA0707"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -206,7 +206,7 @@
                         android:fontFamily="@font/adamina"
                         android:text="Technical"
                         android:paddingLeft="8dp"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#000000"
                         android:buttonTint="#FA0707"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -218,7 +218,7 @@
                         android:fontFamily="@font/adamina"
                         android:text="PI/HR"
                         android:paddingLeft="8dp"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#000000"
                         android:buttonTint="#FA0707"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -230,7 +230,7 @@
                         android:fontFamily="@font/adamina"
                         android:text="Other"
                         android:paddingLeft="8dp"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#000000"
                         android:buttonTint="#FA0707"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -242,7 +242,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Process Date: "
-                    android:textColor="#FFFFFF"
+                    android:textColor="#000000"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:layout_marginTop="20dp"
@@ -262,7 +262,7 @@
                     android:drawableTint="#F3D104"
                     android:hint="Select Date"
                     android:gravity="start"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:textColor="#FFFFFF"
                     android:inputType="none"
                     android:layout_below="@id/process_date_view"/>
@@ -272,7 +272,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Placement Status: "
-                    android:textColor="#FFFFFF"
+                    android:textColor="#000000"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:layout_marginTop="20dp"
@@ -296,7 +296,7 @@
                         android:fontFamily="@font/adamina"
                         android:text="Placed"
                         android:paddingLeft="8dp"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#000000"
                         android:buttonTint="#FA0707"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -308,7 +308,7 @@
                         android:fontFamily="@font/adamina"
                         android:text="Not Placed"
                         android:paddingLeft="8dp"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#000000"
                         android:buttonTint="#FA0707"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -321,7 +321,7 @@
                         android:fontFamily="@font/adamina"
                         android:text="Hold"
                         android:paddingLeft="8dp"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#000000"
                         android:buttonTint="#FA0707"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -333,7 +333,7 @@
                         android:fontFamily="@font/adamina"
                         android:text="In Process"
                         android:paddingLeft="8dp"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#000000"
                         android:buttonTint="#FA0707"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -345,7 +345,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Upload Proof(Email Communication/ Process Notice/ Offer Letter)"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#000000"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:layout_marginTop="20dp"
