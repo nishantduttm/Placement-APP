@@ -32,6 +32,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.regex.Pattern;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,7 +55,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public String name;
     public String branch;
 
-    public int check;
     private TextView loginView;
     public StudentUser su;
 
@@ -91,36 +92,44 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
+        String checkEmail = null;
         Animation myAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce_animation);
         MyBounceInterpolator interpolator = new MyBounceInterpolator(0.05, 5);
         myAnim.setInterpolator(interpolator);
         view.startAnimation(myAnim);
         password = passwordView.getText().toString();
         name = nameView.getText().toString();
+        Pattern pattern = Pattern.compile("[a-zA-Z]+[.]+[a-zA-Z]+@indiraicem.ac.in");
+        checkEmail = emailView.getText().toString();
 
-        if (StringUtils.isNotBlank(emailView.getText().toString()) && StringUtils.isNotBlank(password) && StringUtils.isNotBlank(name)) {
-            String[] temp = emailView.getText().toString().split("@");
-            String firstValue = temp[0];
-            String[] temp1 = firstValue.split("\\.");
-            email = temp1[0] + temp1[1];
-            progressBar.setVisibility(View.VISIBLE);
-            check = 1;
-            ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN + "/" + email);
-            ref.addListenerForSingleValueEvent(this);
+        if (StringUtils.isNotBlank(emailView.getText().toString())) {
+
+            if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(name) && pattern.matcher(checkEmail).matches()) {
+                String[] temp = emailView.getText().toString().split("@");
+                String firstValue = temp[0];
+                String[] temp1 = firstValue.split("\\.");
+                email = temp1[0] + temp1[1];
+                progressBar.setVisibility(View.VISIBLE);
+                ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN + "/" + email);
+                ref.addListenerForSingleValueEvent(this);
+            } else {
+                if (!pattern.matcher(checkEmail).matches()) {
+                    emailView.setError("Invalid Email Format");
+                    Toast.makeText(RegisterActivity.this, "Invalid Email Format", Toast.LENGTH_SHORT).show();
+                }
+                if (!StringUtils.isNotBlank(password)) {
+                    passwordView.setError("Cannot Be Blank");
+                    Toast.makeText(RegisterActivity.this, "This field cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+                if (!StringUtils.isNotBlank(name)) {
+                    nameView.setError("Cannot Be Blank");
+                    Toast.makeText(RegisterActivity.this, "This field cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+            }
         } else {
-            if (!StringUtils.isNotBlank(email)) {
                 emailView.setError("Cannot Be Blank");
                 Toast.makeText(RegisterActivity.this, "This field cannot be empty", Toast.LENGTH_SHORT).show();
             }
-            if (!StringUtils.isNotBlank(password)) {
-                passwordView.setError("Cannot Be Blank");
-                Toast.makeText(RegisterActivity.this, "This field cannot be empty", Toast.LENGTH_SHORT).show();
-            }
-            if (!StringUtils.isNotBlank(name)) {
-                nameView.setError("Cannot Be Blank");
-                Toast.makeText(RegisterActivity.this, "This field cannot be empty", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     @Override
@@ -130,9 +139,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             progressBar.setVisibility(View.GONE);
             emailView.setError("Account Already Registered");
             Toast.makeText(RegisterActivity.this, "Account Already Registered.!", Toast.LENGTH_SHORT).show();
-            check = 0;
         } else {
-            su = new StudentUser(emailView.getText().toString(), password, name,Constants.UserTypes.STUDENT,branch);
+            su = new StudentUser(emailView.getText().toString(), password, name, Constants.UserTypes.STUDENT, branch);
             ref.setValue(su);
             progressBar.setVisibility(View.GONE);
             Toast.makeText(RegisterActivity.this, "Registered Successfully..Please Login now", Toast.LENGTH_SHORT).show();

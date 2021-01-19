@@ -6,18 +6,24 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
+import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.helper.SharedPrefHelper;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
-public class StudentApplicationStatusActivity extends AppCompatActivity {
+public class StudentApplicationStatusActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView studentName;
     private TextView studentEmail;
@@ -26,7 +32,11 @@ public class StudentApplicationStatusActivity extends AppCompatActivity {
     private EditText processDate;
     private RadioGroup radioGroup1;
     private RadioGroup radioGroup2;
+    private RadioButton radioButton1;
     private DatePickerDialog datePicker;
+    private Button saveButton;
+    private Button resetButton;
+    private String radioGroup1input;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +49,8 @@ public class StudentApplicationStatusActivity extends AppCompatActivity {
         processDate = findViewById(R.id.process_date);
         radioGroup1 = findViewById(R.id.radioGroup);
         radioGroup2 = findViewById(R.id.radioGroup2);
+        saveButton = findViewById(R.id.save_button);
+        resetButton = findViewById(R.id.reset_button);
 
         setValuesForNonEditable();  //For Setting Values on Non-Editable EditText Views..1
         
@@ -48,6 +60,15 @@ public class StudentApplicationStatusActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 dateDialogInitializer();   //Initializing DateDialog Panel..3
+            }
+        });
+
+        saveButton.setOnClickListener(this);
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }
@@ -83,5 +104,21 @@ public class StudentApplicationStatusActivity extends AppCompatActivity {
         studentBranch.setText(SharedPrefHelper.getEntryfromSharedPreferences(this, Constants.SharedPrefConstants.KEY_BRANCH));
 
         //Later Add getExtra from Intent for companyName
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(radioGroup1.getCheckedRadioButtonId()==-1)
+            Toast.makeText(this, "Please Select a Process Round!!", Toast.LENGTH_SHORT).show();
+        if(processDate.length()==0) {
+            Toast.makeText(this, "Please Select the Process Date!!", Toast.LENGTH_SHORT).show();
+            processDate.setError("Please Select a Date!!");
+        }
+
+//        if(radioGroup1.getCheckedRadioButtonId()!=-1 && processDate.length()!=0)
+//        {
+//            radioGroup1input = (String) ((RadioButton)findViewById(radioGroup1.getCheckedRadioButtonId())).getText();
+//            DatabaseReference ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.)
+//        }
     }
 }
