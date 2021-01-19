@@ -11,8 +11,6 @@
         android:id="@+id/textView"
         android:layout_width="322dp"
         android:layout_height="89dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="20dp"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="#550909"
         android:fontFamily="@font/aldrich"
