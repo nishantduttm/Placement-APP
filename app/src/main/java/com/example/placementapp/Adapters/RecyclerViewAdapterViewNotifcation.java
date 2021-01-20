@@ -1,42 +1,38 @@
 package com.example.placementapp.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Handler;
-import android.util.Log;
+import android.os.Build;
+import android.transition.AutoTransition;
+import android.transition.Fade;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.placementapp.Animation.MyBounceInterpolator;
 import com.example.placementapp.R;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.placementapp.admin.fragments.ViewNotificationList;
 import com.example.placementapp.pojo.Notification;
-import com.example.placementapp.student.StudentApplicationStatusActivity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<RecyclerViewAdapterViewNotifcation.MyViewHolder> implements View.OnClickListener {
 
     private Context context;
     private List<Notification> notificationList;
     private ViewNotificationList fragment;
+    private RelativeLayout hiddenView;
+    private List<MyViewHolder> myViewHolders = new ArrayList<>();
+    private ImageButton imgButton;
 
     public RecyclerViewAdapterViewNotifcation(Context context, List<Notification> notificationList) {
         this.context = context;
@@ -60,10 +56,17 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Notification notification = (Notification) notificationList.get(position);
-        holder.parent.setAnimation(AnimationUtils.loadAnimation(fragment.getContext(), R.anim.fade_scale_animation));
-        holder.companyName.setText(notification.companyName);
-        holder.comapanyDescription.setText(notification.message);
+        holder.cardView.setAnimation(AnimationUtils.loadAnimation(fragment.getContext(), R.anim.fade_scale_animation));
+        holder.companyName.setText(notification.getCompanyName());
+        holder.venue.setText(notification.getVenue());
+        holder.eligibility.setText(notification.getEligibility());
+        holder.salary.setText(notification.getSalary());
+        holder.date.setText(notification.getDate());
         holder.itemView.setTag(position);
+
+
+        myViewHolders.add(position, holder);
+
         holder.itemView.setOnClickListener(this);
     }
 
@@ -72,30 +75,52 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         return notificationList.size();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onClick(View view) {
-        Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);
-        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);
-        myAnim.setInterpolator(interpolator);
-        view.startAnimation(myAnim);
-        int pos = (int) view.getTag();
+//        Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);
+//        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);
+//        myAnim.setInterpolator(interpolator);
+//        view.startAnimation(myAnim);
+//        int pos = (int) view.getTag();
+//
+//        new Handler().postDelayed(() -> {
+//            Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
+//            i.putExtra("companyName", notificationList.get(pos).getCompanyName());
+//            view.getContext().startActivity(i);
+//        }, 1000);
 
-        new Handler().postDelayed(() -> {
-            Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
-            i.putExtra("companyName", notificationList.get(pos).getCompanyName());
-            view.getContext().startActivity(i);
-        }, 1000);
+        int pos = (int) view.getTag();
+        MyViewHolder holder = myViewHolders.get(pos);
+        if (holder.hiddenView.getVisibility() == View.VISIBLE) {
+            TransitionManager.beginDelayedTransition(holder.cardView,
+                    new Fade(Fade.MODE_IN));
+            holder.hiddenView.setVisibility(View.GONE);
+            holder.imageButton.setImageResource(R.drawable.ic_baseline_arrow_drop_down_circle_24);
+        } else {
+            TransitionManager.beginDelayedTransition(holder.cardView,
+                    new AutoTransition());
+            holder.hiddenView.setVisibility(View.VISIBLE);
+            holder.imageButton.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24);
+        }
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView companyName, comapanyDescription;
-        CardView parent;
+        TextView companyName, venue, date, salary, eligibility;
+        CardView cardView;
+        RelativeLayout hiddenView;
+        ImageButton imageButton;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            parent = itemView.findViewById(R.id.parent);
-            companyName = itemView.findViewById(R.id.company_name);
-            comapanyDescription = itemView.findViewById(R.id.company_description);
+            cardView = itemView.findViewById(R.id.base_cardview);
+            hiddenView = itemView.findViewById(R.id.hiddenlayout);
+            companyName = itemView.findViewById(R.id.companyNameView);
+            venue = itemView.findViewById(R.id.venueView);
+            date = itemView.findViewById(R.id.date);
+            salary = itemView.findViewById(R.id.salaryView);
+            eligibility = itemView.findViewById(R.id.eligibilityView);
+            imageButton = itemView.findViewById(R.id.imageButton);
         }
     }
 }

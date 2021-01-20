@@ -20,12 +20,15 @@ import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.pojo.Notification;
 import com.example.placementapp.student.StudentApplicationStatusActivity;
+import com.example.placementapp.utils.StringUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,8 +46,8 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
     private List<Notification> notificationList;
     private ProgressBar progressBar;
 
-    private EditText branchText;
-    private String branch;
+    private TextView branchText;
+    private String branch = null;
 
     public ViewNotificationList() {
         // Required empty public constructor
@@ -56,7 +59,7 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
         notificationList = new ArrayList<>();
         ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_NOTIFICATIONS);
         ref.addListenerForSingleValueEvent(this);
-    }
+}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,7 +68,6 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
         View v=inflater.inflate(R.layout.fragment_notification_list, container, false);
 
         branchText = v.findViewById(R.id.BranchText);
-        branchText.setKeyListener(null);
         branchText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,8 +93,10 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
                         if(spinner.getSelectedItemId()!=0)
                         {
                             branchText.setText(spinner.getSelectedItem().toString());
+                            branch = spinner.getSelectedItem().toString();
                         }
                         dialogInterface.dismiss();
+                        ref.addListenerForSingleValueEvent(ViewNotificationList.this);
                     }
                 });
 
@@ -122,11 +126,20 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
 
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
+        notificationList.clear();
         for(DataSnapshot childsnapshot : snapshot.getChildren())
         {
             Notification notification = childsnapshot.getValue(Notification.class);
-            if(notification!=null)
-                notificationList.add(new Notification(notification.getCompanyName(),notification.getMessage(),notification.getBranch()));
+            if(notification!=null) {
+
+                if(branch != null)
+                {
+                    if(notification.getBranch().equals(branch))
+                        notificationList.add(new Notification(notification.getCompanyName(), notification.getVenue(), notification.getBranch(),notification.getSalary(),notification.getEligibility(),notification.getDate()));
+                }
+                else
+                    notificationList.add(new Notification(notification.getCompanyName(), notification.getVenue(), notification.getBranch(),notification.getSalary(),notification.getEligibility(),notification.getDate()));
+            }
         }
 
         if (progressBar != null) {

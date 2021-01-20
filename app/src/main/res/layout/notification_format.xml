@@ -1,44 +1,242 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/base_cardview"
     android:layout_width="match_parent"
-    android:layout_height="110dp"
+    android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
     android:layout_marginTop="12dp"
     android:layout_marginRight="16dp"
     android:layout_marginBottom="10dp"
     android:padding="5dp"
     app:cardBackgroundColor="#010523"
-    app:cardCornerRadius="8dp">
+    app:cardCornerRadius="8dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="1.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.049">
 
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bgimage4">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fixedlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="108dp"
+                android:layout_height="87dp"
+                android:src="@drawable/indiralogo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.011"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/companyNameView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/arbutus"
+                android:text="Company Name"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.368"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.403" />
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corners"
+                android:src="@drawable/ic_baseline_arrow_drop_down_circle_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.934"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.921" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <RelativeLayout
+            android:id="@+id/hiddenlayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/bgimage4">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fixedlayout"
+            app:layout_constraintVertical_bias="1.0">
 
 
             <TextView
-                android:id="@+id/company_name"
+                android:id="@+id/dateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
-                android:text="text"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Date: "
                 android:textColor="#000000"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/company_description"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/company_name"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="27dp"
-                android:text="textView"
+                android:layout_below="@id/dateTextView"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/rounded_corners"
+                android:backgroundTint="#433993"
+                android:gravity="start"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
+                android:text="17/07/2001"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/salaryTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/date"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Package: "
                 android:textColor="#000000"
-                android:textSize="16sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/salaryView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/salaryTextView"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/rounded_corners"
+                android:backgroundTint="#433993"
+                android:gravity="start"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
+                android:text="7.5 Lacs Per Annum"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/venueTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/salaryView"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Venue: "
+                android:textColor="#000000"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/venueView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/venueTextView"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/rounded_corners"
+                android:backgroundTint="#433993"
+                android:gravity="start"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
+                android:text="Xoriant Office, Chinchwad"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/eligibilityTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/venueView"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Eligibility Criteria: "
+                android:textColor="#000000"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/eligibilityView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/eligibilityTextView"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/rounded_corners"
+                android:backgroundTint="#433993"
+                android:gravity="start"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
+                android:text="Min 7 SGPA and from COMP Department"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/CheckApplicationsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/eligibilityView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/rounded_corners"
+                android:fontFamily="@font/aclonica"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Check Applications"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
 
         </RelativeLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.cardview.widget.CardView>

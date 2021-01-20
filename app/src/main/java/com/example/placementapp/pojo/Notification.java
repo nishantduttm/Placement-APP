@@ -2,13 +2,19 @@ package com.example.placementapp.pojo;
 
 public class Notification {
     public String companyName;
-    public String message;
+    public String venue;
     public String branch;
+    public String salary;
+    public String eligibility;
+    public String date;
 
-    public Notification(String companyName, String message, String branch) {
+    public Notification(String companyName, String venue, String branch, String salary, String eligibility, String date) {
         this.companyName = companyName;
-        this.message = message;
+        this.venue = venue;
         this.branch = branch;
+        this.salary = salary;
+        this.eligibility = eligibility;
+        this.date = date;
     }
 
     public Notification() {
@@ -22,14 +28,37 @@ public class Notification {
         this.companyName = companyName;
     }
 
-    public String getMessage() {
-        return message;
+    public String getVenue() {
+        return venue;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setVenue(String venue) {
+        this.venue = venue;
     }
 
+    public String getSalary() {
+        return salary;
+    }
+
+    public void setSalary(String salary) {
+        this.salary = salary;
+    }
+
+    public String getEligibility() {
+        return eligibility;
+    }
+
+    public void setEligibility(String eligibility) {
+        this.eligibility = eligibility;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String getBranch() {
         return branch;

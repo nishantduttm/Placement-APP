@@ -26,7 +26,7 @@
             android:textSize="20sp"
             android:fontFamily="@font/aclonica"/>
 
-        <EditText
+        <TextView
             android:id="@+id/BranchText"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -39,8 +39,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="60dp"
             android:layout_gravity="start"
-            android:hint="Branch"
-            android:inputType="none"
+            android:text="All Branches"
+            android:gravity="center_vertical"
             android:textSize="20sp"
             android:textColor="#FFFFFF"
             android:textStyle="bold"/>
@@ -67,9 +67,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        android:layout_below="@id/line2"/>
+        android:layout_height="match_parent"
+        android:layout_below="@id/line2"
+        android:layout_marginTop="12dp"
+        android:scrollbars="vertical" />
 
     <ProgressBar
         android:id="@+id/progressBar"

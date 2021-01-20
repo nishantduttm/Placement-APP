@@ -29,7 +29,7 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
     private TextView studentEmail;
     private TextView studentBranch;
     private TextView companyName;
-    private EditText processDate;
+    private TextView processDate;
     private RadioGroup radioGroup1;
     private RadioGroup radioGroup2;
     private RadioButton radioButton1;
