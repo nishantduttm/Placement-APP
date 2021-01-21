@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
+import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.pojo.Notification;
 import com.example.placementapp.student.StudentApplicationStatusActivity;
 import com.example.placementapp.utils.StringUtils;
@@ -46,8 +47,9 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
     private List<Notification> notificationList;
     private ProgressBar progressBar;
 
-    private TextView branchText;
+    private TextView branchText, selectbranchtext, notificationtext;
     private String branch = null;
+    private String userType;
 
     public ViewNotificationList() {
         // Required empty public constructor
@@ -67,7 +69,24 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_notification_list, container, false);
 
-        branchText = v.findViewById(R.id.BranchText);
+        userType = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(),Constants.SharedPrefConstants.KEY_TYPE);
+
+        if(userType.equals(Constants.UserTypes.ADMIN))
+        {
+            branchText = v.findViewById(R.id.BranchText);
+            selectbranchtext = v.findViewById(R.id.selectbranchtext);
+            selectbranchtext.setVisibility(View.VISIBLE);
+            branchText.setVisibility(View.VISIBLE);
+        }
+
+        if(userType.equals(Constants.UserTypes.STUDENT))
+        {
+            notificationtext = v.findViewById(R.id.notificationtext);
+            notificationtext.setVisibility(View.VISIBLE);
+            branch = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(),Constants.SharedPrefConstants.KEY_BRANCH);
+            ref.addListenerForSingleValueEvent(ViewNotificationList.this);
+        }
+
         branchText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
