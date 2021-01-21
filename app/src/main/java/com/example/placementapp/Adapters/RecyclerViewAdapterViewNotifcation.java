@@ -1,21 +1,27 @@
 package com.example.placementapp.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.transition.AutoTransition;
 import android.transition.Fade;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.placementapp.Animation.MyBounceInterpolator;
 import com.example.placementapp.R;
 import com.example.placementapp.admin.fragments.ViewNotificationList;
 import com.example.placementapp.pojo.Notification;
+import com.example.placementapp.student.StudentApplicationStatusActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +39,17 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
     private RelativeLayout hiddenView;
     private List<MyViewHolder> myViewHolders = new ArrayList<>();
     private ImageButton imgButton;
+    private String userType;
 
     public RecyclerViewAdapterViewNotifcation(Context context, List<Notification> notificationList) {
         this.context = context;
         this.notificationList = notificationList;
     }
 
-    public RecyclerViewAdapterViewNotifcation(List<Notification> notificationList, ViewNotificationList fragment) {
+    public RecyclerViewAdapterViewNotifcation(List<Notification> notificationList, ViewNotificationList fragment, String userType ) {
         this.notificationList = notificationList;
         this.fragment = fragment;
+        this.userType = userType;
     }
 
     @NonNull
@@ -78,17 +86,6 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onClick(View view) {
-//        Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);
-//        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);
-//        myAnim.setInterpolator(interpolator);
-//        view.startAnimation(myAnim);
-//        int pos = (int) view.getTag();
-//
-//        new Handler().postDelayed(() -> {
-//            Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
-//            i.putExtra("companyName", notificationList.get(pos).getCompanyName());
-//            view.getContext().startActivity(i);
-//        }, 1000);
 
         int pos = (int) view.getTag();
         MyViewHolder holder = myViewHolders.get(pos);
@@ -103,6 +100,25 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
             holder.hiddenView.setVisibility(View.VISIBLE);
             holder.imageButton.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24);
         }
+
+        holder.applicationsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);
+                MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);
+                myAnim.setInterpolator(interpolator);
+                view.startAnimation(myAnim);
+
+                if(userType.equals("1"))
+                {
+                    new Handler().postDelayed(() -> {
+                        Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
+                        i.putExtra("companyName", notificationList.get(pos).getCompanyName());
+                        view.getContext().startActivity(i);
+                    }, 1000);
+                }
+            }
+        });
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -110,6 +126,7 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         CardView cardView;
         RelativeLayout hiddenView;
         ImageButton imageButton;
+        Button applicationsButton;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -121,6 +138,11 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
             salary = itemView.findViewById(R.id.salaryView);
             eligibility = itemView.findViewById(R.id.eligibilityView);
             imageButton = itemView.findViewById(R.id.imageButton);
+            applicationsButton = itemView.findViewById(R.id.ApplicationsButton);
+            if(userType.equals("0"))
+                applicationsButton.setText("Check Application");
+            else
+                applicationsButton.setText("Fill Application");
         }
     }
 }

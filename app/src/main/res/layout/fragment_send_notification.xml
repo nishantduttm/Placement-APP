@@ -64,7 +64,6 @@
                         android:background="@drawable/rounded_corners"
                         android:backgroundTint="#2B2468"
                         android:ems="10"
-                        android:inputType="none"
                         android:padding="10dp"
                         android:textColor="#FFFFFF"
                         android:layout_marginTop="10dp"

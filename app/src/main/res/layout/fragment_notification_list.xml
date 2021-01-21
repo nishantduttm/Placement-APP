@@ -40,7 +40,7 @@
             android:fontFamily="@font/aldrich"
             android:gravity="center_horizontal"
             android:padding="15dp"
-            android:text="Placement Drive Notification"
+            android:text="Placement Drive Notifications"
             android:textSize="23sp"
             android:visibility="gone"/>
 

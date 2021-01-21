@@ -218,7 +218,7 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/CheckApplicationsButton"
+                android:id="@+id/ApplicationsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/eligibilityView"
@@ -229,7 +229,6 @@
                 android:fontFamily="@font/aclonica"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="Check Applications"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 

@@ -92,7 +92,7 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 processDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
             }
-        },day,month,year);
+        },year,month,day);
         datePicker.show();
     }
 
@@ -102,8 +102,6 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
         studentName.setText(SharedPrefHelper.getEntryfromSharedPreferences(this, Constants.SharedPrefConstants.KEY_NAME));
         studentEmail.setText(SharedPrefHelper.getEntryfromSharedPreferences(this, Constants.SharedPrefConstants.KEY_MAIL));
         studentBranch.setText(SharedPrefHelper.getEntryfromSharedPreferences(this, Constants.SharedPrefConstants.KEY_BRANCH));
-
-        //Later Add getExtra from Intent for companyName
     }
 
     @Override
