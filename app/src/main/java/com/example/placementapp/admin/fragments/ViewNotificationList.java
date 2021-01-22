@@ -154,10 +154,10 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
                 if(branch != null)
                 {
                     if(notification.getBranch().equals(branch))
-                        notificationList.add(new Notification(notification.getCompanyName(), notification.getVenue(), notification.getBranch(),notification.getSalary(),notification.getEligibility(),notification.getDate()));
+                        notificationList.add(new Notification(notification.getTime(),notification.getCompanyName(), notification.getVenue(), notification.getBranch(),notification.getSalary(),notification.getEligibility(),notification.getDate()));
                 }
                 else
-                    notificationList.add(new Notification(notification.getCompanyName(), notification.getVenue(), notification.getBranch(),notification.getSalary(),notification.getEligibility(),notification.getDate()));
+                    notificationList.add(new Notification(notification.getTime(),notification.getCompanyName(), notification.getVenue(), notification.getBranch(),notification.getSalary(),notification.getEligibility(),notification.getDate()));
             }
         }
 

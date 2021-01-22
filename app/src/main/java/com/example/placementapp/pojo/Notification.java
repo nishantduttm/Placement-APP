@@ -1,14 +1,25 @@
 package com.example.placementapp.pojo;
 
 public class Notification {
+    public String time;
     public String companyName;
     public String venue;
     public String branch;
     public String salary;
     public String eligibility;
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
     public String date;
 
-    public Notification(String companyName, String venue, String branch, String salary, String eligibility, String date) {
+    public Notification(String time,String companyName, String venue, String branch, String salary, String eligibility, String date) {
+        this.time = time;
         this.companyName = companyName;
         this.venue = venue;
         this.branch = branch;

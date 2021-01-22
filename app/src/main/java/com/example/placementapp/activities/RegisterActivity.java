@@ -46,12 +46,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public EditText passwordView;
     public EditText emailView;
     public EditText nameView;
+    public EditText prnView;
     public ProgressBar progressBar;
 
     public Spinner dropdown;
 
     public String password;
-    public String email;
+    public String prn;
     public String name;
     public String branch;
     private TextView loginView;
@@ -68,6 +69,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         emailView = findViewById(R.id.email);
         nameView = findViewById(R.id.Name);
         loginView = findViewById(R.id.loginHereView);
+        prnView = findViewById(R.id.PRN);
         dropdown = findViewById(R.id.streamDropdown);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
@@ -98,23 +100,25 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         view.startAnimation(myAnim);
         password = passwordView.getText().toString();
         name = nameView.getText().toString();
-        Pattern pattern = Pattern.compile("[a-zA-Z]+[.]+[a-zA-Z]+@indiraicem.ac.in");
+        prn = prnView.getText().toString();
+        Pattern pattern1 = Pattern.compile("[a-zA-Z]+[.]+[a-zA-Z]+@indiraicem.ac.in");
+        Pattern pattern2 = Pattern.compile("[0-9]{8}+[A-Z]");
         checkEmail = emailView.getText().toString();
 
-        if (StringUtils.isNotBlank(emailView.getText().toString())) {
+        if (StringUtils.isNotBlank(checkEmail) && StringUtils.isNotBlank(prn)) {
 
-            if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(name) && pattern.matcher(checkEmail).matches()) {
-                String[] temp = emailView.getText().toString().split("@");
-                String firstValue = temp[0];
-                String[] temp1 = firstValue.split("\\.");
-                email = temp1[0] + temp1[1];
+            if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(name) && pattern1.matcher(checkEmail).matches() && pattern2.matcher(prn).matches()) {
                 progressBar.setVisibility(View.VISIBLE);
-                ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN + "/" + email);
+                ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN + "/" + prn);
                 ref.addListenerForSingleValueEvent(this);
             } else {
-                if (!pattern.matcher(checkEmail).matches()) {
+                if (!pattern1.matcher(checkEmail).matches()) {
                     emailView.setError("Invalid Email Format");
                     Toast.makeText(RegisterActivity.this, "Invalid Email Format", Toast.LENGTH_SHORT).show();
+                }
+                if (!pattern2.matcher(prn).matches()) {
+                    prnView.setError("Invalid PRN!!Check LowerCase");
+                    Toast.makeText(RegisterActivity.this, "Invalid PRN Format", Toast.LENGTH_SHORT).show();
                 }
                 if (!StringUtils.isNotBlank(password)) {
                     passwordView.setError("Cannot Be Blank");
@@ -126,9 +130,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         } else {
-                emailView.setError("Cannot Be Blank");
-                Toast.makeText(RegisterActivity.this, "This field cannot be empty", Toast.LENGTH_SHORT).show();
-            }
+                if(!StringUtils.isNotBlank(emailView.getText().toString()))
+                {
+                    emailView.setError("Cannot Be Blank");
+                }
+                else
+                {
+                    prnView.setError("Cannot Be Blank");
+                }
+            Toast.makeText(RegisterActivity.this, "This field cannot be empty", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -139,7 +150,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             emailView.setError("Account Already Registered");
             Toast.makeText(RegisterActivity.this, "Account Already Registered.!", Toast.LENGTH_SHORT).show();
         } else {
-            su = new StudentUser(emailView.getText().toString(), password, name, Constants.UserTypes.STUDENT, branch);
+            su = new StudentUser(emailView.getText().toString(), password, name, Constants.UserTypes.STUDENT, branch,prn);
             ref.setValue(su);
             progressBar.setVisibility(View.GONE);
             Toast.makeText(RegisterActivity.this, "Registered Successfully..Please Login now", Toast.LENGTH_SHORT).show();

@@ -8,7 +8,7 @@
     android:background="#010523">
 
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/studentprn"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginLeft="60dp"
@@ -17,10 +17,10 @@
         android:background="@drawable/rounded_corners"
         android:backgroundTint="#433993"
         android:ems="10"
-        android:hint="Enter MailID"
-        android:inputType="textPersonName"
+        android:hint="Enter PRN"
+        android:inputType="text"
         android:textColor="#FFFFFF"
-        android:drawableLeft="@drawable/mail_icon"
+        android:drawableLeft="@drawable/ic_baseline_lock_24"
         android:drawablePadding="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"

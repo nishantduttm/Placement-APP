@@ -168,15 +168,15 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
 
         if (companyNamevalue.length() != 0 && venueValue.length() != 0 && radioGroup.getCheckedRadioButtonId() != -1 && salaryValue.length() != 0 && eligibilityValue.length() != 0 && dateValue.length() != 0) {
 
-            Long time;
+            String time;
 
             int selectedId = radioGroup.getCheckedRadioButtonId();
             radioButton = this.getView().findViewById(selectedId);
             TOPIC = "/topics/" + radioButton.getText();
 
-            time = System.currentTimeMillis();
+            time = String.valueOf(System.currentTimeMillis());
 
-            Notification notif = new Notification(companyNamevalue,venueValue,radioButton.getText().toString(),salaryValue,eligibilityValue,dateValue);
+            Notification notif = new Notification(time,companyNamevalue,venueValue,radioButton.getText().toString(),salaryValue,eligibilityValue,dateValue);
             databaseReference = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_NOTIFICATIONS + "/" + time);
             databaseReference.setValue(notif);
 

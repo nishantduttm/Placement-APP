@@ -13,6 +13,10 @@
             android:title="View All Notifications"/>
     </group>
 
+    <item
+        android:id="@+id/log_out"
+        android:title="Log Out" />
+
 
 
 </menu>

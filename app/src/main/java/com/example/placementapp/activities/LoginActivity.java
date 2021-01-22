@@ -38,13 +38,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public DatabaseReference ref;
     public FirebaseAuth auth;
     public Button loginButton;
-    public EditText emailView;
+    public EditText prnView;
     public EditText passwordView;
     public TextView registerView;
     public ProgressBar progressBar;
-    public String email;
-    public String emailCropped;
     public String password;
+    public String prn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +52,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login);
 
-        String check = SharedPrefHelper.getEntryfromSharedPreferences(this.getApplicationContext(), Constants.SharedPrefConstants.KEY_MAIL);
+        String check = SharedPrefHelper.getEntryfromSharedPreferences(this.getApplicationContext(), Constants.SharedPrefConstants.KEY_PRN);
         if (check != null) {
             Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
             startActivity(intent);
         }
         loginButton = findViewById(R.id.loginButton);
-        emailView = findViewById(R.id.email);
+        prnView = findViewById(R.id.studentprn);
         passwordView = findViewById(R.id.password);
         registerView = findViewById(R.id.registerHereView);
         progressBar = findViewById(R.id.progressBar);
@@ -81,28 +80,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         MyBounceInterpolator interpolator = new MyBounceInterpolator(0.05, 5);
         myAnim.setInterpolator(interpolator);
         view.startAnimation(myAnim);
-        email = emailView.getText().toString();
+        prn = prnView.getText().toString();
         password = passwordView.getText().toString();
-        checkLoginStatus(email, password);
+        checkLoginStatus(prn, password);
     }
 
     private void checkLoginStatus(String username, String password) {
         if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
-            String[] temp = emailView.getText().toString().split("@");
-            String firstValue = temp[0];
-            String[] temp1 = firstValue.split("\\.");
-            emailCropped = temp1[0] + temp1[1];
-            ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN + "/" + emailCropped);
+            ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN + "/" + username);
             progressBar.setVisibility(View.VISIBLE);
             ref.addListenerForSingleValueEvent(this);
         } else {
             if (!StringUtils.isNotBlank(username)) {
-                emailView.setError("Cannot Be Blank");
-                Toast.makeText(LoginActivity.this, "Email or Password cannot be empty", Toast.LENGTH_SHORT).show();
+                prnView.setError("Cannot Be Blank");
+                Toast.makeText(LoginActivity.this, "PRN or Password cannot be empty", Toast.LENGTH_SHORT).show();
             }
             if (!StringUtils.isNotBlank(password)) {
                 passwordView.setError("Cannot Be Blank");
-                Toast.makeText(LoginActivity.this, "Email or Password cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "PRN or Password cannot be empty", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -160,6 +155,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         {
             StudentUser su = (StudentUser) u;
             SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_BRANCH, su.getBranch());
+            SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_PRN, su.getPrn());
         }
         SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_PASSWORD, password);
         SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_MAIL, u.getMail());

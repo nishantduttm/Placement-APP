@@ -1,7 +1,9 @@
 package com.example.placementapp.activities;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.placementapp.admin.fragments.SendNotificationFragment;
 
@@ -29,7 +31,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     private Fragment fragment;
     private String userBranch;
     private String userType;
-
 
 
     @Override
@@ -116,6 +117,10 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 startTransactionFragment(fragment);
                 break;
             }
+            case R.id.log_out:
+            {
+                logOutFromApp();
+            }
 
             default:
                 break;
@@ -123,6 +128,13 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
         this.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void logOutFromApp() {
+        if (SharedPrefHelper.clearEntriesInSharedPrefs(this.getApplicationContext())) {
+            Toast.makeText(this, "Logged Out Successfully", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+        }
     }
 
 

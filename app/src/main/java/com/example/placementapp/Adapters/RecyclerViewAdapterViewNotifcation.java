@@ -114,6 +114,7 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
                     new Handler().postDelayed(() -> {
                         Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
                         i.putExtra("companyName", notificationList.get(pos).getCompanyName());
+                        i.putExtra("companyID",notificationList.get(pos).getTime());
                         view.getContext().startActivity(i);
                     }, 1000);
                 }

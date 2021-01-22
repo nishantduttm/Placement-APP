@@ -69,6 +69,35 @@
                     android:layout_below="@id/student_email_address_view"/>
 
                 <TextView
+                    android:id="@+id/student_prn_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Student PRN:"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@id/student_email_address"/>
+
+                <TextView
+                    android:id="@+id/student_prn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rounded_corners"
+                    android:backgroundTint="#2B2468"
+                    android:hint="Student's PRN"
+                    android:textSize="15sp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="start"
+                    android:padding="10dp"
+                    android:inputType="none"
+                    android:layout_below="@id/student_prn_view"/>
+
+                <TextView
                     android:id="@+id/student_name_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -78,7 +107,7 @@
                     android:textSize="20sp"
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_below="@id/student_email_address"/>
+                    android:layout_below="@id/student_prn"/>
 
                 <TextView
                     android:id="@+id/student_name"
@@ -385,7 +414,7 @@
                     android:text="Upload File"
                     android:textStyle="bold"
                     android:gravity="start"
-                    android:paddingRight="15dp"
+                    android:padding="8dp"
                     android:textColor="#FFFFFF"
                     android:inputType="none"
                     android:layout_below="@id/upload_file_view"

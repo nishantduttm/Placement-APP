@@ -10,7 +10,7 @@ public abstract class Constants {
     public class FirebaseConstants{
         public static final String PATH_LOGIN = "Login";
         public static final String PATH_NOTIFICATIONS = "Notification";
-        public static final String PATH_STUDENTS_APPLIED = "Placement_Drive/Students_Applied/";
+        public static final String PATH_APPLICATIONS = "Applications/";
     }
 
     public class SharedPrefConstants{
@@ -19,6 +19,7 @@ public abstract class Constants {
         public static final String KEY_NAME = "name";
         public static final String KEY_BRANCH = "branch";
         public static final String KEY_MAIL = "mail";
+        public static final String KEY_PRN = "prn";
         public static final String KEY_TYPE = "type";
     }
 }
