@@ -51,6 +51,14 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
     private String branch = null;
     private String userType;
 
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
+    public void setRecyclerView(RecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
+    }
+
     public ViewNotificationList() {
         // Required empty public constructor
     }

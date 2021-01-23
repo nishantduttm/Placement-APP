@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/bgimage3"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.DashboardActivity">
+
+    <TextView
+        android:id="@+id/yourApplicationsTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:layout_marginBottom="5dp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="#550909"
+        android:fontFamily="@font/aldrich"
+        android:gravity="center_horizontal"
+        android:padding="15dp"
+        android:text="Your Applications"
+        android:textSize="23sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/your_applications_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/yourApplicationsTextView"
+        android:layout_marginTop="15dp"
+        android:scrollbars="vertical" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="66dp"
+        android:layout_height="72dp"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>

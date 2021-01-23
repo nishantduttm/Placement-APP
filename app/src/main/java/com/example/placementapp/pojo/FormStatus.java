@@ -4,7 +4,6 @@ import java.util.Objects;
 
 public class FormStatus {
     public String processRound;
-    public String processStatus;
     public String processDate;
 
     public String getProcessRound() {
@@ -15,13 +14,6 @@ public class FormStatus {
         this.processRound = processRound;
     }
 
-    public String getProcessStatus() {
-        return processStatus;
-    }
-
-    public void setProcessStatus(String processStatus) {
-        this.processStatus = processStatus;
-    }
 
     public String getProcessDate() {
         return processDate;
@@ -34,9 +26,8 @@ public class FormStatus {
     public FormStatus() {
     }
 
-    public FormStatus(String processRound, String processStatus, String processDate) {
+    public FormStatus(String processRound, String processDate) {
         this.processRound = processRound;
-        this.processStatus = processStatus;
         this.processDate = processDate;
     }
 

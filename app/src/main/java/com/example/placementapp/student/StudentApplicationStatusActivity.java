@@ -118,7 +118,7 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
             RadioButton radioButton1 = findViewById(radioGroup1.getCheckedRadioButtonId());
             RadioButton radioButton2 = findViewById(radioGroup2.getCheckedRadioButtonId());
 
-            formStatus = new FormStatus(radioButton1.getText().toString(), radioButton2.getText().toString(), processDate.getText().toString());
+            formStatus = new FormStatus(radioButton1.getText().toString(), processDate.getText().toString());
 
             ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + companyId + "/" + studentPRN.getText().toString());
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -127,21 +127,22 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
                     ApplicationForm retrievedForm = snapshot.getValue(ApplicationForm.class);
                     if (retrievedForm == null) {
                         //Get and set object FormStatus into the FormStatusList
-                        retrievedForm = new ApplicationForm(studentEmail.getText().toString(), studentPRN.getText().toString(), studentName.getText().toString(), studentBranch.getText().toString(), companyName.getText().toString(), companyId, new ArrayList<>());
+                        retrievedForm = new ApplicationForm(studentEmail.getText().toString(), studentPRN.getText().toString(), studentName.getText().toString(), studentBranch.getText().toString(), companyName.getText().toString(), companyId, new ArrayList<>(),radioButton2.getText().toString());
                         retrievedForm.getFormStatusList().add(formStatus);
                         ref.setValue(retrievedForm);
                     } else {
                         if (!retrievedForm.getFormStatusList().contains(formStatus)) {
                             retrievedForm.getFormStatusList().add(formStatus);
+                            retrievedForm.setOverallStatus(radioButton2.getText().toString());
                             ref.setValue(retrievedForm);
                         } else {
                             for (FormStatus status : retrievedForm.getFormStatusList()) {
                                 if (status.getProcessRound().equals(formStatus.getProcessRound())) {
                                     status.setProcessDate(formStatus.getProcessDate());
-                                    status.setProcessStatus(formStatus.getProcessStatus());
                                     break;
                                 }
                             }
+                            retrievedForm.setOverallStatus(radioButton2.getText().toString());
                             ref.setValue(retrievedForm);
                         }
                     }
@@ -160,21 +161,22 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
                     ApplicationForm retrievedForm = snapshot.getValue(ApplicationForm.class);
                     if (retrievedForm == null) {
                         //Get and set object FormStatus into the FormStatusList
-                        retrievedForm = new ApplicationForm(studentEmail.getText().toString(), studentPRN.getText().toString(), studentName.getText().toString(), studentBranch.getText().toString(), companyName.getText().toString(), companyId, new ArrayList<>());
+                        retrievedForm = new ApplicationForm(studentEmail.getText().toString(), studentPRN.getText().toString(), studentName.getText().toString(), studentBranch.getText().toString(), companyName.getText().toString(), companyId, new ArrayList<>(), radioButton2.getText().toString());
                         retrievedForm.getFormStatusList().add(formStatus);
                         refApplied.setValue(retrievedForm);
                     } else {
                         if (!retrievedForm.getFormStatusList().contains(formStatus)) {
                             retrievedForm.getFormStatusList().add(formStatus);
+                            retrievedForm.setOverallStatus(radioButton2.getText().toString());
                             refApplied.setValue(retrievedForm);
                         } else {
                             for (FormStatus status : retrievedForm.getFormStatusList()) {
                                 if (status.getProcessRound().equals(formStatus.getProcessRound())) {
                                     status.setProcessDate(formStatus.getProcessDate());
-                                    status.setProcessStatus(formStatus.getProcessStatus());
                                     break;
                                 }
                             }
+                            retrievedForm.setOverallStatus(radioButton2.getText().toString());
                             refApplied.setValue(retrievedForm);
                         }
                     }

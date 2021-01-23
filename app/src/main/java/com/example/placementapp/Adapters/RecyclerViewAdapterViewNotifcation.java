@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.example.placementapp.Animation.MyBounceInterpolator;
 import com.example.placementapp.R;
+import com.example.placementapp.activities.CompanyPopUpActivity;
 import com.example.placementapp.admin.fragments.ViewNotificationList;
 import com.example.placementapp.pojo.Notification;
 import com.example.placementapp.student.StudentApplicationStatusActivity;
@@ -46,7 +47,7 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         this.notificationList = notificationList;
     }
 
-    public RecyclerViewAdapterViewNotifcation(List<Notification> notificationList, ViewNotificationList fragment, String userType ) {
+    public RecyclerViewAdapterViewNotifcation(List<Notification> notificationList, ViewNotificationList fragment, String userType) {
         this.notificationList = notificationList;
         this.fragment = fragment;
         this.userType = userType;
@@ -66,14 +67,8 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         Notification notification = (Notification) notificationList.get(position);
         holder.cardView.setAnimation(AnimationUtils.loadAnimation(fragment.getContext(), R.anim.fade_scale_animation));
         holder.companyName.setText(notification.getCompanyName());
-        holder.venue.setText(notification.getVenue());
-        holder.eligibility.setText(notification.getEligibility());
-        holder.salary.setText(notification.getSalary());
-        holder.date.setText(notification.getDate());
+
         holder.itemView.setTag(position);
-
-
-        myViewHolders.add(position, holder);
 
         holder.itemView.setOnClickListener(this);
     }
@@ -88,39 +83,31 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
     public void onClick(View view) {
 
         int pos = (int) view.getTag();
-        MyViewHolder holder = myViewHolders.get(pos);
-        if (holder.hiddenView.getVisibility() == View.VISIBLE) {
-            TransitionManager.beginDelayedTransition(holder.cardView,
-                    new Fade(Fade.MODE_IN));
-            holder.hiddenView.setVisibility(View.GONE);
-            holder.imageButton.setImageResource(R.drawable.ic_baseline_arrow_drop_down_circle_24);
-        } else {
-            TransitionManager.beginDelayedTransition(holder.cardView,
-                    new AutoTransition());
-            holder.hiddenView.setVisibility(View.VISIBLE);
-            holder.imageButton.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24);
-        }
+        Intent intent = new Intent(view.getContext(), CompanyPopUpActivity.class);
+        intent.putExtra("details", notificationList.get(pos));
+        view.getContext().startActivity(intent);
 
-        holder.applicationsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);
-                MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);
-                myAnim.setInterpolator(interpolator);
-                view.startAnimation(myAnim);
 
-                if(userType.equals("1"))
-                {
-                    new Handler().postDelayed(() -> {
-                        Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
-                        i.putExtra("companyName", notificationList.get(pos).getCompanyName());
-                        i.putExtra("companyID",notificationList.get(pos).getTime());
-                        view.getContext().startActivity(i);
-                    }, 1000);
-                }
-            }
-        });
+//        holder.applicationsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);
+//                MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);
+//                myAnim.setInterpolator(interpolator);
+//                view.startAnimation(myAnim);
+//
+//                if (userType.equals("1")) {
+//                    new Handler().postDelayed(() -> {
+//                        Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
+//                        i.putExtra("companyName", notificationList.get(pos).getCompanyName());
+//                        i.putExtra("companyID", notificationList.get(pos).getTime());
+//                        view.getContext().startActivity(i);
+//                    }, 1000);
+//                }
+//            }
+//        });
     }
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView companyName, venue, date, salary, eligibility;
@@ -132,18 +119,12 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         public MyViewHolder(View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.base_cardview);
-            hiddenView = itemView.findViewById(R.id.hiddenlayout);
             companyName = itemView.findViewById(R.id.companyNameView);
-            venue = itemView.findViewById(R.id.venueView);
-            date = itemView.findViewById(R.id.date);
-            salary = itemView.findViewById(R.id.salaryView);
-            eligibility = itemView.findViewById(R.id.eligibilityView);
-            imageButton = itemView.findViewById(R.id.imageButton);
-            applicationsButton = itemView.findViewById(R.id.ApplicationsButton);
-            if(userType.equals("0"))
-                applicationsButton.setText("Check Application");
-            else
-                applicationsButton.setText("Fill Application");
+//            applicationsButton = itemView.findViewById(R.id.ApplicationsButton);
+//            if (userType.equals("0"))
+//                applicationsButton.setText("Check Application");
+//            else
+//                applicationsButton.setText("Fill Application");
         }
     }
 }

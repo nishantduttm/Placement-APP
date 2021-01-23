@@ -8,6 +8,15 @@ public class ApplicationForm extends GeneralApplicationForm {
     private String companyName;
     private String companyId;
     private List<FormStatus> formStatusList;
+    private String overallStatus;
+
+    public String getOverallStatus() {
+        return overallStatus;
+    }
+
+    public void setOverallStatus(String overallStatus) {
+        this.overallStatus = overallStatus;
+    }
 
     public List<FormStatus> getFormStatusList() {
         return formStatusList;
@@ -17,11 +26,12 @@ public class ApplicationForm extends GeneralApplicationForm {
         this.formStatusList = formStatusList;
     }
 
-    public ApplicationForm(String studentMailID, String studentPRN, String studentName, String studentBranch, String companyName, String companyId, List<FormStatus> formStatusList) {
+    public ApplicationForm(String studentMailID, String studentPRN, String studentName, String studentBranch, String companyName, String companyId, List<FormStatus> formStatusList, String overallStatus) {
         super(studentMailID, studentPRN, studentName, studentBranch);
         this.companyName = companyName;
         this.companyId = companyId;
         this.formStatusList = formStatusList;
+        this.overallStatus = overallStatus;
     }
 
     public ApplicationForm() {

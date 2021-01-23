@@ -1,6 +1,8 @@
 package com.example.placementapp.pojo;
 
-public class Notification {
+import java.io.Serializable;
+
+public class Notification implements Serializable {
     public String time;
     public String companyName;
     public String venue;
