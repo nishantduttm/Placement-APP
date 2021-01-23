@@ -1,15 +1,10 @@
 package com.example.placementapp.student;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -24,12 +19,14 @@ import com.example.placementapp.pojo.FormStatus;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class StudentApplicationStatusActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -41,12 +38,9 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
     private TextView processDate;
     private RadioGroup radioGroup1;
     private RadioGroup radioGroup2;
-    private DatePickerDialog datePicker;
-    private Button saveButton;
-    private Button resetButton;
     private DatabaseReference ref;
-
-    private List<FormStatus> formStatusList = new ArrayList<>();
+    private DatabaseReference refApplied;
+    private FormStatus formStatus;
 
     private String companyId;
 
@@ -62,33 +56,27 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
         processDate = findViewById(R.id.process_date);
         radioGroup1 = findViewById(R.id.radioGroup);
         radioGroup2 = findViewById(R.id.radioGroup2);
-        saveButton = findViewById(R.id.save_button);
-        resetButton = findViewById(R.id.reset_button);
+        Button saveButton = findViewById(R.id.save_button);
+        Button resetButton = findViewById(R.id.reset_button);
 
         setValuesForNonEditable();  //For Setting Values on Non-Editable EditText Views..1
-        
-        getandSetCompanyNameFromIntent();  //For Setting Company Name on EditText..2
+
+        getAndSetCompanyNameFromIntent();  //For Setting Company Name on EditText..2
 
 
-        processDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dateDialogInitializer();   //Initializing DateDialog Panel..3
-            }
+        processDate.setOnClickListener(view -> {
+            dateDialogInitializer();   //Initializing DateDialog Panel..3
         });
 
         saveButton.setOnClickListener(this);
 
-        resetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        resetButton.setOnClickListener(view -> {
 
-            }
         });
     }
 
     //    2
-    private void getandSetCompanyNameFromIntent() {
+    private void getAndSetCompanyNameFromIntent() {
         Intent intent = getIntent();
         companyName.setText(intent.getStringExtra("companyName"));
         companyId = intent.getStringExtra("companyID");
@@ -102,16 +90,11 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
         int month = calendar.get(Calendar.MONTH);
         int year = calendar.get(Calendar.YEAR);
 
-        datePicker = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                processDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-            }
-        },year,month,day);
+        DatePickerDialog datePicker = new DatePickerDialog(this, (view, year1, monthOfYear, dayOfMonth) -> processDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1), year, month, day);
         datePicker.show();
     }
 
-//    1
+    //    1
     private void setValuesForNonEditable() {
 
         studentName.setText(SharedPrefHelper.getEntryfromSharedPreferences(this, Constants.SharedPrefConstants.KEY_NAME));
@@ -122,32 +105,45 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
 
     @Override
     public void onClick(View view) {
-        if(radioGroup1.getCheckedRadioButtonId()==-1)
+        if (radioGroup1.getCheckedRadioButtonId() == -1)
             Toast.makeText(this, "Please Select a Process Round!!", Toast.LENGTH_SHORT).show();
-        if(radioGroup2.getCheckedRadioButtonId()==-1)
+        if (radioGroup2.getCheckedRadioButtonId() == -1)
             Toast.makeText(this, "Please Select a Status!!", Toast.LENGTH_SHORT).show();
-        if(processDate.length()==0) {
+        if (processDate.length() == 0) {
             Toast.makeText(this, "Please Select the Process Date!!", Toast.LENGTH_SHORT).show();
             processDate.setError("Please Select a Date!!");
         }
 
-        if(radioGroup1.getCheckedRadioButtonId()!=-1 && radioGroup2.getCheckedRadioButtonId()!=-1 && processDate.length()!=0)
-        {
+        if (radioGroup1.getCheckedRadioButtonId() != -1 && radioGroup2.getCheckedRadioButtonId() != -1 && processDate.length() != 0) {
             RadioButton radioButton1 = findViewById(radioGroup1.getCheckedRadioButtonId());
             RadioButton radioButton2 = findViewById(radioGroup2.getCheckedRadioButtonId());
 
-            FormStatus formStatus = new FormStatus(radioButton1.getText().toString(),radioButton2.getText().toString(),processDate.getText().toString());
+            formStatus = new FormStatus(radioButton1.getText().toString(), radioButton2.getText().toString(), processDate.getText().toString());
 
-            ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + companyId + "/" + studentPRN.getText().toString() + "/" + radioGroup1.getCheckedRadioButtonId());
-
+            ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + companyId + "/" + studentPRN.getText().toString());
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot==null)
-                    {
-                        ApplicationForm form = snapshot.getValue(ApplicationForm.class);
-                        formStatusList.addAll(form.getFormStatusList());
-                        Toast.makeText(StudentApplicationStatusActivity.this, "Can Access this", Toast.LENGTH_SHORT).show();
+                    ApplicationForm retrievedForm = snapshot.getValue(ApplicationForm.class);
+                    if (retrievedForm == null) {
+                        //Get and set object FormStatus into the FormStatusList
+                        retrievedForm = new ApplicationForm(studentEmail.getText().toString(), studentPRN.getText().toString(), studentName.getText().toString(), studentBranch.getText().toString(), companyName.getText().toString(), companyId, new ArrayList<>());
+                        retrievedForm.getFormStatusList().add(formStatus);
+                        ref.setValue(retrievedForm);
+                    } else {
+                        if (!retrievedForm.getFormStatusList().contains(formStatus)) {
+                            retrievedForm.getFormStatusList().add(formStatus);
+                            ref.setValue(retrievedForm);
+                        } else {
+                            for (FormStatus status : retrievedForm.getFormStatusList()) {
+                                if (status.getProcessRound().equals(formStatus.getProcessRound())) {
+                                    status.setProcessDate(formStatus.getProcessDate());
+                                    status.setProcessStatus(formStatus.getProcessStatus());
+                                    break;
+                                }
+                            }
+                            ref.setValue(retrievedForm);
+                        }
                     }
                 }
 
@@ -157,11 +153,39 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
                 }
             });
 
-            //Get and set object FormStatus into the FormStatusList
-            ApplicationForm form = new ApplicationForm(studentEmail.getText().toString(),studentPRN.getText().toString(),studentName.getText().toString(),studentBranch.getText().toString(),companyName.getText().toString(),companyId,formStatusList);
-            form.getFormStatusList().add(formStatus);
+            refApplied = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPILED_COMPANIES + studentPRN.getText().toString() + "/" + companyId);
+            refApplied.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    ApplicationForm retrievedForm = snapshot.getValue(ApplicationForm.class);
+                    if (retrievedForm == null) {
+                        //Get and set object FormStatus into the FormStatusList
+                        retrievedForm = new ApplicationForm(studentEmail.getText().toString(), studentPRN.getText().toString(), studentName.getText().toString(), studentBranch.getText().toString(), companyName.getText().toString(), companyId, new ArrayList<>());
+                        retrievedForm.getFormStatusList().add(formStatus);
+                        refApplied.setValue(retrievedForm);
+                    } else {
+                        if (!retrievedForm.getFormStatusList().contains(formStatus)) {
+                            retrievedForm.getFormStatusList().add(formStatus);
+                            refApplied.setValue(retrievedForm);
+                        } else {
+                            for (FormStatus status : retrievedForm.getFormStatusList()) {
+                                if (status.getProcessRound().equals(formStatus.getProcessRound())) {
+                                    status.setProcessDate(formStatus.getProcessDate());
+                                    status.setProcessStatus(formStatus.getProcessStatus());
+                                    break;
+                                }
+                            }
+                            refApplied.setValue(retrievedForm);
+                        }
+                    }
+                }
 
-            ref.setValue(form);
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
             Toast.makeText(this, "Application Saved Successfully!", Toast.LENGTH_SHORT).show();
         }
     }

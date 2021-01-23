@@ -1,5 +1,7 @@
 package com.example.placementapp.pojo;
 
+import java.util.Objects;
+
 public class FormStatus {
     public String processRound;
     public String processStatus;
@@ -36,5 +38,15 @@ public class FormStatus {
         this.processRound = processRound;
         this.processStatus = processStatus;
         this.processDate = processDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null)
+            return false;
+        if (!(o instanceof FormStatus))
+            return false;
+        FormStatus second = (FormStatus) o;
+        return this.getProcessRound().equals(second.getProcessRound());
     }
 }

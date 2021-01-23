@@ -1,8 +1,9 @@
 package com.example.placementapp.pojo;
 
 import java.util.List;
+import java.util.Set;
 
-public class ApplicationForm extends GeneralApplicationForm{
+public class ApplicationForm extends GeneralApplicationForm {
 
     private String companyName;
     private String companyId;
@@ -23,9 +24,7 @@ public class ApplicationForm extends GeneralApplicationForm{
         this.formStatusList = formStatusList;
     }
 
-    public ApplicationForm(String companyName, String companyId) {
-        this.companyName = companyName;
-        this.companyId = companyId;
+    public ApplicationForm() {
     }
 
     public String getCompanyName() {

@@ -11,6 +11,7 @@ public abstract class Constants {
         public static final String PATH_LOGIN = "Login";
         public static final String PATH_NOTIFICATIONS = "Notification";
         public static final String PATH_APPLICATIONS = "Applications/";
+        public static final String PATH_APPILED_COMPANIES = "AppliedCompanies/";
     }
 
     public class SharedPrefConstants{
