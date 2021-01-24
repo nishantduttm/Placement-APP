@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/hiddenlayout2"
@@ -8,33 +8,11 @@
     android:background="@drawable/bgimage3"
     android:orientation="vertical">
 
-
-    <TextView
-        android:id="@+id/venueTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/salaryView"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="135dp"
-        android:layout_marginEnd="67dp"
-        android:layout_marginRight="67dp"
-        android:layout_marginBottom="33dp"
-        android:text="Venue: "
-        android:textColor="#000000"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/salaryView"
-        app:layout_constraintEnd_toStartOf="@+id/salaryTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/companyNameHeading"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:layout_marginBottom="50dp"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="#550909"
         android:fontFamily="@font/aldrich"
@@ -42,184 +20,172 @@
         android:padding="15dp"
         android:text="Placement Drive Notifications"
         android:textColor="#FFFFFF"
-        android:textSize="23sp"
-        app:layout_constraintBottom_toTopOf="@+id/dateTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="23sp"/>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/companyNameHeading">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bgimage4">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/dateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="66dp"
-        android:layout_marginLeft="66dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="34dp"
-        android:layout_marginRight="34dp"
-        android:layout_marginBottom="41dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginLeft="10dp"
         android:text="Date: "
         android:textColor="#000000"
         android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/salaryView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/salaryTextView"
-        app:layout_constraintTop_toBottomOf="@+id/companyNameHeading" />
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/companyDateView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/dateTextView"
-        android:layout_marginStart="23dp"
-        android:layout_marginLeft="23dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="34dp"
-        android:layout_marginRight="34dp"
-        android:layout_marginBottom="38dp"
+        android:layout_toRightOf="@id/dateTextView"
+        android:layout_alignBaseline="@id/dateTextView"
         android:background="@drawable/rounded_corners"
+        android:layout_marginLeft="10dp"
         android:backgroundTint="#433993"
-        android:gravity="start"
-        android:paddingLeft="15dp"
+        android:paddingLeft="10dp"
         android:paddingTop="5dp"
         android:paddingRight="15dp"
         android:paddingBottom="5dp"
         android:text="17/07/2001"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/companyVenueView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/eligibilityTextView"
-        app:layout_constraintTop_toBottomOf="@+id/salaryView" />
-
-    <TextView
-        android:id="@+id/salaryTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="57dp"
-        android:layout_marginBottom="34dp"
-        android:text="Package: "
-        android:textColor="#000000"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/salaryView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/companyNameHeading" />
-
-    <TextView
-        android:id="@+id/salaryView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/salaryTextView"
-        android:layout_marginStart="22dp"
-        android:layout_marginLeft="22dp"
-        android:layout_marginTop="34dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/rounded_corners"
-        android:backgroundTint="#433993"
-        android:gravity="start"
-        android:paddingLeft="15dp"
-        android:paddingTop="5dp"
-        android:paddingRight="15dp"
-        android:paddingBottom="5dp"
-        android:text="7.5 Lacs Per Annum asd asd asd asd aSd asd "
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/companyDateView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/venueTextView" />
-
-    <TextView
-        android:id="@+id/companyVenueView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/venueTextView"
-        android:layout_marginTop="38dp"
-        android:layout_marginBottom="36dp"
-        android:background="@drawable/rounded_corners"
-        android:backgroundTint="#433993"
-        android:gravity="start"
-        android:paddingLeft="15dp"
-        android:paddingTop="5dp"
-        android:paddingRight="15dp"
-        android:paddingBottom="5dp"
-        android:text="Xoriant Offfice Chincheadasd aasda asd asda asd asdas dasdasd asd"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/companyEligibilityView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/companyDateView" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/eligibilityTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="17dp"
-        android:layout_marginEnd="23dp"
-        android:layout_marginRight="23dp"
-        android:layout_marginBottom="38dp"
-        android:text="Eligibility Criteria: "
+        android:layout_marginTop="65dp"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@id/dateTextView"
+        android:text="Eligibility: "
         android:textColor="#000000"
         android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/companyVenueView"
-        app:layout_constraintEnd_toStartOf="@+id/companyDateView"
-        app:layout_constraintStart_toStartOf="@+id/salaryView"
-        app:layout_constraintTop_toBottomOf="@+id/salaryView" />
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/companyEligibilityView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/eligibilityTextView"
-        android:layout_marginStart="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="7dp"
-        android:layout_marginRight="7dp"
-        android:layout_marginBottom="13dp"
+        android:layout_below="@id/companyDateView"
         android:background="@drawable/rounded_corners"
+        android:layout_toRightOf="@id/eligibilityTextView"
+        android:layout_alignBaseline="@id/eligibilityTextView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="12dp"
         android:backgroundTint="#433993"
-        android:gravity="start"
-        android:paddingLeft="15dp"
+        android:paddingLeft="10dp"
         android:paddingTop="5dp"
         android:paddingRight="15dp"
         android:paddingBottom="5dp"
         android:text="Min 7 SGPA and from COMP Department"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/ApplicationsButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/companyVenueView" />
+        android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/ApplicationsButton"
+    <TextView
+        android:id="@+id/salaryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="36dp"
-        android:layout_marginBottom="169dp"
-        android:background="@drawable/rounded_corners"
-        android:fontFamily="@font/aclonica"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:text="Boi"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/companyEligibilityView" />
+        android:layout_marginTop="65dp"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@id/companyEligibilityView"
+        android:text="Package: "
+        android:textColor="#000000"
+        android:textSize="22sp"
+        android:textStyle="bold"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/salaryView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/companyEligibilityView"
+        android:layout_toRightOf="@id/salaryTextView"
+        android:layout_alignBaseline="@id/salaryTextView"
+        android:background="@drawable/rounded_corners"
+        android:layout_marginLeft="15dp"
+        android:backgroundTint="#433993"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="5dp"
+        android:text="7.5 Lacs Per Annum"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/venueTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="65dp"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@id/salaryTextView"
+        android:text="Venue: "
+        android:textColor="#000000"
+        android:textSize="22sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/companyVenueView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/salaryView"
+        android:layout_toRightOf="@id/venueTextView"
+        android:layout_alignBaseline="@id/venueTextView"
+        android:background="@drawable/rounded_corners"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#433993"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="5dp"
+        android:text="Xoriant Offfice Chincheadasd aasda asd asda asd asdas dasdasd asd"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+
+                <Button
+                    android:id="@+id/ApplicationsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/venueTextView"
+                    android:layout_marginTop="90dp"
+                    android:layout_marginBottom="80dp"
+                    android:background="@drawable/rounded_corners"
+                    android:fontFamily="@font/aclonica"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="Fill Application"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
