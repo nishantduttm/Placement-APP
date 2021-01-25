@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.placementapp.PlacementDashboardFragment;
 import com.example.placementapp.admin.fragments.SendNotificationFragment;
 
 import com.example.placementapp.R;
@@ -109,6 +110,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         int id = item.getItemId();
 
         switch (id){
+            case R.id.nav_placementdashboard:
+            {
+                toolbar.setTitle("Placement Dashboard");
+                fragment = new PlacementDashboardFragment();
+                startTransactionFragment(fragment);
+                break;
+            }
+
             case R.id.admin_navigation_drawer_send_notifications:
             {
                 toolbar.setTitle("Send Notifications");

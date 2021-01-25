@@ -2,7 +2,6 @@ package com.example.placementapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
@@ -21,11 +20,7 @@ import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.pojo.StudentUser;
-import com.example.placementapp.pojo.User;
 import com.example.placementapp.utils.StringUtils;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -130,14 +125,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         } else {
-                if(!StringUtils.isNotBlank(emailView.getText().toString()))
-                {
-                    emailView.setError("Cannot Be Blank");
-                }
-                else
-                {
-                    prnView.setError("Cannot Be Blank");
-                }
+            if (!StringUtils.isNotBlank(emailView.getText().toString())) {
+                emailView.setError("Cannot Be Blank");
+            } else {
+                prnView.setError("Cannot Be Blank");
+            }
             Toast.makeText(RegisterActivity.this, "This field cannot be empty", Toast.LENGTH_SHORT).show();
         }
     }
@@ -150,7 +142,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             emailView.setError("Account Already Registered");
             Toast.makeText(RegisterActivity.this, "Account Already Registered.!", Toast.LENGTH_SHORT).show();
         } else {
-            su = new StudentUser(emailView.getText().toString(), password, name, Constants.UserTypes.STUDENT, branch,prn);
+            su = new StudentUser(emailView.getText().toString(), password, name, Constants.UserTypes.STUDENT, branch, prn);
             ref.setValue(su);
             progressBar.setVisibility(View.GONE);
             Toast.makeText(RegisterActivity.this, "Registered Successfully..Please Login now", Toast.LENGTH_SHORT).show();

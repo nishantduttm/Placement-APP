@@ -21,9 +21,6 @@ import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.pojo.StudentUser;
 import com.example.placementapp.pojo.User;
 import com.example.placementapp.utils.StringUtils;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,8 +49,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login);
 
-        String check = SharedPrefHelper.getEntryfromSharedPreferences(this.getApplicationContext(), Constants.SharedPrefConstants.KEY_PRN);
-        if (check != null) {
+        String sharedPref_PRN = SharedPrefHelper.getEntryfromSharedPreferences(this.getApplicationContext(), Constants.SharedPrefConstants.KEY_PRN);
+        if (sharedPref_PRN != null) {
             Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
             startActivity(intent);
         }
@@ -106,36 +103,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onDataChange(@NonNull DataSnapshot snapshot) {
         StudentUser su = snapshot.getValue(StudentUser.class);
         if (su != null) {
-            if (checkPassword(password,su)) {
+            if (checkPassword(password, su)) {
                 progressBar.setVisibility(View.GONE);
                 storeInSharedPref(su);
                 Toast.makeText(LoginActivity.this, "Logged In Successfully", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 progressBar.setVisibility(View.GONE);
                 passwordView.setError("Incorrect Password!");
                 Toast.makeText(LoginActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
             }
-        }
-        else
-        {
+        } else {
             User u = snapshot.getValue(User.class);
-            if(u!=null)
-            {
-                if(checkPassword(password,u))
-                {
+            if (u != null) {
+                if (checkPassword(password, u)) {
                     progressBar.setVisibility(View.GONE);
                     storeInSharedPref(u);
                     Toast.makeText(LoginActivity.this, "Logged In Successfully", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                } else {
                     progressBar.setVisibility(View.GONE);
                     passwordView.setError("Incorrect Password!");
                     Toast.makeText(LoginActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
                 }
-            }
-            else{
+            } else {
                 progressBar.setVisibility(View.GONE);
                 Toast.makeText(LoginActivity.this, "No Account Registered! Please Register First!", Toast.LENGTH_SHORT).show();
             }
@@ -143,16 +132,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public boolean checkPassword(String password, User u)
-    {
+    public boolean checkPassword(String password, User u) {
         return password.equals(u.getPassword());
     }
 
-    public void storeInSharedPref(User u)
-    {
+    public void storeInSharedPref(User u) {
         SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_NAME, u.getName());
-        if(u instanceof StudentUser)
-        {
+        if (u instanceof StudentUser) {
             StudentUser su = (StudentUser) u;
             SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_BRANCH, su.getBranch());
             SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_PRN, su.getPrn());
@@ -164,8 +150,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    public void redirectIntent()
-    {
+    public void redirectIntent() {
         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
         startActivity(intent);
     }
