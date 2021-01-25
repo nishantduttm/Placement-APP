@@ -152,7 +152,6 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
         notificationList.clear();
-
         GenericTypeIndicator<Map<String, Notification>> t = new GenericTypeIndicator<Map<String, Notification>>() {};
         Map<String, Notification> notifications = snapshot.getValue(t);
 

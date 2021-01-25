@@ -37,6 +37,9 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
     private Context context;
     private List<Notification> notificationList;
     private ViewNotificationList fragment;
+    private RelativeLayout hiddenView;
+    private List<MyViewHolder> myViewHolders = new ArrayList<>();
+    private ImageButton imgButton;
     private String userType;
 
     public RecyclerViewAdapterViewNotifcation(Context context, List<Notification> notificationList) {
@@ -64,10 +67,8 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         Notification notification = (Notification) notificationList.get(position);
         holder.cardView.setAnimation(AnimationUtils.loadAnimation(fragment.getContext(), R.anim.fade_scale_animation));
         holder.companyName.setText(notification.getCompanyName());
-        holder.applicantsCountView.setText(notification.getCount());
 
         holder.itemView.setTag(position);
-
         holder.itemView.setOnClickListener(this);
     }
 
@@ -84,22 +85,45 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         Intent intent = new Intent(view.getContext(), CompanyPopUpActivity.class);
         intent.putExtra("details", notificationList.get(pos));
         view.getContext().startActivity(intent);
+
+
+//        holder.applicationsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);
+//                MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);
+//                myAnim.setInterpolator(interpolator);
+//                view.startAnimation(myAnim);
+//
+//                if (userType.equals("1")) {
+//                    new Handler().postDelayed(() -> {
+//                        Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
+//                        i.putExtra("companyName", notificationList.get(pos).getCompanyName());
+//                        i.putExtra("companyID", notificationList.get(pos).getTime());
+//                        view.getContext().startActivity(i);
+//                    }, 1000);
+//                }
+//            }
+//        });
     }
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView companyName,applicantsCountView,applicantsCountTextView;
+        TextView companyName, venue, date, salary, eligibility;
         CardView cardView;
+        RelativeLayout hiddenView;
+        ImageButton imageButton;
+        Button applicationsButton;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.base_cardview);
-            applicantsCountTextView = itemView.findViewById(R.id.applicantsCountTextView);
-            applicantsCountView = itemView.findViewById(R.id.applicantsCountView);
             companyName = itemView.findViewById(R.id.companyNameView);
-
-            applicantsCountTextView.setVisibility(View.VISIBLE);
-            applicantsCountView.setVisibility(View.VISIBLE);
+//            applicationsButton = itemView.findViewById(R.id.ApplicationsButton);
+//            if (userType.equals("0"))
+//                applicationsButton.setText("Check Application");
+//            else
+//                applicationsButton.setText("Fill Application");
         }
     }
 }

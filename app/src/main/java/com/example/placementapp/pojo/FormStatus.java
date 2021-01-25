@@ -1,10 +1,32 @@
 package com.example.placementapp.pojo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.Objects;
 
-public class FormStatus {
+public class FormStatus implements Parcelable {
     public String processRound;
     public String processDate;
+
+
+    protected FormStatus(Parcel in) {
+        processRound = in.readString();
+        processDate = in.readString();
+    }
+
+    public static final Creator<FormStatus> CREATOR = new Creator<FormStatus>() {
+        @Override
+        public FormStatus createFromParcel(Parcel in) {
+            return new FormStatus(in);
+        }
+
+        @Override
+        public FormStatus[] newArray(int size) {
+            return new FormStatus[size];
+        }
+    };
 
     public String getProcessRound() {
         return processRound;
@@ -39,5 +61,16 @@ public class FormStatus {
             return false;
         FormStatus second = (FormStatus) o;
         return this.getProcessRound().equals(second.getProcessRound());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(processRound);
+        dest.writeString(processDate);
     }
 }
