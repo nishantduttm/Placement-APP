@@ -127,7 +127,7 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
                     ApplicationForm retrievedForm = snapshot.getValue(ApplicationForm.class);
                     if (retrievedForm == null) {
                         //Get and set object FormStatus into the FormStatusList
-                        retrievedForm = new ApplicationForm(studentEmail.getText().toString(), studentPRN.getText().toString(), studentName.getText().toString(), studentBranch.getText().toString(), companyName.getText().toString(), companyId, new ArrayList<>(),radioButton2.getText().toString());
+                        retrievedForm = new ApplicationForm(studentEmail.getText().toString(), studentPRN.getText().toString(), studentName.getText().toString(), studentBranch.getText().toString(), companyName.getText().toString(), companyId, new ArrayList<>(), radioButton2.getText().toString());
                         retrievedForm.getFormStatusList().add(formStatus);
                         ref.setValue(retrievedForm);
                     } else {

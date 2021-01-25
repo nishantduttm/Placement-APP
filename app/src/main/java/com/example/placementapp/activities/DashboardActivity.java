@@ -1,5 +1,7 @@
 package com.example.placementapp.activities;
+
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -25,66 +27,80 @@ import androidx.fragment.app.Fragment;
 
 public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    //FOR DESIGN
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-
-    private Fragment fragment;
-    private String userBranch;
-    private String userType;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_navigation_drawer);
+
         // 6 - Configure all views
         this.configureToolBar();
-
         this.configureDrawerLayout();
-
         this.configureNavigationView();
 
-        userType = SharedPrefHelper.getEntryfromSharedPreferences(this.getApplicationContext(),Constants.SharedPrefConstants.KEY_TYPE);
+        new DashboardTaskRunner().execute();
+    }
 
-        if (userType.equals(Constants.UserTypes.ADMIN)) {
-            navigationView.getMenu().removeGroup(R.id.student_group);
+    private class DashboardTaskRunner extends AsyncTask<String, String, Constants.NavigationView> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
 
-        if(userType.equals(Constants.UserTypes.STUDENT)) {
-            userBranch = SharedPrefHelper.getEntryfromSharedPreferences(this.getApplicationContext(), Constants.SharedPrefConstants.KEY_BRANCH);
-            if(userBranch!=null)
-                allotStudentsToTopic(userBranch);
-            else
-                Log.i("Info","Null");
-            navigationView.getMenu().removeGroup(R.id.admin_group);
+        @Override
+        protected void onPostExecute(Constants.NavigationView navigationViewEnum) {
+            switch (navigationViewEnum) {
+                case ADMIN:
+                    navigationView.getMenu().removeGroup(R.id.student_group);
+                    break;
+
+                case STUDENT:
+                    navigationView.getMenu().removeGroup(R.id.admin_group);
+                    break;
+            }
+            startTransactionFragment(new PlacementDashboardFragment());
+        }
+
+        @Override
+        protected Constants.NavigationView doInBackground(String... strings) {
+            String userType = SharedPrefHelper.getEntryfromSharedPreferences(DashboardActivity.this.getApplicationContext(), Constants.SharedPrefConstants.KEY_TYPE);
+            if (userType.equals(Constants.UserTypes.ADMIN)) {
+                return Constants.NavigationView.ADMIN;
+            }
+
+            if (userType.equals(Constants.UserTypes.STUDENT)) {
+                String userBranch = SharedPrefHelper.getEntryfromSharedPreferences(DashboardActivity.this.getApplicationContext(), Constants.SharedPrefConstants.KEY_BRANCH);
+                if (userBranch != null)
+                    allotStudentsToTopic(userBranch);
+                else
+                    Log.i("Info", "Null");
+                return Constants.NavigationView.STUDENT;
+            }
+            return null;
         }
     }
 
     private void allotStudentsToTopic(String userBranch) {
-        switch(userBranch)
-        {
-            case "Comp":
-            {
+        switch (userBranch) {
+            case "Comp": {
                 FirebaseMessaging.getInstance().subscribeToTopic("Comp");
                 break;
             }
 
-            case "Mech":
-            {
+            case "Mech": {
                 FirebaseMessaging.getInstance().subscribeToTopic("Mech");
                 break;
             }
 
-            case "Civil":
-            {
+            case "Civil": {
                 FirebaseMessaging.getInstance().subscribeToTopic("Civil");
                 break;
             }
 
-            case "MechSandwich":
-            {
+            case "MechSandwich": {
                 FirebaseMessaging.getInstance().subscribeToTopic("MechSandwich");
                 break;
             }
@@ -105,42 +121,37 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-
         // 4 - Handle Navigation Item Click
         int id = item.getItemId();
 
-        switch (id){
-            case R.id.nav_placementdashboard:
-            {
+        Fragment fragment;
+        switch (id) {
+            case R.id.nav_placementdashboard: {
                 toolbar.setTitle("Placement Dashboard");
                 fragment = new PlacementDashboardFragment();
                 startTransactionFragment(fragment);
                 break;
             }
 
-            case R.id.admin_navigation_drawer_send_notifications:
-            {
+            case R.id.admin_navigation_drawer_send_notifications: {
                 toolbar.setTitle("Send Notifications");
                 fragment = new SendNotificationFragment();
                 startTransactionFragment(fragment);
                 break;
             }
-            case R.id.navigation_drawer_view_all_notifications:
-            {
+            case R.id.navigation_drawer_view_all_notifications: {
                 toolbar.setTitle("View All Notifications");
                 fragment = new ViewNotificationList();
                 startTransactionFragment(fragment);
                 break;
             }
-            case R.id.student_navigation_drawer_view_applications:
-            {
+            case R.id.student_navigation_drawer_view_applications: {
                 toolbar.setTitle("View Your Applications");
                 fragment = new ViewYourApplicationsList();
                 startTransactionFragment(fragment);
                 break;
             }
-            case R.id.log_out:
-            {
+            case R.id.log_out: {
                 logOutFromApp();
             }
 
@@ -159,32 +170,28 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         }
     }
 
-
-    // ---------------------
-    // CONFIGURATION
-    // ---------------------
-
     // 1 - Configure Toolbar
-    private void configureToolBar(){
-        this.toolbar = (Toolbar) findViewById(R.id.activity_admin_main_toolbar);
+    private void configureToolBar() {
+        this.toolbar = findViewById(R.id.activity_admin_main_toolbar);
         setSupportActionBar(toolbar);
     }
 
     // 2 - Configure Drawer Layout
-    private void configureDrawerLayout(){
-        this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    private void configureDrawerLayout() {
+        this.drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
 
     // 3 - Configure NavigationView
-    private void configureNavigationView(){
-        this.navigationView = (NavigationView) findViewById(R.id.nav_view);
+    private void configureNavigationView() {
+        this.navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-    private void startTransactionFragment(Fragment fragment){
-        if (!fragment.isVisible() && fragment!=null){
+
+    private void startTransactionFragment(Fragment fragment) {
+        if (fragment != null && !fragment.isVisible()) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.activity_main_frame_layout, fragment).commit();
         }

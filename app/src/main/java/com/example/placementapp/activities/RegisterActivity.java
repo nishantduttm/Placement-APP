@@ -1,6 +1,7 @@
 package com.example.placementapp.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -21,7 +22,6 @@ import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.pojo.StudentUser;
 import com.example.placementapp.utils.StringUtils;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,7 +35,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, ValueEventListener, AdapterView.OnItemSelectedListener {
 
-    public FirebaseAuth auth;
+    private static final String[] dropdownArray = {"Select Stream", "Comp", "Mech", "Civil", "MechSandwich"};
+
     public DatabaseReference ref;
     public Button RegisterButton;
     public EditText passwordView;
@@ -50,6 +51,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public String prn;
     public String name;
     public String branch;
+    private String email = null;
     private TextView loginView;
     public StudentUser su;
 
@@ -68,27 +70,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         dropdown = findViewById(R.id.streamDropdown);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
-        auth = FirebaseAuth.getInstance();
 
-
-        String[] dropdownArray = {"Select Stream", "Comp", "Mech", "Civil", "MechSandwich"};
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, R.layout.spinnert_row, R.id.streamDropdown, dropdownArray);
         dropdown.setAdapter(adapter);
         dropdown.setOnItemSelectedListener(this);
 
-        loginView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
-                startActivity(i);
-            }
+        loginView.setOnClickListener(view -> {
+            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(i);
         });
+
         RegisterButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        String checkEmail = null;
         Animation myAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce_animation);
         MyBounceInterpolator interpolator = new MyBounceInterpolator(0.05, 5);
         myAnim.setInterpolator(interpolator);
@@ -98,16 +94,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         prn = prnView.getText().toString();
         Pattern pattern1 = Pattern.compile("[a-zA-Z]+[.]+[a-zA-Z]+@indiraicem.ac.in");
         Pattern pattern2 = Pattern.compile("[0-9]{8}+[A-Z]");
-        checkEmail = emailView.getText().toString();
+        email = emailView.getText().toString();
 
-        if (StringUtils.isNotBlank(checkEmail) && StringUtils.isNotBlank(prn)) {
-
-            if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(name) && pattern1.matcher(checkEmail).matches() && pattern2.matcher(prn).matches()) {
+        if (StringUtils.isNotBlank(email) && StringUtils.isNotBlank(prn)) {
+            if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(name) && pattern1.matcher(email).matches() && pattern2.matcher(prn).matches()) {
                 progressBar.setVisibility(View.VISIBLE);
                 ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN + "/" + prn);
                 ref.addListenerForSingleValueEvent(this);
             } else {
-                if (!pattern1.matcher(checkEmail).matches()) {
+                if (!pattern1.matcher(email).matches()) {
                     emailView.setError("Invalid Email Format");
                     Toast.makeText(RegisterActivity.this, "Invalid Email Format", Toast.LENGTH_SHORT).show();
                 }
@@ -134,26 +129,53 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    public class RegisterTaskRunner extends AsyncTask<DataSnapshot, String, Constants.StatusEnum> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Constants.StatusEnum doInBackground(DataSnapshot... snapshots) {
+            return validateRegister(snapshots[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Constants.StatusEnum result) {
+            progressBar.setVisibility(View.GONE);
+            switch (result) {
+                case INVALID:
+                    emailView.setError("Account Already Registered");
+                    Toast.makeText(RegisterActivity.this, "Account Already Registered.!", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case SUCCESS:
+                    Toast.makeText(RegisterActivity.this, "Registered Successfully..Please Login now", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+                    startActivity(i);
+            }
+        }
+    }
+
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
+        new RegisterTaskRunner().execute(snapshot);
+    }
+
+    public Constants.StatusEnum validateRegister(DataSnapshot snapshot) {
         su = snapshot.getValue(StudentUser.class);
         if (su != null) {
-            progressBar.setVisibility(View.GONE);
-            emailView.setError("Account Already Registered");
-            Toast.makeText(RegisterActivity.this, "Account Already Registered.!", Toast.LENGTH_SHORT).show();
+            return Constants.StatusEnum.INVALID;
         } else {
-            su = new StudentUser(emailView.getText().toString(), password, name, Constants.UserTypes.STUDENT, branch, prn);
+            su = new StudentUser(email, password, name, Constants.UserTypes.STUDENT, branch, prn);
             ref.setValue(su);
-            progressBar.setVisibility(View.GONE);
-            Toast.makeText(RegisterActivity.this, "Registered Successfully..Please Login now", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
-            startActivity(i);
+            return Constants.StatusEnum.SUCCESS;
         }
     }
 
     @Override
     public void onCancelled(@NonNull DatabaseError error) {
-
     }
 
     @Override
@@ -166,6 +188,5 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
     }
 }

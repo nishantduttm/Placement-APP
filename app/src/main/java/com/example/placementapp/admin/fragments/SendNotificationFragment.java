@@ -1,6 +1,7 @@
 package com.example.placementapp.admin.fragments;
 
 import android.app.DatePickerDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -11,21 +12,16 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.placementapp.Animation.MyBounceInterpolator;
 import com.example.placementapp.R;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.placementapp.admin.helper.MySingleton;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
@@ -35,12 +31,10 @@ import com.google.firebase.database.DatabaseReference;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,20 +43,13 @@ import androidx.fragment.app.Fragment;
 public class SendNotificationFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
 
     private EditText companyName;
-    private RadioButton radioButton;
     private RadioGroup radioGroup;
     private EditText salary;
     private EditText venue;
     private EditText eligibility;
-    private Button sendNotificationButton;
-
-    private DatabaseReference databaseReference;
 
     private TextView date;
-    private DatePickerDialog datePicker;
 
-    final private String FCM_API = "https://fcm.googleapis.com/fcm/send";
-    final private String serverKey = "key=" + "AAAAcbbeSbc:APA91bEO3kDXcK8khLywCXAMuV7516Fttdp5re70s80NzaZrQ-F6QUIxUemg87qZCrAc3nX7f9hitS8uA69dMvW6MfC7AhyQDLnaxC9tUGJBg61aCeaHuyjAvbIy5N2Kg0LRMx87VPOp";
     final private String contentType = "application/json";
     final String TAG = "NOTIFICATION TAG";
 
@@ -94,12 +81,7 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         date = view.findViewById(R.id.dateView);
 
         //Intializing Date TextView
-        date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dateDialogInitializer(view);
-            }
-        });
+        date.setOnClickListener(this::dateDialogInitializer);
 
         if (venue != null) {
             venue.setVerticalScrollBarEnabled(true);
@@ -120,7 +102,7 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         }
 
         radioGroup = view.findViewById(R.id.radioGroup);
-        sendNotificationButton = view.findViewById(R.id.sendNotificationButton);
+        Button sendNotificationButton = view.findViewById(R.id.sendNotificationButton);
         sendNotificationButton.setOnClickListener(this);
     }
 
@@ -133,9 +115,9 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         int presentYear = calendar.get(Calendar.YEAR);
 
 
-        datePicker = new DatePickerDialog(view.getContext(), (view1, year, monthOfYear, dayOfMonth) -> {
+        DatePickerDialog datePicker = new DatePickerDialog(view.getContext(), (view1, year, monthOfYear, dayOfMonth) -> {
             date.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-        },presentYear,presentMonth,presentDay);
+        }, presentYear, presentMonth, presentDay);
         datePicker.show();
     }
 
@@ -153,81 +135,98 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         String dateValue = date.getText().toString();
         String eligibilityValue = eligibility.getText().toString();
 
-        if (companyNamevalue.length() == 0)
-            companyName.setError("This field cannot be empty");
-        if (venueValue.length() == 0)
-            venue.setError("This field cannot be empty");
-        if (salaryValue.length() == 0)
-            salary.setError("This field cannot be empty");
-        if (dateValue.length() == 0)
-            date.setError("This field cannot be empty");
-        if (eligibilityValue.length() == 0)
-            eligibility.setError("This field cannot be empty");
-        if(radioGroup.getCheckedRadioButtonId() == -1)
-            Toast.makeText(this.getContext(), "Please SELECT A BRANCH!!", Toast.LENGTH_SHORT).show();
 
-        if (companyNamevalue.length() != 0 && venueValue.length() != 0 && radioGroup.getCheckedRadioButtonId() != -1 && salaryValue.length() != 0 && eligibilityValue.length() != 0 && dateValue.length() != 0) {
-
-            String time;
-
-            int selectedId = radioGroup.getCheckedRadioButtonId();
-            radioButton = this.getView().findViewById(selectedId);
+        if (isInputValid(companyNamevalue, venueValue, salaryValue, dateValue, eligibilityValue)) {
+            String time = String.valueOf(System.currentTimeMillis());
+            RadioButton radioButton = this.getView().findViewById(radioGroup.getCheckedRadioButtonId());
             TOPIC = "/topics/" + radioButton.getText();
-
-            time = String.valueOf(System.currentTimeMillis());
-
-            Notification notif = new Notification(time,companyNamevalue,venueValue,radioButton.getText().toString(),salaryValue,eligibilityValue,dateValue,"0");
-            databaseReference = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_NOTIFICATIONS + "/" + time);
-            databaseReference.setValue(notif);
-
-            NOTIFICATION_TITLE = companyNamevalue;
-            NOTIFICATION_MESSAGE = "Placement Drive Scheduled";
-
-            JSONObject notification = new JSONObject();
-            JSONObject notifcationBody = new JSONObject();
-            try {
-                notifcationBody.put("title", NOTIFICATION_TITLE);
-                notifcationBody.put("message", NOTIFICATION_MESSAGE);
-
-                notification.put("to", TOPIC);
-                notification.put("data", notifcationBody);
-            } catch (JSONException e) {
-                Log.e(TAG, "onCreate: " + e.getMessage());
-            }
-            sendNotification(notification);
+            Notification notification = new Notification(time, companyNamevalue, venueValue, radioButton.getText().toString(), salaryValue, eligibilityValue, dateValue, "0");
+            new SendNotifyRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, notification);
         }
     }
 
-    private void sendNotification(JSONObject notification) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(FCM_API, notification,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Toast.makeText(getContext(), "Notification Sent Successfully", Toast.LENGTH_SHORT).show();
-                        Log.i(TAG, "onResponse: " + response.toString());
-                        companyName.setText("");
-                        venue.setText("");
-                        eligibility.setText("");
-                        salary.setText("");
-                        date.setText("");
-                    }
+    private boolean isInputValid(String companyNameValue, String venueValue, String salaryValue, String dateValue, String eligibilityValue) {
+        boolean isValid = true;
+        if (companyNameValue.isEmpty()) {
+            companyName.setError("This field cannot be empty");
+            isValid = false;
+        }
+        if (venueValue.isEmpty()) {
+            venue.setError("This field cannot be empty");
+            isValid = false;
+        }
+        if (salaryValue.isEmpty()) {
+            salary.setError("This field cannot be empty");
+            isValid = false;
+        }
+        if (dateValue.isEmpty()) {
+            date.setError("This field cannot be empty");
+            isValid = false;
+        }
+        if (eligibilityValue.isEmpty()) {
+            eligibility.setError("This field cannot be empty");
+            isValid = false;
+        }
+        if (radioGroup.getCheckedRadioButtonId() == -1) {
+            Toast.makeText(this.getContext(), "Please SELECT A BRANCH!!", Toast.LENGTH_SHORT).show();
+            isValid = false;
+        }
+        return isValid;
+    }
+
+    private class SendNotifyRunner extends AsyncTask<Notification, String, AtomicReference<Constants.StatusEnum>> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected AtomicReference<Constants.StatusEnum> doInBackground(Notification... notifications) {
+            Notification notificationBean = notifications[0];
+            DatabaseReference databaseReference = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_NOTIFICATIONS + "/" + notificationBean.getTime());
+            databaseReference.setValue(notificationBean);
+
+            NOTIFICATION_TITLE = notificationBean.getCompanyName();
+            NOTIFICATION_MESSAGE = "Placement Drive Scheduled";
+
+            JSONObject notification = new JSONObject();
+            JSONObject notificationBody = new JSONObject();
+            try {
+                notificationBody.put("title", NOTIFICATION_TITLE);
+                notificationBody.put("message", NOTIFICATION_MESSAGE);
+
+                notification.put("to", TOPIC);
+                notification.put("data", notificationBody);
+            } catch (JSONException e) {
+                Log.e(TAG, "onCreate: " + e.getMessage());
+            }
+            return sendNotification(notification);
+        }
+    }
+
+    private AtomicReference<Constants.StatusEnum> sendNotification(JSONObject notification) {
+        AtomicReference<Constants.StatusEnum> responseCode = new AtomicReference<>();
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Constants.FirebaseConstants.FCM_API, notification,
+                response -> {
+                    Toast.makeText(getContext(), "Notification Sent Successfully", Toast.LENGTH_SHORT).show();
+                    companyName.setText("");
+                    venue.setText("");
+                    eligibility.setText("");
+                    salary.setText("");
+                    date.setText("");
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getContext(), "Request error", Toast.LENGTH_LONG).show();
-                    }
-                }) {
+                error -> Toast.makeText(getContext(), "Request error", Toast.LENGTH_LONG).show()) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("Authorization", serverKey);
+                params.put("Authorization", Constants.FirebaseConstants.FIREBASE_SERVER_KEY);
                 params.put("Content-Type", contentType);
                 return params;
             }
         };
 
         MySingleton.getInstance(getContext()).addToRequestQueue(jsonObjectRequest);
+        return responseCode;
     }
 
     @Override
@@ -239,9 +238,3 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         return false;
     }
 }
-
-
-
-
-
-

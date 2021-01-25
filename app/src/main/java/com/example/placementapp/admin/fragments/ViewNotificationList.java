@@ -1,15 +1,9 @@
 package com.example.placementapp.admin.fragments;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
-
-import com.example.placementapp.Adapters.RecyclerViewAdapterViewNotifcation;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +14,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.placementapp.Adapters.RecyclerViewAdapterViewNotifcation;
 import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.pojo.Notification;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,27 +32,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class ViewNotificationList extends Fragment implements ValueEventListener, AdapterView.OnItemSelectedListener {
 
+    private static final List<String> list;
+    private static final Cache<String, List<Notification>> notificationCache;
+    private static final String NOTIFICATIONS_CACHE_KEY = "CACHE_NOTIFICATIONS_";
+
+    static {
+        list = new ArrayList<>();
+        list.add("Choose a Stream");
+        list.add("Comp");
+        list.add("Mech");
+        list.add("Civil");
+        list.add("MechSandwich");
+        notificationCache = CacheBuilder.newBuilder().build();
+    }
+
+    private static List<Notification> notificationList;
+
     private DatabaseReference ref;
-    private DatabaseReference ref2;
     private RecyclerView recyclerView;
     private RecyclerViewAdapterViewNotifcation notificationAdapter;
-    private List<Notification> notificationList;
     private ProgressBar progressBar;
 
-    private TextView branchText, selectbranchtext, notificationtext;
-    private String branch = null;
-    private String userType;
+    private TextView branchText;
+    private String branch = "ALL";
     private long count;
-
-    public RecyclerView getRecyclerView() {
-        return recyclerView;
-    }
-
-    public void setRecyclerView(RecyclerView recyclerView) {
-        this.recyclerView = recyclerView;
-    }
 
     public ViewNotificationList() {
         // Required empty public constructor
@@ -64,134 +71,157 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        notificationList = new ArrayList<>();
-        ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_NOTIFICATIONS);
-        ref.addListenerForSingleValueEvent(this);
-}
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        View v=inflater.inflate(R.layout.fragment_notification_list, container, false);
+        View v = inflater.inflate(R.layout.fragment_notification_list, container, false);
 
-        userType = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(),Constants.SharedPrefConstants.KEY_TYPE);
+        notificationList = new ArrayList<>();
+        String userType = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(), Constants.SharedPrefConstants.KEY_TYPE);
+        this.ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_NOTIFICATIONS);
 
-        if(userType.equals(Constants.UserTypes.ADMIN))
-        {
-            branchText = v.findViewById(R.id.BranchText);
-            selectbranchtext = v.findViewById(R.id.selectbranchtext);
-            selectbranchtext.setVisibility(View.VISIBLE);
-            branchText.setVisibility(View.VISIBLE);
-            branchText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                    View v = inflater.inflate(R.layout.spinner_dialog,container,false);
-                    builder.setTitle("Select Branch to Filter");
-                    Spinner spinner = v.findViewById(R.id.spinner);
-
-                    List<String> list = new ArrayList<>();
-                    list.add("Choose a Stream");
-                    list.add("Comp");
-                    list.add("Mech");
-                    list.add("Civil");
-                    list.add("MechSandwich");
-
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(v.getContext(),android.R.layout.simple_spinner_item,list);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinner.setAdapter(adapter);
-
-                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            if(spinner.getSelectedItemId()!=0)
-                            {
-                                branchText.setText(spinner.getSelectedItem().toString());
-                                branch = spinner.getSelectedItem().toString();
-                            }
-                            dialogInterface.dismiss();
-                            ref.addListenerForSingleValueEvent(ViewNotificationList.this);
-                        }
-                    });
-
-                    builder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-
-                    builder.setView(v);
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                }
-            });
+        if (userType.equals(Constants.UserTypes.ADMIN)) {
+            initializeViewForAdmin(inflater, container, v);
+        } else if (userType.equals(Constants.UserTypes.STUDENT)) {
+            initializeViewForStudent(v);
         }
-
-        if(userType.equals(Constants.UserTypes.STUDENT))
-        {
-            notificationtext = v.findViewById(R.id.notificationtext);
-            notificationtext.setVisibility(View.VISIBLE);
-            branch = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(),Constants.SharedPrefConstants.KEY_BRANCH);
-            ref.addListenerForSingleValueEvent(ViewNotificationList.this);
-        }
-
 
         recyclerView = v.findViewById(R.id.recycler_view);
         recyclerView.setVisibility(View.GONE);
         progressBar = v.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
-        notificationAdapter = new RecyclerViewAdapterViewNotifcation(notificationList,this, userType);
+        notificationAdapter = new RecyclerViewAdapterViewNotifcation(notificationList, this, userType);
         RecyclerView.LayoutManager manager = new GridLayoutManager(getContext(), 1);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(notificationAdapter);
+
+        //getDataFromCache(ref);
+
         return v;
     }
 
-    @Override
-    public void onDataChange(@NonNull DataSnapshot snapshot) {
-        notificationList.clear();
+    private void initializeViewForAdmin(LayoutInflater inflater, ViewGroup container, View v) {
+        branchText = v.findViewById(R.id.BranchText);
+        TextView selectBranchText = v.findViewById(R.id.selectbranchtext);
+        selectBranchText.setVisibility(View.VISIBLE);
+        branchText.setVisibility(View.VISIBLE);
+        branchText.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+            View v1 = inflater.inflate(R.layout.spinner_dialog, container, false);
+            builder.setTitle("Select Branch to Filter");
+            Spinner spinner = v1.findViewById(R.id.spinner);
 
-        GenericTypeIndicator<Map<String, Notification>> t = new GenericTypeIndicator<Map<String, Notification>>() {};
-        Map<String, Notification> notifications = snapshot.getValue(t);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(v1.getContext(), android.R.layout.simple_spinner_item, list);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
 
-        if(notifications == null)
-            Toast.makeText(this.getContext(), "No Notifications Yet! Stay Tuned!", Toast.LENGTH_SHORT).show();
-        else {
+            builder.setPositiveButton("Ok", (dialogInterface, i) -> {
+                if (spinner.getSelectedItemId() != 0) {
+                    branchText.setText(spinner.getSelectedItem().toString());
+                    branch = spinner.getSelectedItem().toString();
+                }
+                dialogInterface.dismiss();
+                this.ref.addListenerForSingleValueEvent(this);
+                //getDataFromCache(ref);
+            });
 
-            for (Map.Entry<String, Notification> entry : notifications.entrySet()) {
-                Notification notification = entry.getValue();
-                ref2 = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + entry.getKey());
-                ref2.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        count = snapshot.getChildrenCount();
-                    }
+            builder.setNegativeButton("Dismiss", (dialogInterface, i) -> dialogInterface.dismiss());
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+            builder.setView(v1);
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        });
+        this.ref.addListenerForSingleValueEvent(this);
+    }
 
-                    }
-                });
-                notification.setCount(String.valueOf(count));
-                Toast.makeText(this.getContext(), notification.getCount(), Toast.LENGTH_SHORT).show();
-
-                if (notification != null) {
-
-                    if (branch != null) {
-                        if (notification.getBranch().equals(branch))
-                            notificationList.add(new Notification(notification.getTime(), notification.getCompanyName(), notification.getVenue(), notification.getBranch(), notification.getSalary(), notification.getEligibility(), notification.getDate(), notification.getCount()));
-                    } else
-                        notificationList.add(new Notification(notification.getTime(), notification.getCompanyName(), notification.getVenue(), notification.getBranch(), notification.getSalary(), notification.getEligibility(), notification.getDate(), notification.getCount()));
+    private List<Notification> getDataFromCache(DatabaseReference ref) {
+        List<Notification> notifications = null;
+        //List<Notification> notifications = notificationCache.getIfPresent(NOTIFICATIONS_CACHE_KEY + branch);
+        //notifications == null || notifications.isEmpty()
+        if (true) {
+            this.ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_NOTIFICATIONS);
+            this.ref.addListenerForSingleValueEvent(this);
+        } else {
+            notificationList.clear();
+            for (Notification notify : notifications) {
+                if (!branch.equals("ALL")) {
+                    if (notify.getBranch().equals(branch))
+                        notificationList.add(notify);
+                } else {
+                    notificationList.add(notify);
                 }
             }
+            Log.i("STATS AFTER: ", String.valueOf(notifications.size()));
+            displayList();
+        }
+        return notificationList;
+    }
+
+    private void initializeViewForStudent(View v) {
+        TextView notificationText = v.findViewById(R.id.notificationtext);
+        notificationText.setVisibility(View.VISIBLE);
+        branch = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(), Constants.SharedPrefConstants.KEY_BRANCH);
+        ref.addListenerForSingleValueEvent(ViewNotificationList.this);
+    }
+
+    public class ViewNotificationTaskRunner extends AsyncTask<DataSnapshot, String, List<Notification>> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
 
-        if (progressBar != null) {
-            progressBar.setVisibility(View.GONE);
+        @Override
+        protected List<Notification> doInBackground(DataSnapshot... snapshots) {
+            DataSnapshot snapshot = snapshots[0];
+            notificationList.clear();
+            Map<String, Notification> notifications = snapshot.getValue(new GenericTypeIndicator<Map<String, Notification>>() {
+            });
+
+            if (notifications == null)
+                showToast("No Notifications Yet! Stay Tuned!");
+            else {
+                for (Map.Entry<String, Notification> entry : notifications.entrySet()) {
+                    Notification notification = entry.getValue();
+                    if (!branch.equals("ALL")) {
+                        if (notification.getBranch().equals(branch))
+                            notificationList.add(notification);
+                    } else {
+                        notificationList.add(notification);
+                    }
+                    DatabaseReference refToGetCount = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + entry.getKey());
+                    refToGetCount.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            int count = (int) snapshot.getChildrenCount();
+                            notification.setCount(String.valueOf(count));
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            showToast("System Error..Please try again later");
+                        }
+                    });
+                }
+            }
+            return null;
         }
 
+        @Override
+        protected void onPostExecute(List<Notification> notifications) {
+           /* if (!notificationList.isEmpty()) {
+                notificationCache.cleanUp();
+                notificationCache.put(NOTIFICATIONS_CACHE_KEY + branch, notificationList);
+            }*/
+            displayList();
+        }
+    }
+
+    private void displayList() {
+        progressBar.setVisibility(View.GONE);
         if (recyclerView != null && notificationAdapter != null) {
             recyclerView.setVisibility(View.VISIBLE);
             recyclerView.setAdapter(notificationAdapter);
@@ -200,8 +230,13 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
     }
 
     @Override
-    public void onCancelled(@NonNull DatabaseError error) {
+    public void onDataChange(@NonNull DataSnapshot snapshot) {
+        new ViewNotificationTaskRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, snapshot);
+    }
 
+    @Override
+    public void onCancelled(@NonNull DatabaseError error) {
+        showToast("System Error..Please try again later");
     }
 
     @Override
@@ -212,5 +247,11 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    private void showToast(String toastMsg) {
+        if (this.getActivity() != null) {
+            this.getActivity().runOnUiThread(() -> Toast.makeText(this.getContext(), toastMsg, Toast.LENGTH_SHORT).show());
+        }
     }
 }

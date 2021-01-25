@@ -3,6 +3,7 @@ package com.example.placementapp.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.animation.Animation;
@@ -10,6 +11,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.example.placementapp.R;
+import com.example.placementapp.constants.Constants;
+import com.example.placementapp.helper.SharedPrefHelper;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -29,9 +32,26 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent i = new Intent(SplashActivity.this, LoginActivity.class);
-                startActivity(i);
+                new SplashAsyncTaskRunner().execute();
             }
-        }, 2000);
+        }, 1000);
+    }
+
+    private class SplashAsyncTaskRunner extends AsyncTask<String, String, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            return SharedPrefHelper.getEntryfromSharedPreferences(SplashActivity.this.getApplicationContext(), Constants.SharedPrefConstants.KEY_PRN);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Intent intent = null;
+            if (result != null) {
+                intent = new Intent(SplashActivity.this, DashboardActivity.class);
+            } else {
+                intent = new Intent(SplashActivity.this, LoginActivity.class);
+            }
+            startActivity(intent);
+        }
     }
 }
