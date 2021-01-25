@@ -22,7 +22,7 @@ public class ApplicationForm  extends GeneralApplicationForm implements Parcelab
         companyName = in.readString();
         companyId = in.readString();
         overallStatus = in.readString();
-        
+
         in.readTypedList(formStatusList, FormStatus.CREATOR);
     }
 
