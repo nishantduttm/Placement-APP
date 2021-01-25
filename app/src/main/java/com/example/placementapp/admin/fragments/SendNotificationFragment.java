@@ -176,7 +176,7 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
 
             time = String.valueOf(System.currentTimeMillis());
 
-            Notification notif = new Notification(time,companyNamevalue,venueValue,radioButton.getText().toString(),salaryValue,eligibilityValue,dateValue);
+            Notification notif = new Notification(time,companyNamevalue,venueValue,radioButton.getText().toString(),salaryValue,eligibilityValue,dateValue,"0");
             databaseReference = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_NOTIFICATIONS + "/" + time);
             databaseReference.setValue(notif);
 

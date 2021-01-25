@@ -11,6 +11,7 @@ import com.example.placementapp.R;
 import com.example.placementapp.admin.fragments.ViewNotificationList;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.SharedPrefHelper;
+import com.example.placementapp.student.ViewYourApplicationsList;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -46,12 +47,17 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
         userType = SharedPrefHelper.getEntryfromSharedPreferences(this.getApplicationContext(),Constants.SharedPrefConstants.KEY_TYPE);
 
+        if (userType.equals(Constants.UserTypes.ADMIN)) {
+            navigationView.getMenu().removeGroup(R.id.student_group);
+        }
+
         if(userType.equals(Constants.UserTypes.STUDENT)) {
             userBranch = SharedPrefHelper.getEntryfromSharedPreferences(this.getApplicationContext(), Constants.SharedPrefConstants.KEY_BRANCH);
             if(userBranch!=null)
                 allotStudentsToTopic(userBranch);
             else
                 Log.i("Info","Null");
+            navigationView.getMenu().removeGroup(R.id.admin_group);
         }
     }
 
@@ -110,10 +116,17 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 startTransactionFragment(fragment);
                 break;
             }
-            case R.id.admin_navigation_drawer_view_all_notifications:
+            case R.id.navigation_drawer_view_all_notifications:
             {
                 toolbar.setTitle("View All Notifications");
                 fragment = new ViewNotificationList();
+                startTransactionFragment(fragment);
+                break;
+            }
+            case R.id.student_navigation_drawer_view_applications:
+            {
+                toolbar.setTitle("View Your Applications");
+                fragment = new ViewYourApplicationsList();
                 startTransactionFragment(fragment);
                 break;
             }

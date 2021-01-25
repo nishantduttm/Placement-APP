@@ -21,10 +21,10 @@ import com.example.placementapp.Animation.MyBounceInterpolator;
 import com.example.placementapp.R;
 import com.example.placementapp.activities.CompanyPopUpActivity;
 import com.example.placementapp.admin.fragments.ViewNotificationList;
+import com.example.placementapp.admin.fragments.ViewStudentsList;
 import com.example.placementapp.pojo.ApplicationForm;
 import com.example.placementapp.pojo.Notification;
 import com.example.placementapp.student.StudentApplicationStatusActivity;
-import com.example.placementapp.student.ViewYourApplicationsList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,27 +34,20 @@ import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RecyclerViewAdapterViewYourApplications extends RecyclerView.Adapter<RecyclerViewAdapterViewYourApplications.MyViewHolder> implements View.OnClickListener {
+public class RecyclerViewAdapterViewStudents extends RecyclerView.Adapter<RecyclerViewAdapterViewStudents.MyViewHolder> implements View.OnClickListener {
 
     private Context context;
-    private List<ApplicationForm> applicationFormList;
-    private ViewYourApplicationsList fragment;
+    private List<ApplicationForm> studentList;
 
-
-    public RecyclerViewAdapterViewYourApplications(Context context, List<ApplicationForm> applicationFormList) {
+    public RecyclerViewAdapterViewStudents(List<ApplicationForm> studentList, Context context) {
+        this.studentList = studentList;
         this.context = context;
-        this.applicationFormList = applicationFormList;
-    }
-
-    public RecyclerViewAdapterViewYourApplications(List<ApplicationForm> applicationFormList, ViewYourApplicationsList fragment) {
-        this.applicationFormList = applicationFormList;
-        this.fragment = fragment;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View itemView = LayoutInflater.from(fragment.getContext())
+        View itemView = LayoutInflater.from(context)
                 .inflate(R.layout.notification_format, viewGroup, false);
         return new MyViewHolder(itemView);
     }
@@ -62,8 +55,8 @@ public class RecyclerViewAdapterViewYourApplications extends RecyclerView.Adapte
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        ApplicationForm applicationForm = (ApplicationForm) applicationFormList.get(position);
-        holder.cardView.setAnimation(AnimationUtils.loadAnimation(fragment.getContext(), R.anim.fade_scale_animation));
+        ApplicationForm applicationForm = (ApplicationForm) studentList.get(position);
+        holder.cardView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_scale_animation));
         holder.companyName.setText(applicationForm.getCompanyName());
         holder.statusView.setText(applicationForm.getOverallStatus());
 
@@ -74,15 +67,18 @@ public class RecyclerViewAdapterViewYourApplications extends RecyclerView.Adapte
 
     @Override
     public int getItemCount() {
-        return applicationFormList.size();
+        return studentList.size();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onClick(View view) {
 
-        int pos = (int) view.getTag();
-
-    }
+//        int pos = (int) view.getTag();
+//        Intent intent = new Intent(view.getContext(), CompanyPopUpActivity.class);
+//        intent.putExtra("details", studentList.get(pos));
+//        view.getContext().startActivity(intent);
+}
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -92,9 +88,9 @@ public class RecyclerViewAdapterViewYourApplications extends RecyclerView.Adapte
         public MyViewHolder(View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.base_cardview);
-            companyName = itemView.findViewById(R.id.companyNameView);
             statusTextView = itemView.findViewById(R.id.statusTextView);
             statusView = itemView.findViewById(R.id.statusView);
+            companyName = itemView.findViewById(R.id.companyNameView);
 
             statusTextView.setVisibility(View.VISIBLE);
             statusView.setVisibility(View.VISIBLE);

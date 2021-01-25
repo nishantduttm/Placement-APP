@@ -2,7 +2,6 @@ package com.example.placementapp.admin.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.placementapp.Adapters.RecyclerViewAdapterViewNotifcation;
@@ -16,8 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,20 +25,20 @@ import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.pojo.Notification;
-import com.example.placementapp.student.StudentApplicationStatusActivity;
-import com.example.placementapp.utils.StringUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class ViewNotificationList extends Fragment implements ValueEventListener, AdapterView.OnItemSelectedListener {
 
     private DatabaseReference ref;
+    private DatabaseReference ref2;
     private RecyclerView recyclerView;
     private RecyclerViewAdapterViewNotifcation notificationAdapter;
     private List<Notification> notificationList;
@@ -50,6 +47,7 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
     private TextView branchText, selectbranchtext, notificationtext;
     private String branch = null;
     private String userType;
+    private long count;
 
     public RecyclerView getRecyclerView() {
         return recyclerView;
@@ -154,18 +152,39 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
         notificationList.clear();
-        for(DataSnapshot childsnapshot : snapshot.getChildren())
-        {
-            Notification notification = childsnapshot.getValue(Notification.class);
-            if(notification!=null) {
 
-                if(branch != null)
-                {
-                    if(notification.getBranch().equals(branch))
-                        notificationList.add(new Notification(notification.getTime(),notification.getCompanyName(), notification.getVenue(), notification.getBranch(),notification.getSalary(),notification.getEligibility(),notification.getDate()));
+        GenericTypeIndicator<Map<String, Notification>> t = new GenericTypeIndicator<Map<String, Notification>>() {};
+        Map<String, Notification> notifications = snapshot.getValue(t);
+
+        if(notifications == null)
+            Toast.makeText(this.getContext(), "No Notifications Yet! Stay Tuned!", Toast.LENGTH_SHORT).show();
+        else {
+
+            for (Map.Entry<String, Notification> entry : notifications.entrySet()) {
+                Notification notification = entry.getValue();
+                ref2 = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + entry.getKey());
+                ref2.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        count = snapshot.getChildrenCount();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                notification.setCount(String.valueOf(count));
+                Toast.makeText(this.getContext(), notification.getCount(), Toast.LENGTH_SHORT).show();
+
+                if (notification != null) {
+
+                    if (branch != null) {
+                        if (notification.getBranch().equals(branch))
+                            notificationList.add(new Notification(notification.getTime(), notification.getCompanyName(), notification.getVenue(), notification.getBranch(), notification.getSalary(), notification.getEligibility(), notification.getDate(), notification.getCount()));
+                    } else
+                        notificationList.add(new Notification(notification.getTime(), notification.getCompanyName(), notification.getVenue(), notification.getBranch(), notification.getSalary(), notification.getEligibility(), notification.getDate(), notification.getCount()));
                 }
-                else
-                    notificationList.add(new Notification(notification.getTime(),notification.getCompanyName(), notification.getVenue(), notification.getBranch(),notification.getSalary(),notification.getEligibility(),notification.getDate()));
             }
         }
 

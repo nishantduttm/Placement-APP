@@ -9,6 +9,15 @@ public class Notification implements Serializable {
     public String branch;
     public String salary;
     public String eligibility;
+    public String count;
+
+    public String getCount() {
+        return count;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
+    }
 
     public String getTime() {
         return time;
@@ -20,7 +29,7 @@ public class Notification implements Serializable {
 
     public String date;
 
-    public Notification(String time,String companyName, String venue, String branch, String salary, String eligibility, String date) {
+    public Notification(String time,String companyName, String venue, String branch, String salary, String eligibility, String date, String count) {
         this.time = time;
         this.companyName = companyName;
         this.venue = venue;
@@ -28,6 +37,7 @@ public class Notification implements Serializable {
         this.salary = salary;
         this.eligibility = eligibility;
         this.date = date;
+        this.count = count;
     }
 
     public Notification() {

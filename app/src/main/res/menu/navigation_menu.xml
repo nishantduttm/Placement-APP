@@ -3,15 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/admin_group">
         <item
             android:id="@+id/admin_navigation_drawer_send_notifications"
             android:title="Send Notifications"/>
-
-        <item
-            android:id="@+id/admin_navigation_drawer_view_all_notifications"
-            android:title="View All Notifications"/>
     </group>
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/student_group">
+        <item
+            android:id="@+id/student_navigation_drawer_view_applications"
+            android:title="View Your Applications"/>
+    </group>
+
+    <item
+        android:id="@+id/navigation_drawer_view_all_notifications"
+        android:title="View All Notifications"/>
 
     <item
         android:id="@+id/log_out"

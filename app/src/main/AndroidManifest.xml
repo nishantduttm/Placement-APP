@@ -17,7 +17,11 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activities.CompanyPopUpActivity"
             android:theme="@style/AppTheme.CustomTheme"></activity>
+
         <activity android:name=".student.StudentApplicationStatusActivity" />
+
+        <activity android:name=".admin.fragments.ViewStudentsList"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activities.LoginActivity"
             android:theme="@style/AppTheme">
