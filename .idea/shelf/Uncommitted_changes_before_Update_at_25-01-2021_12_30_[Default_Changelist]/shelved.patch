@@ -1,0 +1,696 @@
+Index: app/src/main/java/com/example/placementapp/Adapters/RecyclerViewAdapterViewNotifcation.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.placementapp.Adapters;\r\n\r\nimport android.content.Context;\r\nimport android.content.Intent;\r\nimport android.os.Build;\r\nimport android.os.Handler;\r\nimport android.transition.AutoTransition;\r\nimport android.transition.Fade;\r\nimport android.transition.TransitionManager;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.view.animation.Animation;\r\nimport android.view.animation.AnimationUtils;\r\nimport android.widget.Button;\r\nimport android.widget.ImageButton;\r\nimport android.widget.RelativeLayout;\r\nimport android.widget.TextView;\r\n\r\nimport com.example.placementapp.Animation.MyBounceInterpolator;\r\nimport com.example.placementapp.R;\r\nimport com.example.placementapp.activities.CompanyPopUpActivity;\r\nimport com.example.placementapp.admin.fragments.ViewNotificationList;\r\nimport com.example.placementapp.pojo.Notification;\r\nimport com.example.placementapp.student.StudentApplicationStatusActivity;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.RequiresApi;\r\nimport androidx.cardview.widget.CardView;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\npublic class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<RecyclerViewAdapterViewNotifcation.MyViewHolder> implements View.OnClickListener {\r\n\r\n    private Context context;\r\n    private List<Notification> notificationList;\r\n    private ViewNotificationList fragment;\r\n    private RelativeLayout hiddenView;\r\n    private List<MyViewHolder> myViewHolders = new ArrayList<>();\r\n    private ImageButton imgButton;\r\n    private String userType;\r\n\r\n    public RecyclerViewAdapterViewNotifcation(Context context, List<Notification> notificationList) {\r\n        this.context = context;\r\n        this.notificationList = notificationList;\r\n    }\r\n\r\n    public RecyclerViewAdapterViewNotifcation(List<Notification> notificationList, ViewNotificationList fragment, String userType) {\r\n        this.notificationList = notificationList;\r\n        this.fragment = fragment;\r\n        this.userType = userType;\r\n    }\r\n\r\n    @NonNull\r\n    @Override\r\n    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {\r\n        View itemView = LayoutInflater.from(fragment.getContext())\r\n                .inflate(R.layout.notification_format, viewGroup, false);\r\n        return new MyViewHolder(itemView);\r\n    }\r\n\r\n\r\n    @Override\r\n    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {\r\n        Notification notification = (Notification) notificationList.get(position);\r\n        holder.cardView.setAnimation(AnimationUtils.loadAnimation(fragment.getContext(), R.anim.fade_scale_animation));\r\n        holder.companyName.setText(notification.getCompanyName());\r\n\r\n        holder.itemView.setTag(position);\r\n\r\n        holder.itemView.setOnClickListener(this);\r\n    }\r\n\r\n    @Override\r\n    public int getItemCount() {\r\n        return notificationList.size();\r\n    }\r\n\r\n    @RequiresApi(api = Build.VERSION_CODES.KITKAT)\r\n    @Override\r\n    public void onClick(View view) {\r\n\r\n        int pos = (int) view.getTag();\r\n        Intent intent = new Intent(view.getContext(), CompanyPopUpActivity.class);\r\n        intent.putExtra(\"details\", notificationList.get(pos));\r\n        view.getContext().startActivity(intent);\r\n\r\n\r\n//        holder.applicationsButton.setOnClickListener(new View.OnClickListener() {\r\n//            @Override\r\n//            public void onClick(View view) {\r\n//                Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);\r\n//                MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);\r\n//                myAnim.setInterpolator(interpolator);\r\n//                view.startAnimation(myAnim);\r\n//\r\n//                if (userType.equals(\"1\")) {\r\n//                    new Handler().postDelayed(() -> {\r\n//                        Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);\r\n//                        i.putExtra(\"companyName\", notificationList.get(pos).getCompanyName());\r\n//                        i.putExtra(\"companyID\", notificationList.get(pos).getTime());\r\n//                        view.getContext().startActivity(i);\r\n//                    }, 1000);\r\n//                }\r\n//            }\r\n//        });\r\n    }\r\n\r\n\r\n    public class MyViewHolder extends RecyclerView.ViewHolder {\r\n        TextView companyName, venue, date, salary, eligibility;\r\n        CardView cardView;\r\n        RelativeLayout hiddenView;\r\n        ImageButton imageButton;\r\n        Button applicationsButton;\r\n\r\n        public MyViewHolder(View itemView) {\r\n            super(itemView);\r\n            cardView = itemView.findViewById(R.id.base_cardview);\r\n            companyName = itemView.findViewById(R.id.companyNameView);\r\n//            applicationsButton = itemView.findViewById(R.id.ApplicationsButton);\r\n//            if (userType.equals(\"0\"))\r\n//                applicationsButton.setText(\"Check Application\");\r\n//            else\r\n//                applicationsButton.setText(\"Fill Application\");\r\n        }\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/placementapp/Adapters/RecyclerViewAdapterViewNotifcation.java	(revision 276260b7a9cfe7eeb6bfec13aeba1d9973746de3)
++++ app/src/main/java/com/example/placementapp/Adapters/RecyclerViewAdapterViewNotifcation.java	(date 1611517120223)
+@@ -19,7 +19,6 @@
+ 
+ import com.example.placementapp.Animation.MyBounceInterpolator;
+ import com.example.placementapp.R;
+-import com.example.placementapp.activities.CompanyPopUpActivity;
+ import com.example.placementapp.admin.fragments.ViewNotificationList;
+ import com.example.placementapp.pojo.Notification;
+ import com.example.placementapp.student.StudentApplicationStatusActivity;
+@@ -47,7 +46,7 @@
+         this.notificationList = notificationList;
+     }
+ 
+-    public RecyclerViewAdapterViewNotifcation(List<Notification> notificationList, ViewNotificationList fragment, String userType) {
++    public RecyclerViewAdapterViewNotifcation(List<Notification> notificationList, ViewNotificationList fragment, String userType ) {
+         this.notificationList = notificationList;
+         this.fragment = fragment;
+         this.userType = userType;
+@@ -67,9 +66,15 @@
+         Notification notification = (Notification) notificationList.get(position);
+         holder.cardView.setAnimation(AnimationUtils.loadAnimation(fragment.getContext(), R.anim.fade_scale_animation));
+         holder.companyName.setText(notification.getCompanyName());
+-
++        holder.venue.setText(notification.getVenue());
++        holder.eligibility.setText(notification.getEligibility());
++        holder.salary.setText(notification.getSalary());
++        holder.date.setText(notification.getDate());
+         holder.itemView.setTag(position);
+ 
++
++        myViewHolders.add(position, holder);
++
+         holder.itemView.setOnClickListener(this);
+     }
+ 
+@@ -83,31 +88,39 @@
+     public void onClick(View view) {
+ 
+         int pos = (int) view.getTag();
+-        Intent intent = new Intent(view.getContext(), CompanyPopUpActivity.class);
+-        intent.putExtra("details", notificationList.get(pos));
+-        view.getContext().startActivity(intent);
++        MyViewHolder holder = myViewHolders.get(pos);
++        if (holder.hiddenView.getVisibility() == View.VISIBLE) {
++            TransitionManager.beginDelayedTransition(holder.cardView,
++                    new Fade(Fade.MODE_IN));
++            holder.hiddenView.setVisibility(View.GONE);
++            holder.imageButton.setImageResource(R.drawable.ic_baseline_arrow_drop_down_circle_24);
++        } else {
++            TransitionManager.beginDelayedTransition(holder.cardView,
++                    new AutoTransition());
++            holder.hiddenView.setVisibility(View.VISIBLE);
++            holder.imageButton.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24);
++        }
+ 
++        holder.applicationsButton.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View view) {
++                Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);
++                MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);
++                myAnim.setInterpolator(interpolator);
++                view.startAnimation(myAnim);
+ 
+-//        holder.applicationsButton.setOnClickListener(new View.OnClickListener() {
+-//            @Override
+-//            public void onClick(View view) {
+-//                Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);
+-//                MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);
+-//                myAnim.setInterpolator(interpolator);
+-//                view.startAnimation(myAnim);
+-//
+-//                if (userType.equals("1")) {
+-//                    new Handler().postDelayed(() -> {
+-//                        Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
+-//                        i.putExtra("companyName", notificationList.get(pos).getCompanyName());
+-//                        i.putExtra("companyID", notificationList.get(pos).getTime());
+-//                        view.getContext().startActivity(i);
+-//                    }, 1000);
+-//                }
+-//            }
+-//        });
++                if(userType.equals("1"))
++                {
++                    new Handler().postDelayed(() -> {
++                        Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
++                        i.putExtra("companyName", notificationList.get(pos).getCompanyName());
++                        i.putExtra("companyID",notificationList.get(pos).getTime());
++                        view.getContext().startActivity(i);
++                    }, 1000);
++                }
++            }
++        });
+     }
+-
+ 
+     public class MyViewHolder extends RecyclerView.ViewHolder {
+         TextView companyName, venue, date, salary, eligibility;
+@@ -120,11 +133,13 @@
+             super(itemView);
+             cardView = itemView.findViewById(R.id.base_cardview);
+             companyName = itemView.findViewById(R.id.companyNameView);
+-//            applicationsButton = itemView.findViewById(R.id.ApplicationsButton);
+-//            if (userType.equals("0"))
+-//                applicationsButton.setText("Check Application");
+-//            else
+-//                applicationsButton.setText("Fill Application");
++            salary = itemView.findViewById(R.id.salaryView);
++            imageButton = itemView.findViewById(R.id.imageButton);
++            applicationsButton = itemView.findViewById(R.id.ApplicationsButton);
++            if(userType.equals("0"))
++                applicationsButton.setText("Check Application");
++            else
++                applicationsButton.setText("Fill Application");
+         }
+     }
+ }
+Index: app/src/main/java/com/example/placementapp/admin/fragments/StudentStatus.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/placementapp/admin/fragments/StudentStatus.java	(date 1611516196827)
++++ app/src/main/java/com/example/placementapp/admin/fragments/StudentStatus.java	(date 1611516196827)
+@@ -0,0 +1,58 @@
++package com.example.placementapp.admin.fragments;
++
++import android.content.Intent;
++import android.os.Bundle;
++
++import androidx.fragment.app.Fragment;
++import androidx.recyclerview.widget.GridLayoutManager;
++import androidx.recyclerview.widget.RecyclerView;
++
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.ProgressBar;
++import android.widget.TextView;
++
++import com.example.placementapp.Adapters.RecyclerViewAdapterProcessRound;
++import com.example.placementapp.Adapters.RecyclerViewAdapterViewNotifcation;
++import com.example.placementapp.R;
++import com.example.placementapp.pojo.FormStatus;
++import com.example.placementapp.pojo.Notification;
++
++import java.util.List;
++public class StudentStatus extends Fragment {
++
++    // TODO: Rename parameter arguments, choose names that match
++    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
++    private static final String ARG_PARAM1 = "param1";
++    private static final String ARG_PARAM2 = "param2";
++
++    // TODO: Rename and change types of parameters
++    private String mParam1;
++    private String mParam2;
++
++    private RecyclerView recyclerView;
++    private RecyclerViewAdapterProcessRound recyclerViewAdapterProcessRound;
++    private List<FormStatus> formStatusList;
++
++    public StudentStatus() {
++        // Required empty public constructor
++    }
++    @Override
++    public void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++    }
++
++    @Override
++    public View onCreateView(LayoutInflater inflater, ViewGroup container,
++                             Bundle savedInstanceState) {
++        View v=inflater.inflate(R.layout.fragment_notification_list, container, false);
++        recyclerView = v.findViewById(R.id.recycler_view);
++        recyclerView.setVisibility(View.GONE);
++        recyclerViewAdapterProcessRound = new RecyclerViewAdapterProcessRound(formStatusList,this);
++        RecyclerView.LayoutManager manager = new GridLayoutManager(getContext(), 1);
++        recyclerView.setLayoutManager(manager);
++        recyclerView.setAdapter(recyclerViewAdapterProcessRound);
++        return v;
++    }
++}
+\ No newline at end of file
+Index: app/src/main/res/layout/process_round_format.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/process_round_format.xml	(date 1611516196839)
++++ app/src/main/res/layout/process_round_format.xml	(date 1611516196839)
+@@ -0,0 +1,59 @@
++<?xml version="1.0" encoding="utf-8"?>
++<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:id="@+id/base_cardview_proceesRound"
++    android:layout_width="match_parent"
++    android:layout_height="wrap_content"
++    android:layout_marginLeft="16dp"
++    android:layout_marginTop="12dp"
++    android:layout_marginRight="16dp"
++    android:layout_marginBottom="10dp"
++    android:padding="5dp"
++    app:cardCornerRadius="8dp"
++    app:layout_constraintBottom_toBottomOf="parent"
++    app:layout_constraintEnd_toEndOf="parent"
++    app:layout_constraintHorizontal_bias="1.0"
++    app:layout_constraintStart_toStartOf="parent"
++    app:layout_constraintTop_toTopOf="parent"
++    app:layout_constraintVertical_bias="0.049">
++
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content">
++
++        <TextView
++            android:id="@+id/process_round"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_marginLeft="10dp"
++            android:layout_marginTop="20dp"
++            android:text="Process Round"
++            android:textColor="#ffffff"
++            android:textSize="15sp"
++            android:textStyle="bold" />
++
++        <TextView
++            android:id="@+id/process_staus"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_marginLeft="30dp"
++            android:layout_marginTop="20dp"
++            android:text="Process Status"
++            android:textColor="#ffffff"
++            android:textSize="15sp"
++            android:textStyle="bold" />
++
++        <TextView
++            android:id="@+id/process_date"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_marginLeft="20dp"
++            android:layout_marginTop="20dp"
++            android:text="Process Date"
++            android:textColor="#ffffff"
++            android:textSize="15sp"
++            android:textStyle="bold" />
++    </LinearLayout>
++
++</androidx.cardview.widget.CardView>
+\ No newline at end of file
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleMigrationSettings\" migrationVersion=\"1\" />\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"PLATFORM\" />\r\n        <option name=\"distributionType\" value=\"DEFAULT_WRAPPED\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"1.8\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n        <option name=\"resolveModulePerSourceSet\" value=\"false\" />\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/gradle.xml	(revision 276260b7a9cfe7eeb6bfec13aeba1d9973746de3)
++++ .idea/gradle.xml	(date 1611516196795)
+@@ -15,6 +15,7 @@
+           </set>
+         </option>
+         <option name="resolveModulePerSourceSet" value="false" />
++        <option name="useQualifiedModuleNames" value="true" />
+       </GradleProjectSettings>
+     </option>
+   </component>
+Index: app/src/main/res/layout/fragment_student_status.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/fragment_student_status.xml	(date 1611516196810)
++++ app/src/main/res/layout/fragment_student_status.xml	(date 1611516196810)
+@@ -0,0 +1,320 @@
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:background="@drawable/bgimage3"
++    tools:context=".student.StudentApplicationStatusActivity">
++
++    <TextView
++        android:id="@+id/ApplicationForm"
++        android:layout_width="fill_parent"
++        android:layout_height="wrap_content"
++        android:layout_marginTop="10dip"
++        android:layout_marginBottom="20dp"
++        android:background="@drawable/rounded_corners"
++        android:backgroundTint="#550909"
++        android:fontFamily="@font/aldrich"
++        android:gravity="center_horizontal"
++        android:padding="15dp"
++        android:text="Application Status"
++        android:textColor="#FFFFFF"
++        android:textSize="23sp" />
++
++    <androidx.cardview.widget.CardView
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        android:layout_below="@+id/ApplicationForm"
++        android:layout_marginLeft="15dp"
++        android:layout_marginRight="15dp"
++        android:layout_marginBottom="20dp"
++        app:cardCornerRadius="30dp">
++
++        <androidx.core.widget.NestedScrollView
++            android:layout_width="match_parent"
++            android:layout_height="match_parent"
++            android:background="@drawable/bgimage4">
++
++            <LinearLayout
++                android:layout_width="match_parent"
++                android:layout_height="match_parent"
++                android:orientation="vertical">
++
++                <LinearLayout
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:orientation="horizontal">
++
++                    <TextView
++                        android:id="@+id/student_email_address_view"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:layout_marginLeft="10dp"
++                        android:layout_marginTop="20dp"
++                        android:text="Email Address: "
++                        android:textColor="#000000"
++                        android:textSize="20sp"
++                        android:textStyle="bold" />
++
++                    <TextView
++                        android:id="@+id/student_email_address"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:layout_marginLeft="29dp"
++                        android:layout_marginTop="20dp"
++                        android:text="Email Address:"
++                        android:textColor="#ffffff"
++                        android:textSize="20sp"
++                        android:textStyle="bold" />
++                </LinearLayout>
++
++                <LinearLayout
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:orientation="horizontal">
++
++                    <TextView
++                        android:id="@+id/student_prn_view"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:layout_marginLeft="10dp"
++                        android:layout_marginTop="20dp"
++                        android:text="Student PRN: "
++                        android:textColor="#000000"
++                        android:textSize="20sp"
++                        android:textStyle="bold" />
++
++                    <TextView
++                        android:id="@+id/student_prn"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:layout_marginLeft="42dp"
++                        android:layout_marginTop="20dp"
++                        android:text="71915796l"
++                        android:textColor="#ffffff"
++                        android:textSize="20sp"
++                        android:textStyle="bold" />
++                </LinearLayout>
++
++                <LinearLayout
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:orientation="horizontal">
++
++                    <TextView
++                        android:id="@+id/student_name_view"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:layout_marginLeft="10dp"
++                        android:layout_marginTop="20dp"
++                        android:text="Student Name"
++                        android:textColor="#000000"
++                        android:textSize="20sp"
++                        android:textStyle="bold" />
++
++                    <TextView
++                        android:id="@+id/student_name"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:layout_marginLeft="39dp"
++                        android:layout_marginTop="20dp"
++                        android:text="Nishant"
++                        android:textColor="#ffffff"
++                        android:textSize="20sp"
++                        android:textStyle="bold" />
++                </LinearLayout>
++
++                <LinearLayout
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:orientation="horizontal">
++
++                    <TextView
++                        android:id="@+id/student_branch_view"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:layout_marginLeft="10dp"
++                        android:layout_marginTop="20dp"
++                        android:text="Student Branch: "
++                        android:textColor="#000000"
++                        android:textSize="20sp"
++                        android:textStyle="bold" />
++
++                    <TextView
++                        android:id="@+id/student_branch"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:layout_marginLeft="20dp"
++                        android:layout_marginTop="20dp"
++                        android:text="Computer"
++                        android:textColor="#ffffff"
++                        android:textSize="20sp"
++                        android:textStyle="bold" />
++                </LinearLayout>
++
++                <LinearLayout
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:orientation="horizontal">
++
++                    <LinearLayout
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:orientation="vertical">
++
++                        <TextView
++                            android:id="@+id/company_name_view1"
++                            android:layout_width="match_parent"
++                            android:layout_height="wrap_content"
++                            android:layout_marginLeft="10dp"
++                            android:layout_marginTop="20dp"
++                            android:text="Company Name:"
++                            android:textColor="#000000"
++                            android:textSize="20sp"
++                            android:textStyle="bold" />
++
++                        <TextView
++                            android:id="@+id/company_name_view2"
++                            android:layout_width="match_parent"
++                            android:layout_height="wrap_content"
++                            android:layout_marginLeft="10dp"
++                            android:text="(Applied For)"
++                            android:textColor="#000000"
++                            android:textSize="20sp"
++                            android:textStyle="bold" />
++                    </LinearLayout>
++
++                    <TextView
++                        android:id="@+id/comapany_name"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:layout_marginLeft="20dp"
++                        android:layout_marginTop="20dp"
++                        android:text="Infosys"
++                        android:textColor="#ffffff"
++                        android:textSize="20sp"
++                        android:textStyle="bold" />
++                </LinearLayout>
++
++                <LinearLayout
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:orientation="vertical">
++
++                    <TextView
++                        android:id="@+id/process_round_view"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:layout_marginLeft="10dp"
++                        android:layout_marginTop="20dp"
++                        android:text="Process Round :"
++                        android:textColor="#000000"
++                        android:textSize="20sp"
++                        android:textStyle="bold" />
++
++                    <View
++                        android:id="@+id/line1"
++                        android:layout_width="match_parent"
++                        android:layout_height="3dp"
++                        android:layout_below="@id/linearlayout"
++                        android:layout_centerHorizontal="true"
++                        android:layout_marginTop="10dp"
++                        android:background="#03971B" />
++
++                    <LinearLayout
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:orientation="horizontal">
++
++                        <TextView
++                            android:id="@+id/process_round"
++                            android:layout_width="wrap_content"
++                            android:layout_height="wrap_content"
++                            android:layout_marginLeft="10dp"
++                            android:layout_marginTop="20dp"
++                            android:text="Process Round"
++                            android:textColor="#000000"
++                            android:textSize="15sp"
++                            android:textStyle="bold" />
++
++                        <TextView
++                            android:id="@+id/process_staus"
++                            android:layout_width="wrap_content"
++                            android:layout_height="wrap_content"
++                            android:layout_marginLeft="30dp"
++                            android:layout_marginTop="20dp"
++                            android:text="Process Status"
++                            android:textColor="#000000"
++                            android:textSize="15sp"
++                            android:textStyle="bold" />
++
++                        <TextView
++                            android:id="@+id/process_date"
++                            android:layout_width="wrap_content"
++                            android:layout_height="wrap_content"
++                            android:layout_marginLeft="20dp"
++                            android:layout_marginTop="20dp"
++                            android:text="Process Date"
++                            android:textColor="#000000"
++                            android:textSize="15sp"
++                            android:textStyle="bold" />
++                    </LinearLayout>
++
++                    <androidx.recyclerview.widget.RecyclerView
++                        android:id="@+id/recycler_view"
++                        android:layout_width="match_parent"
++                        android:layout_height="match_parent"
++                        android:layout_gravity="center"
++                        android:layout_marginTop="12dp"
++                        android:scrollbars="vertical" />
++
++                    <ProgressBar
++                        android:id="@+id/progressBar"
++                        style="?android:attr/progressBarStyle"
++                        android:layout_width="66dp"
++                        android:layout_height="72dp"
++                        android:layout_gravity="center" />
++
++                    <View
++                        android:id="@+id/line2"
++                        android:layout_width="match_parent"
++                        android:layout_height="3dp"
++                        android:layout_below="@id/line1"
++                        android:layout_centerHorizontal="true"
++                        android:layout_marginTop="5dp"
++                        android:layout_marginBottom="15dp"
++                        android:background="#03971B" />
++                </LinearLayout>
++
++                <LinearLayout
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:orientation="horizontal">
++
++                    <TextView
++                        android:id="@+id/placement_status_view"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:layout_marginLeft="10dp"
++                        android:layout_marginTop="20dp"
++                        android:text="Placement Status:"
++                        android:textColor="#000000"
++                        android:textSize="20sp"
++                        android:textStyle="bold" />
++
++                    <TextView
++                        android:id="@+id/placement_status"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:layout_marginLeft="10dp"
++                        android:layout_marginTop="20dp"
++                        android:text="Placed"
++                        android:textColor="#ffffff"
++                        android:textSize="20sp"
++                        android:textStyle="bold" />
++                </LinearLayout>
++
++            </LinearLayout>
++        </androidx.core.widget.NestedScrollView>
++    </androidx.cardview.widget.CardView>
++</RelativeLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/example/placementapp/Adapters/RecyclerViewAdapterProcessRound.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/placementapp/Adapters/RecyclerViewAdapterProcessRound.java	(date 1611517293010)
++++ app/src/main/java/com/example/placementapp/Adapters/RecyclerViewAdapterProcessRound.java	(date 1611517293010)
+@@ -0,0 +1,83 @@
++package com.example.placementapp.Adapters;
++
++import android.content.Context;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.view.animation.AnimationUtils;
++import android.widget.Button;
++import android.widget.ImageButton;
++import android.widget.LinearLayout;
++import android.widget.RelativeLayout;
++import android.widget.TextView;
++
++import androidx.annotation.NonNull;
++import androidx.cardview.widget.CardView;
++import androidx.recyclerview.widget.RecyclerView;
++
++import com.example.placementapp.R;
++import com.example.placementapp.admin.fragments.StudentStatus;
++import com.example.placementapp.admin.fragments.ViewNotificationList;
++import com.example.placementapp.pojo.FormStatus;
++import com.example.placementapp.pojo.Notification;
++
++import java.util.ArrayList;
++import java.util.List;
++
++public class RecyclerViewAdapterProcessRound extends RecyclerView.Adapter<RecyclerViewAdapterProcessRound.MyViewHolder> implements View.OnClickListener{
++    private Context context;
++    private List<FormStatus> formStatusList;
++    private StudentStatus fragment;
++    private LinearLayout hiddenView;
++    private List<RecyclerViewAdapterProcessRound.MyViewHolder> myViewHolders = new ArrayList<>();
++    public RecyclerViewAdapterProcessRound(Context context, List<FormStatus> formStatusList) {
++        this.context = context;
++        this.formStatusList = formStatusList;
++    }
++    public RecyclerViewAdapterProcessRound(List<FormStatus> formStatusList, StudentStatus fragment) {
++        this.formStatusList = formStatusList;
++        this.fragment = fragment;
++    }
++
++
++    @Override
++    public void onClick(View v) {
++
++    }
++
++    @NonNull
++    @Override
++    public RecyclerViewAdapterProcessRound.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
++        View itemView = LayoutInflater.from(fragment.getContext())
++                .inflate(R.layout.process_round_format,parent, false);
++        return new MyViewHolder(itemView);
++    }
++
++    @Override
++    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
++        FormStatus formStatus = (FormStatus) formStatusList.get(position);
++        holder.cardView.setAnimation(AnimationUtils.loadAnimation(fragment.getContext(), R.anim.fade_scale_animation));
++        holder.processRound.setText(formStatus.processRound);
++        holder.processDate.setText(formStatus.processDate);
++        holder.itemView.setTag(position);
++
++
++        myViewHolders.add(position, holder);
++    }
++
++    @Override
++    public int getItemCount() {
++        return formStatusList.size();
++    }
++    public class MyViewHolder extends RecyclerView.ViewHolder {
++        TextView processRound, processDate;
++        CardView cardView;
++
++        public MyViewHolder(View itemView) {
++            super(itemView);
++            cardView = itemView.findViewById(R.id.base_cardview_proceesRound);
++            processRound = itemView.findViewById(R.id.process_round);
++            processDate = itemView.findViewById(R.id.process_date);
++        }
++    }
++}

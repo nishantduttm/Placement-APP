@@ -29,12 +29,13 @@
             android:name=".activities.CompanyPopUpActivity"
             android:theme="@style/AppTheme.CustomTheme" />
         <activity android:name=".student.StudentApplicationStatusActivity" />
+
         <activity
             android:name=".admin.fragments.ViewStudentsList"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.LoginActivity"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.DashboardActivity"
             android:theme="@style/AppTheme.NoActionBar" />

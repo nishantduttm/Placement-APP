@@ -1,5 +1,7 @@
 package com.example.placementapp.pojo;
 
+import java.io.Serializable;
+
 public class GeneralApplicationForm {
 
     private String studentMailID;
