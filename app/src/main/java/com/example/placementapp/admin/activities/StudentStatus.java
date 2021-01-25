@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.example.placementapp.Adapters.RecyclerViewAdapterProcessRound;
 import com.example.placementapp.R;
 import com.example.placementapp.activities.CompanyPopUpActivity;
+import com.example.placementapp.admin.fragments.ViewStudentsList;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.pojo.ApplicationForm;
@@ -61,7 +62,7 @@ public class StudentStatus extends AppCompatActivity {
                 appplicationStatusButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(v.getContext(), CompanyPopUpActivity.class);
+                        Intent intent = new Intent(v.getContext(), ViewStudentsList.class);
                         v.getContext().startActivity(intent);
                     }
                 });

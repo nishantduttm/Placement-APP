@@ -67,6 +67,7 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         Notification notification = (Notification) notificationList.get(position);
         holder.cardView.setAnimation(AnimationUtils.loadAnimation(fragment.getContext(), R.anim.fade_scale_animation));
         holder.companyName.setText(notification.getCompanyName());
+        holder.applicantCountView.setText(notification.getCount());
 
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(this);
@@ -109,21 +110,18 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView companyName, venue, date, salary, eligibility;
+        TextView companyName,applicantCountView,applicantCountTextView;
         CardView cardView;
-        RelativeLayout hiddenView;
-        ImageButton imageButton;
-        Button applicationsButton;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.base_cardview);
             companyName = itemView.findViewById(R.id.companyNameView);
-//            applicationsButton = itemView.findViewById(R.id.ApplicationsButton);
-//            if (userType.equals("0"))
-//                applicationsButton.setText("Check Application");
-//            else
-//                applicationsButton.setText("Fill Application");
+            applicantCountTextView = itemView.findViewById(R.id.applicantsCountTextView);
+            applicantCountView = itemView.findViewById(R.id.applicantsCountView);
+
+            applicantCountView.setVisibility(View.VISIBLE);
+            applicantCountTextView.setVisibility(View.VISIBLE);
         }
     }
 }

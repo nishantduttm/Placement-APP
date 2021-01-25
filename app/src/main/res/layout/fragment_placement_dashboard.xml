@@ -9,7 +9,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:background="#B8B5B4">
+        android:background="#EAE5E4">
         
         <LinearLayout
             android:layout_width="fill_parent"
@@ -67,7 +67,8 @@
                             
                             <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                android:layout_height="match_parent"
+                                android:background="#F33210">
 
                                 <TextView
                                 android:id="@+id/appliedCompaniesTextView"
@@ -85,11 +86,10 @@
                                     android:layout_height="wrap_content"
                                     android:text="5"
                                     android:textColor="#000000"
-                                    android:textSize="28sp"
                                     android:textStyle="bold"
                                     android:layout_centerInParent="true"
                                     android:layout_below="@+id/appliedCompaniesTextView"
-                                    android:layout_marginTop="10dp"
+                                    android:textSize="32sp"
                                     android:layout_marginBottom="10dp"/>
 
                                 <Button
@@ -110,7 +110,8 @@
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                android:layout_height="match_parent"
+                                android:background="#939F16">
 
                                 <TextView
                                     android:id="@+id/inProcessCompaniesTextView"
@@ -128,11 +129,10 @@
                                     android:layout_height="wrap_content"
                                     android:text="3"
                                     android:textColor="#000000"
-                                    android:textSize="28sp"
                                     android:textStyle="bold"
                                     android:layout_centerInParent="true"
                                     android:layout_below="@+id/inProcessCompaniesTextView"
-                                    android:layout_marginTop="10dp"
+                                    android:textSize="32sp"
                                     android:layout_marginBottom="10dp"/>
 
                                 <Button
@@ -161,7 +161,8 @@
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                android:layout_height="match_parent"
+                                android:background="#18F310">
 
                                 <TextView
                                     android:id="@+id/placedCompaniesTextView"
@@ -179,11 +180,10 @@
                                     android:layout_height="wrap_content"
                                     android:text="4"
                                     android:textColor="#000000"
-                                    android:textSize="28sp"
                                     android:textStyle="bold"
                                     android:layout_centerInParent="true"
                                     android:layout_below="@+id/placedCompaniesTextView"
-                                    android:layout_marginTop="10dp"
+                                    android:textSize="32sp"
                                     android:layout_marginBottom="10dp"/>
 
                                 <Button
@@ -204,7 +204,8 @@
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                android:layout_height="match_parent"
+                                android:background="#6661EA">
 
                                 <TextView
                                     android:id="@+id/notPlacedCompaniesTextView"
@@ -222,11 +223,10 @@
                                     android:layout_height="wrap_content"
                                     android:text="0"
                                     android:textColor="#000000"
-                                    android:textSize="28sp"
                                     android:textStyle="bold"
                                     android:layout_centerInParent="true"
                                     android:layout_below="@+id/notPlacedCompaniesTextView"
-                                    android:layout_marginTop="10dp"
+                                    android:textSize="32sp"
                                     android:layout_marginBottom="10dp"/>
 
                                 <Button
@@ -255,7 +255,8 @@
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                android:layout_height="match_parent"
+                                android:background="#F310A7">
 
                                 <TextView
                                     android:id="@+id/onHoldCompaniesTextView"
@@ -273,11 +274,10 @@
                                     android:layout_height="wrap_content"
                                     android:text="4"
                                     android:textColor="#000000"
-                                    android:textSize="28sp"
                                     android:textStyle="bold"
                                     android:layout_centerInParent="true"
                                     android:layout_below="@+id/onHoldCompaniesTextView"
-                                    android:layout_marginTop="10dp"
+                                    android:textSize="32sp"
                                     android:layout_marginBottom="10dp"/>
 
                                 <Button
@@ -298,7 +298,8 @@
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                android:layout_height="match_parent"
+                                android:background="#F3C210">
 
                                 <TextView
                                     android:id="@+id/viewNoticesTextView"

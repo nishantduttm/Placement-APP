@@ -3,10 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item
-        android:id="@+id/nav_placementdashboard"
-        android:title="Placement Dashboard"/>
-
     <group android:checkableBehavior="single"
         android:id="@+id/admin_group">
         <item
@@ -19,6 +15,9 @@
         <item
             android:id="@+id/student_navigation_drawer_view_applications"
             android:title="View Your Applications"/>
+        <item
+            android:id="@+id/nav_placementdashboard"
+            android:title="Placement Dashboard"/>
     </group>
 
     <item

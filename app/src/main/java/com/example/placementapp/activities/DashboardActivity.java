@@ -55,13 +55,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             switch (navigationViewEnum) {
                 case ADMIN:
                     navigationView.getMenu().removeGroup(R.id.student_group);
+                    startTransactionFragment(new ViewNotificationList());
                     break;
 
                 case STUDENT:
                     navigationView.getMenu().removeGroup(R.id.admin_group);
+                    startTransactionFragment(new PlacementDashboardFragment());
                     break;
             }
-            startTransactionFragment(new PlacementDashboardFragment());
         }
 
         @Override

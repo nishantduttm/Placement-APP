@@ -56,12 +56,12 @@ public class RecyclerViewAdapterProcessRound extends RecyclerView.Adapter<Recycl
     }
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView processRound, processDate;
-        LinearLayout linearLayout;
+        CardView card_view;
         public MyViewHolder(View itemView) {
             super(itemView);
-            linearLayout = itemView.findViewById(R.id.linearlayout);
-            processRound = itemView.findViewById(R.id.process_round);
-            processDate = itemView.findViewById(R.id.process_date);
+            card_view = itemView.findViewById(R.id.card_view);
+            processRound = itemView.findViewById(R.id.process_round_status);
+            processDate = itemView.findViewById(R.id.process_date_status);
         }
     }
 }

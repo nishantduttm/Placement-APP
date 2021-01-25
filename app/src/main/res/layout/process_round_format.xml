@@ -1,35 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/linearlayout"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="10dp"
+        android:padding="5dp"
+        app:cardBackgroundColor="#010523"
+        app:cardCornerRadius="8dp">
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="@drawable/smartdp">
 
         <TextView
-            android:id="@+id/process_round"
-            android:layout_width="match_parent"
+            android:id="@+id/process_round_text_view"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:text="Process Round"
+            android:layout_marginTop="10dp"
+            android:text="Round:"
             android:textColor="#ffffff"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:id="@+id/process_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:layout_marginTop="20dp"
-            android:text="Process Date"
-            android:textColor="#ffffff"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
-</LinearLayout>
+
+        <TextView
+            android:id="@+id/process_round_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="10dp"
+            android:text="Company Presentation"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBaseline="@id/process_round_text_view"
+            android:layout_toRightOf="@id/process_round_text_view"/>
+
+        <TextView
+            android:id="@+id/process_date_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="10dp"
+            android:text="25/01/2021"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBaseline="@id/process_date_text_view"
+            android:layout_toRightOf="@id/process_date_text_view"
+            android:layout_below="@id/process_round_text_view"/>
+
+        <TextView
+            android:id="@+id/process_date_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Date:    "
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_below="@id/process_round_text_view"/>
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
