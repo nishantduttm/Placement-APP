@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ public class ApplicationForm  extends GeneralApplicationForm implements Parcelab
         companyName = in.readString();
         companyId = in.readString();
         overallStatus = in.readString();
-
+        formStatusList = new ArrayList<FormStatus>();
         in.readTypedList(formStatusList, FormStatus.CREATOR);
     }
 

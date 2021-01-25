@@ -83,9 +83,7 @@ public class CompanyPopUpActivity extends Activity implements View.OnClickListen
 
         if(userType.equals(Constants.UserTypes.ADMIN))
         {
-            Intent intent = new Intent(view.getContext(), ViewStudentsList.class);
-            intent.putExtra("companyID", notification.getTime());
-            view.getContext().startActivity(intent);
+            finish();
         }
         else
         {

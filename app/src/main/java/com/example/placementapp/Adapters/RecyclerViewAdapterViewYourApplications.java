@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.example.placementapp.Animation.MyBounceInterpolator;
 import com.example.placementapp.R;
 import com.example.placementapp.activities.CompanyPopUpActivity;
+import com.example.placementapp.admin.activities.StudentStatus;
 import com.example.placementapp.admin.fragments.ViewNotificationList;
 import com.example.placementapp.pojo.ApplicationForm;
 import com.example.placementapp.pojo.Notification;
@@ -80,8 +81,10 @@ public class RecyclerViewAdapterViewYourApplications extends RecyclerView.Adapte
     @Override
     public void onClick(View view) {
 
-        int pos = (int) view.getTag();
-
+            int pos = (int) view.getTag();
+            Intent intent = new Intent(view.getContext(), StudentStatus.class);
+            intent.putExtra("details", applicationFormList.get(pos));
+            view.getContext().startActivity(intent);
     }
 
 

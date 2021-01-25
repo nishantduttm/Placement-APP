@@ -16,6 +16,7 @@ import com.example.placementapp.R;
 import com.example.placementapp.admin.activities.StudentStatus;
 import com.example.placementapp.pojo.FormStatus;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,16 +24,10 @@ public class RecyclerViewAdapterProcessRound extends RecyclerView.Adapter<Recycl
     private Context context;
     private List<FormStatus> formStatusList;
     private StudentStatus  studentStatus;
-    private List<RecyclerViewAdapterProcessRound.MyViewHolder> myViewHolders = new ArrayList<>();
-    public RecyclerViewAdapterProcessRound(Context context, List<FormStatus> formStatusList) {
-        this.context = context;
-        this.formStatusList = formStatusList;
-    }
-    public RecyclerViewAdapterProcessRound(List<FormStatus> formStatusList, StudentStatus activity) {
-        this.formStatusList = formStatusList;
-        this.studentStatus = activity;
-    }
 
+    public RecyclerViewAdapterProcessRound(List<FormStatus> formStatusList) {
+        this.formStatusList = formStatusList;
+    }
 
     @Override
     public void onClick(View v) {
@@ -50,13 +45,9 @@ public class RecyclerViewAdapterProcessRound extends RecyclerView.Adapter<Recycl
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         FormStatus formStatus = (FormStatus) formStatusList.get(position);
-        holder.cardView.setAnimation(AnimationUtils.loadAnimation(this.context, R.anim.fade_scale_animation));
         holder.processRound.setText(formStatus.processRound);
         holder.processDate.setText(formStatus.processDate);
         holder.itemView.setTag(position);
-
-
-        myViewHolders.add(position, holder);
     }
 
     @Override
@@ -65,11 +56,10 @@ public class RecyclerViewAdapterProcessRound extends RecyclerView.Adapter<Recycl
     }
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView processRound, processDate;
-        CardView cardView;
-
+        LinearLayout linearLayout;
         public MyViewHolder(View itemView) {
             super(itemView);
-            cardView = itemView.findViewById(R.id.base_cardview_proceesRound);
+            linearLayout = itemView.findViewById(R.id.linearlayout);
             processRound = itemView.findViewById(R.id.process_round);
             processDate = itemView.findViewById(R.id.process_date);
         }

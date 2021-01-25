@@ -40,6 +40,7 @@
             android:name=".activities.DashboardActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.RegisterActivity" />
+        <activity android:name=".admin.activities.StudentStatus"/>
 
         <meta-data
             android:name="preloaded_fonts"

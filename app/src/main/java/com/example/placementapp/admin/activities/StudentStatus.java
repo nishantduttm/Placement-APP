@@ -13,10 +13,12 @@ import android.widget.TextView;
 
 import com.example.placementapp.Adapters.RecyclerViewAdapterProcessRound;
 import com.example.placementapp.R;
+import com.example.placementapp.activities.CompanyPopUpActivity;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.pojo.ApplicationForm;
 import com.example.placementapp.pojo.FormStatus;
+import com.example.placementapp.student.StudentApplicationStatusActivity;
 
 import java.util.List;
 
@@ -41,24 +43,41 @@ public class StudentStatus extends AppCompatActivity {
             TextView prn = findViewById(R.id.student_prn);
             TextView studentName = findViewById(R.id.student_name);
             TextView studentBranch = findViewById(R.id.student_branch);
-            TextView companyName = findViewById(R.id.comapany_name);
-            Button appplicationStatusButton = findViewById(R.id.ApplicationStausButton);
+            TextView companyName = findViewById(R.id.student_status_company_name);
+            Button appplicationStatusButton = findViewById(R.id.ApplicationStatusButton);
             recyclerView = findViewById(R.id.recycler_view);
             emailAddress.setText(a.getStudentMailID());
             prn.setText(a.getStudentPRN());
             studentName.setText(a.getStudentName());
             studentBranch.setText(a.getStudentBranch());
             companyName.setText(a.getCompanyName());
-            recyclerView.setVisibility(View.GONE);
             Log.i("a",a.getFormStatusList().get(0).processDate);
-            recyclerViewAdapterProcessRound = new RecyclerViewAdapterProcessRound(a.getFormStatusList(),this);
+            recyclerViewAdapterProcessRound = new RecyclerViewAdapterProcessRound(a.getFormStatusList());
             RecyclerView.LayoutManager manager = new GridLayoutManager(this, 1);
             recyclerView.setLayoutManager(manager);
             recyclerView.setAdapter(recyclerViewAdapterProcessRound);
-            if(userType.equals(Constants.UserTypes.ADMIN))
+            if(userType.equals(Constants.UserTypes.ADMIN)) {
                 appplicationStatusButton.setText("Ok");
-            else
+                appplicationStatusButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), CompanyPopUpActivity.class);
+                        v.getContext().startActivity(intent);
+                    }
+                });
+            }
+            else {
                 appplicationStatusButton.setText("Edit Application");
+                appplicationStatusButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), StudentApplicationStatusActivity.class);
+                        intent.putExtra("companyName",a.getCompanyName());
+                        intent.putExtra("companyId", a.getCompanyId());
+                        v.getContext().startActivity(intent);
+                    }
+                });
+            }
         }
     }
 }

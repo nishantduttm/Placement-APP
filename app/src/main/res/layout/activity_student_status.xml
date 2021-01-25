@@ -163,7 +163,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/company_name_view1"
+                            android:id="@+id/company_name_first_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
@@ -174,7 +174,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/company_name_view2"
+                            android:id="@+id/company_name_second_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
@@ -185,7 +185,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/comapany_name"
+                        android:id="@+id/student_status_company_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
@@ -259,7 +259,7 @@
                         android:layout_marginBottom="15dp"
                         android:background="#03971B" />
                     <Button
-                        android:id="@+id/ApplicationStausButton"
+                        android:id="@+id/ApplicationStatusButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
