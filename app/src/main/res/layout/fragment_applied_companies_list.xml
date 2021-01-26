@@ -8,29 +8,40 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.DashboardActivity">
 
-    <TextView
-        android:id="@+id/yourApplicationsTextView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
-        android:layout_marginBottom="5dp"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/rounded_corners"
-        android:backgroundTint="#550909"
-        android:fontFamily="@font/aldrich"
-        android:gravity="center_horizontal"
-        android:padding="15dp"
-        android:text="Your Applications"
-        android:textSize="23sp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/your_applications_recycler_view"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/applicationsRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/yourApplicationsTextView"
-        android:layout_marginTop="15dp"
-        android:scrollbars="vertical" />
+        android:layout_height="wrap_content">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/yourApplicationsTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="5dp"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/rounded_corners"
+                android:backgroundTint="#550909"
+                android:fontFamily="@font/aldrich"
+                android:gravity="center_horizontal"
+                android:padding="15dp"
+                android:text="Your Applications"
+                android:textSize="23sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/your_applications_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/yourApplicationsTextView"
+                android:layout_marginTop="15dp"
+                android:scrollbars="vertical" />
+        </RelativeLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyle"

@@ -3,6 +3,7 @@ package com.example.placementapp.admin.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ public class StudentStatus extends AppCompatActivity {
             TextView studentBranch = findViewById(R.id.student_branch);
             TextView companyName = findViewById(R.id.student_status_company_name);
             Button appplicationStatusButton = findViewById(R.id.ApplicationStatusButton);
+
             recyclerView = findViewById(R.id.recycler_view);
             emailAddress.setText(a.getStudentMailID());
             prn.setText(a.getStudentPRN());

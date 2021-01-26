@@ -80,6 +80,8 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
         Intent intent = getIntent();
         companyName.setText(intent.getStringExtra("companyName"));
         companyId = intent.getStringExtra("companyID");
+        if(companyId == null)
+            companyId = intent.getStringExtra("companyId");
     }
 
     //    3

@@ -13,11 +13,11 @@
     <group android:checkableBehavior="single"
         android:id="@+id/student_group">
         <item
-            android:id="@+id/student_navigation_drawer_view_applications"
-            android:title="View Your Applications"/>
-        <item
             android:id="@+id/nav_placementdashboard"
             android:title="Placement Dashboard"/>
+        <item
+            android:id="@+id/student_navigation_drawer_view_applications"
+            android:title="View Your Applications"/>
     </group>
 
     <item

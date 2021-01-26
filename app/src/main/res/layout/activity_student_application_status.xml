@@ -390,36 +390,6 @@
 
                 </RadioGroup>
 
-                <TextView
-                    android:id="@+id/upload_file_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Upload Proof(Email Communication/ Process Notice/ Offer Letter)"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_below="@id/radioGroup2"/>
-
-                <TextView
-                    android:id="@+id/upload_file"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/rounded_corners"
-                    android:backgroundTint="#2B2468"
-                    android:text="Upload File"
-                    android:textStyle="bold"
-                    android:gravity="start"
-                    android:padding="8dp"
-                    android:textColor="#FFFFFF"
-                    android:inputType="none"
-                    android:layout_below="@id/upload_file_view"
-                    android:drawableLeft="@drawable/ic_upload"
-                    android:drawablePadding="20dp"/>
 
                 <Button
                     android:id="@+id/save_button"
@@ -430,7 +400,7 @@
                     android:layout_marginRight="50dp"
                     android:background="@drawable/rounded_corners"
                     android:text="SAVE"
-                    android:layout_below="@id/upload_file" />
+                    android:layout_below="@id/radioGroup2" />
 
                 <Button
                     android:id="@+id/reset_button"
