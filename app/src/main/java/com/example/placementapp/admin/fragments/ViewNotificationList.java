@@ -36,6 +36,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class ViewNotificationList extends Fragment implements ValueEventListener, AdapterView.OnItemSelectedListener {
 
@@ -59,6 +60,7 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
     private RecyclerView recyclerView;
     private RecyclerViewAdapterViewNotifcation notificationAdapter;
     private ProgressBar progressBar;
+    private SwipeRefreshLayout notificationRefresh;
 
     private TextView branchText;
     private String branch = "ALL";

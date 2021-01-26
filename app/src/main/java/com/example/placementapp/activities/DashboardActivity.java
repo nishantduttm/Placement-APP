@@ -167,7 +167,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     private void logOutFromApp() {
         if (SharedPrefHelper.clearEntriesInSharedPrefs(this.getApplicationContext())) {
             Toast.makeText(this, "Logged Out Successfully", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+            startActivity(new Intent(DashboardActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            finish();
         }
     }
 

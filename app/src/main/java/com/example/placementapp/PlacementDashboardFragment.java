@@ -107,11 +107,9 @@ public class PlacementDashboardFragment extends Fragment implements ValueEventLi
                                 onHoldCount +=1;
                                 list.set(4, onHoldCount);
                                 break;
-                            default:
-                                appliedCount +=1;
-                                list.set(0, appliedCount);
-                                break;
                         }
+                        appliedCount +=1;
+                        list.set(0, appliedCount);
                     }
                 }
             }

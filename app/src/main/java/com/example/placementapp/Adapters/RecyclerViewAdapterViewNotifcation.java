@@ -21,6 +21,7 @@ import com.example.placementapp.Animation.MyBounceInterpolator;
 import com.example.placementapp.R;
 import com.example.placementapp.activities.CompanyPopUpActivity;
 import com.example.placementapp.admin.fragments.ViewNotificationList;
+import com.example.placementapp.constants.Constants;
 import com.example.placementapp.pojo.Notification;
 import com.example.placementapp.student.StudentApplicationStatusActivity;
 
@@ -67,7 +68,8 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         Notification notification = (Notification) notificationList.get(position);
         holder.cardView.setAnimation(AnimationUtils.loadAnimation(fragment.getContext(), R.anim.fade_scale_animation));
         holder.companyName.setText(notification.getCompanyName());
-        holder.applicantCountView.setText(notification.getCount());
+        if(userType.equals(Constants.UserTypes.ADMIN))
+            holder.applicantCountView.setText(notification.getCount());
 
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(this);
@@ -117,11 +119,14 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
             super(itemView);
             cardView = itemView.findViewById(R.id.base_cardview);
             companyName = itemView.findViewById(R.id.companyNameView);
-            applicantCountTextView = itemView.findViewById(R.id.applicantsCountTextView);
-            applicantCountView = itemView.findViewById(R.id.applicantsCountView);
 
-            applicantCountView.setVisibility(View.VISIBLE);
-            applicantCountTextView.setVisibility(View.VISIBLE);
+            if(userType.equals(Constants.UserTypes.ADMIN)) {
+                applicantCountTextView = itemView.findViewById(R.id.applicantsCountTextView);
+                applicantCountView = itemView.findViewById(R.id.applicantsCountView);
+
+                applicantCountView.setVisibility(View.VISIBLE);
+                applicantCountTextView.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
