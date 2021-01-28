@@ -1,6 +1,7 @@
 package com.example.placementapp.student;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -94,6 +96,7 @@ public class ViewYourApplicationsList extends Fragment implements ValueEventList
             progressBar.setVisibility(View.VISIBLE);
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected Integer doInBackground(DataSnapshot... snapshots) {
             DataSnapshot snapshot = snapshots[0];
@@ -114,6 +117,9 @@ public class ViewYourApplicationsList extends Fragment implements ValueEventList
                     else
                         showToast("No Applied Applications!");
                 }
+                applicationsList.sort((a, b) -> {
+                    return (int) (Long.parseLong(b.getCompanyId()) - Long.parseLong(a.getCompanyId()));
+                });
             }
             return null;
         }

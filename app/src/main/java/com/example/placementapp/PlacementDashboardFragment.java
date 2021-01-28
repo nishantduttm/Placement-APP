@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.placementapp.activities.DashboardActivity;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.helper.SharedPrefHelper;
@@ -40,7 +41,7 @@ public class PlacementDashboardFragment extends Fragment implements ValueEventLi
     private TextView notPlacedCompaniesView;
     private TextView onHoldCompaniesView;
     private ProgressBar dashboardProgressBar;
-
+    private TextView nameTextView;
     public PlacementDashboardFragment() {
     }
 
@@ -48,6 +49,9 @@ public class PlacementDashboardFragment extends Fragment implements ValueEventLi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = getLayoutInflater().inflate(R.layout.fragment_placement_dashboard, container, false);
+        nameTextView = v.findViewById(R.id.dashboardName);
+        String name = SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(), Constants.SharedPrefConstants.KEY_NAME);
+        nameTextView.setText("Hi, "+name.toUpperCase().charAt(0) + name.substring(1).toLowerCase());
         appliedCompaniesView = v.findViewById(R.id.appliedCompaniesView);
         inProcessCompaniesView = v.findViewById(R.id.inProcessCompaniesView);
         placedCompaniesView = v.findViewById(R.id.placedCompaniesView);

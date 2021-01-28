@@ -177,4 +177,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onCancelled(@NonNull DatabaseError error) {
         Toast.makeText(LoginActivity.this, "System Issue.. Please try again later", Toast.LENGTH_SHORT).show();
     }
+    public void onBackPressed() {
+       finishAffinity();
+    }
+
 }

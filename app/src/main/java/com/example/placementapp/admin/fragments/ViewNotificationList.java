@@ -2,6 +2,7 @@ package com.example.placementapp.admin.fragments;
 
 import android.app.AlertDialog;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.helper.SharedPrefHelper;
+import com.example.placementapp.pojo.ApplicationForm;
 import com.example.placementapp.pojo.Notification;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -29,10 +31,13 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,7 +48,8 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
     private static final List<String> list;
     private static final Cache<String, List<Notification>> notificationCache;
     private static final String NOTIFICATIONS_CACHE_KEY = "CACHE_NOTIFICATIONS_";
-
+    private DatabaseReference myApplicationRef;
+    Set<Long> myApplication;
     static {
         list = new ArrayList<>();
         list.add("Choose a Stream");
@@ -65,6 +71,8 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
     private TextView branchText;
     private String branch = "ALL";
     private long count;
+    String userType;
+    String userPRN;
 
     public ViewNotificationList() {
         // Required empty public constructor
@@ -83,15 +91,15 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
         View v = inflater.inflate(R.layout.fragment_notification_list, container, false);
 
         notificationList = new ArrayList<>();
-        String userType = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(), Constants.SharedPrefConstants.KEY_TYPE);
+        myApplication = new HashSet<>();
+        userType = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(), Constants.SharedPrefConstants.KEY_TYPE);
         this.ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_NOTIFICATIONS);
-
         if (userType.equals(Constants.UserTypes.ADMIN)) {
             initializeViewForAdmin(inflater, container, v);
         } else if (userType.equals(Constants.UserTypes.STUDENT)) {
+            userPRN = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(), Constants.SharedPrefConstants.KEY_PRN);
             initializeViewForStudent(v);
         }
-
         recyclerView = v.findViewById(R.id.recycler_view);
         recyclerView.setVisibility(View.GONE);
         progressBar = v.findViewById(R.id.progressBar);
@@ -167,15 +175,53 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
         TextView notificationText = v.findViewById(R.id.notificationtext);
         notificationText.setVisibility(View.VISIBLE);
         branch = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(), Constants.SharedPrefConstants.KEY_BRANCH);
+
         ref.addListenerForSingleValueEvent(ViewNotificationList.this);
     }
 
     public class ViewNotificationTaskRunner extends AsyncTask<DataSnapshot, String, List<Notification>> {
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        void getNotification(Map<String, Notification> notifications) {
+            for (Map.Entry<String, Notification> entry : notifications.entrySet()) {
+                Notification notification = entry.getValue();
+                if (!branch.equals("ALL")) {
+                    if (notification.getBranch().equals(branch)) {
+                        if (myApplication.size() != 0) {
+                            if (!myApplication.contains(Long.parseLong(notification.getTime())))
+                                notificationList.add(notification);
+                        } else {
+                            notificationList.add(notification);
+                        }
+                    }
+                } else {
+                    notificationList.add(notification);
+                }
+                DatabaseReference refToGetCount = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + entry.getKey());
+                refToGetCount.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int count = (int) snapshot.getChildrenCount();
+                        notification.setCount(String.valueOf(count));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        showToast("System Error..Please try again later");
+                    }
+                });
+            }
+            notificationList.sort((a, b) -> {
+                return (int) (Long.parseLong(b.time) - Long.parseLong(a.time));
+            });
+        }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected List<Notification> doInBackground(DataSnapshot... snapshots) {
             DataSnapshot snapshot = snapshots[0];
@@ -186,27 +232,32 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
             if (notifications == null)
                 showToast("No Notifications Yet! Stay Tuned!");
             else {
-                for (Map.Entry<String, Notification> entry : notifications.entrySet()) {
-                    Notification notification = entry.getValue();
-                    if (!branch.equals("ALL")) {
-                        if (notification.getBranch().equals(branch))
-                            notificationList.add(notification);
-                    } else {
-                        notificationList.add(notification);
-                    }
-                    DatabaseReference refToGetCount = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + entry.getKey());
-                    refToGetCount.addValueEventListener(new ValueEventListener() {
+                if (userType.equals(Constants.UserTypes.STUDENT)) {
+                    myApplicationRef = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPILED_COMPANIES + userPRN);
+                    myApplicationRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            int count = (int) snapshot.getChildrenCount();
-                            notification.setCount(String.valueOf(count));
+                        public void onDataChange(@NonNull DataSnapshot snapshot1) {
+                            Map<String, ApplicationForm> applications = snapshot1.getValue(new GenericTypeIndicator<Map<String, ApplicationForm>>() {
+                            });
+
+                            if (applications != null) {
+                                for (Map.Entry<String, ApplicationForm> entry : applications.entrySet()) {
+                                    ApplicationForm applicationForm = entry.getValue();
+                                    myApplication.add(Long.parseLong(applicationForm.getCompanyId()));
+                                }
+                            }
+                            Log.i("myApplications", myApplication.toString());
+                            getNotification(notifications);
+                            displayList();
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            showToast("System Error..Please try again later");
+
                         }
                     });
+                } else {
+                    getNotification(notifications);
                 }
             }
             return null;
@@ -220,6 +271,7 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
             }*/
             displayList();
         }
+
     }
 
     private void displayList() {

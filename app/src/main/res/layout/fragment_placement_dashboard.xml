@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <ProgressBar
         android:id="@+id/dashboardProgressBar"
         style="?android:attr/progressBarStyle"
@@ -35,12 +36,28 @@
                     android:gravity="center"
                     android:background="@drawable/abstractbg">
 
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:src="@drawable/indiralogo"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="118dp"
+                            android:layout_height="65dp"
+                            android:src="@drawable/indiralogo" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Indira College of Engineering And Management"
+                            android:textColor="#ffffff"
+                            android:layout_gravity="center_vertical"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            />
+                    </LinearLayout>
 
                     <TextView
+                        android:id="@+id/dashboardName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Hi, Aravind Pidaparthy"
@@ -70,6 +87,7 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:id="@+id/appliedCardView"
                             android:layout_gravity="center"
                             android:layout_marginRight="5dp">
                             
@@ -114,6 +132,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:layout_gravity="center"
+                            android:id="@+id/inProcessCardView"
                             android:layout_marginLeft="5dp">
 
                             <RelativeLayout
@@ -165,7 +184,8 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:layout_gravity="center"
-                            android:layout_marginRight="5dp">
+                            android:layout_marginRight="5dp"
+                            android:id="@+id/placedCardView">
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -208,7 +228,8 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="5dp">
+                            android:layout_marginLeft="5dp"
+                            android:id="@+id/notPlacedCardView">
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -259,7 +280,8 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:layout_gravity="center"
-                            android:layout_marginRight="5dp">
+                            android:layout_marginRight="5dp"
+                            android:id="@+id/onHoldCardView">
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -302,7 +324,8 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="5dp">
+                            android:layout_marginLeft="5dp"
+                            android:id="@+id/viewNoticesCardView">
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
