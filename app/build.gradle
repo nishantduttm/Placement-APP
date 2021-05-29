@@ -12,6 +12,7 @@ android {
         versionCode 1
         versionName "1.0"
 
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -42,7 +43,8 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.firebase:firebase-messaging:20.3.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -60,5 +62,7 @@ dependencies {
     // Also declare the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.android.volley:volley:1.1.1'
+
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
 }

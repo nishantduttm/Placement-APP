@@ -20,14 +20,17 @@ import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.pojo.ApplicationForm;
 import com.example.placementapp.pojo.FormStatus;
+import com.example.placementapp.pojo.Statistics;
 import com.example.placementapp.student.StudentApplicationStatusActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-public class StudentStatus extends AppCompatActivity {
+public class StudentStatus extends AppCompatActivity{
     private RecyclerView recyclerView;
     private RecyclerViewAdapterProcessRound recyclerViewAdapterProcessRound;
     private ApplicationForm a;
+    private Statistics statistics;
     private String userType;
 
     @Override
@@ -65,6 +68,7 @@ public class StudentStatus extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(v.getContext(), ViewStudentsList.class);
+                        intent.putExtra("companyID", a.getCompanyId());
                         v.getContext().startActivity(intent);
                     }
                 });
@@ -83,4 +87,5 @@ public class StudentStatus extends AppCompatActivity {
             }
         }
     }
+
 }

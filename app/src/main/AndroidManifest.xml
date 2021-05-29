@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".admin.activities.StatisticsActivity"></activity>
         <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -29,7 +30,6 @@
             android:name=".activities.CompanyPopUpActivity"
             android:theme="@style/AppTheme.CustomTheme" />
         <activity android:name=".student.StudentApplicationStatusActivity" />
-
         <activity
             android:name=".admin.fragments.ViewStudentsList"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -40,7 +40,7 @@
             android:name=".activities.DashboardActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".admin.activities.StudentStatus"/>
+        <activity android:name=".admin.activities.StudentStatus" />
 
         <meta-data
             android:name="preloaded_fonts"

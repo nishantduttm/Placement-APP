@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.placementapp.constants.Constants;
+import com.google.gson.Gson;
 
 public abstract class SharedPrefHelper {
     public static SharedPreferences sharedPreferences;
@@ -13,6 +14,16 @@ public abstract class SharedPrefHelper {
         sharedPreferences = context.getSharedPreferences(Constants.SharedPrefConstants.SHARED_PREF,context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(key,value);
+        editor.apply();
+    }
+
+    public static void saveObjectEntryinSharedPreferences(Context context, String key, Object value)
+    {
+        sharedPreferences = context.getSharedPreferences(Constants.SharedPrefConstants.SHARED_PREF,context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(value);
+        editor.putString(key,json);
         editor.apply();
     }
 

@@ -26,6 +26,7 @@ import com.example.placementapp.admin.fragments.ViewNotificationList;
 import com.example.placementapp.admin.fragments.ViewStudentsList;
 import com.example.placementapp.pojo.ApplicationForm;
 import com.example.placementapp.pojo.Notification;
+import com.example.placementapp.pojo.Statistics;
 import com.example.placementapp.student.StudentApplicationStatusActivity;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class RecyclerViewAdapterViewStudents extends RecyclerView.Adapter<Recycl
     private Context context;
     private List<ApplicationForm> studentList;
 
-    public RecyclerViewAdapterViewStudents(List<ApplicationForm> studentList, Context context) {
+    public RecyclerViewAdapterViewStudents(List<ApplicationForm> studentList,Context context) {
         this.studentList = studentList;
         this.context = context;
     }
