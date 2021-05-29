@@ -152,6 +152,9 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 startTransactionFragment(fragment);
                 break;
             }
+            case R.id.navigation_drawer_update_profile: {
+                //update profile fragment call
+            }
             case R.id.log_out: {
                 logOutFromApp();
             }
