@@ -25,7 +25,7 @@
         android:title="View All Notifications"/>
     <item
         android:id="@+id/navigation_drawer_update_profile"
-        android:title="update profile"/>
+        android:title="Update Profile"/>
 
     <item
         android:id="@+id/log_out"

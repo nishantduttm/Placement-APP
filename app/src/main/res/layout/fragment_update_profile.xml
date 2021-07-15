@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".student.UpdateProfile">
 
     <RelativeLayout
@@ -38,12 +39,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/imgUser"
+            android:id="@+id/userName"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15sp"
             android:fontFamily="sans-serif-light"
             android:text="Nishant"
             android:textColor="#FFFFFF"
             android:textSize="32sp" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -71,6 +74,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_weight="4"
+                        android:id="@+id/FullName"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
                         android:text="Full Name"
@@ -81,6 +85,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:id="@+id/FullNameValue"
                         android:layout_marginLeft="15sp"
                         android:text="Nishant Dutt Mishra"
                         android:textSize="18sp" />
@@ -104,6 +109,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
                         android:text="Branch"
+                        android:id="@+id/BranchName"
                         android:textColor="@color/headings"
                         android:layout_weight="4"
                         android:textSize="13sp" />
@@ -111,6 +117,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_weight="1"
+                        android:id="@+id/BranchNameValue"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15sp"
                         android:text="Computer"
@@ -140,6 +147,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-light"
                             android:text="Class"
+                            android:id="@+id/ClassName"
                             android:layout_weight="1"
                             android:textColor="@color/headings"
                             android:textSize="13sp" />
@@ -147,6 +155,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:id="@+id/ClassNameValue"
                             android:layout_marginLeft="15sp"
                             android:layout_weight="3"
                             android:text="SE"
@@ -163,6 +172,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-light"
                             android:layout_weight="1"
+                            android:id="@+id/DivName"
                             android:text="Div"
                             android:textColor="@color/headings"
                             android:textSize="13sp" />
@@ -170,6 +180,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_weight="3"
+                            android:id="@+id/DivNameValue"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15sp"
                             android:text="2"
@@ -197,6 +208,7 @@
                         android:layout_weight="4"
                         android:fontFamily="sans-serif-light"
                         android:text="Roll"
+                        android:id="@+id/Roll"
                         android:textColor="@color/headings"
                         android:textSize="13sp" />
 
@@ -205,6 +217,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15sp"
                         android:layout_weight="1"
+                        android:id="@+id/RollValue"
                         android:text="23205"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -227,12 +240,14 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
                         android:text="Email"
+                        android:id="@+id/Email"
                         android:layout_weight="4"
                         android:textColor="@color/headings"
                         android:textSize="13sp" />
 
                     <TextView
                         android:layout_weight="1"
+                        android:id="@+id/EmailValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15sp"
@@ -258,6 +273,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
                         android:text="Mobile No"
+                        android:id="@+id/mobileNo"
                         android:textColor="@color/headings"
                         android:textSize="13sp" />
 
@@ -265,6 +281,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:id="@+id/mobileNoValue"
                         android:layout_marginLeft="15sp"
                         android:text="99999999999"
                         android:textSize="18sp" />
@@ -306,6 +323,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Overall SGPA"
+                                android:id="@+id/overallSgpa"
                                 android:textColor="@color/headings"
                                 android:textSize="11sp"
                                 android:layout_weight="1"/>
@@ -313,6 +331,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:id="@+id/overallSgpaValue"
                                 android:textSize="13sp"
                                 android:text="9.3"/>
 
@@ -326,6 +345,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Sem 1"
+                                android:id="@+id/SgpaSem1"
                                 android:textSize="11sp"
                                 android:textColor="@color/headings"/>
                             <TextView
@@ -333,18 +353,21 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:textSize="13sp"
+                                android:id="@+id/SgpaSem1Value"
                                 android:text="9.8"/>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Sem 2"
+                                android:id="@+id/SgpaSem2"
                                 android:textSize="11sp"
                                 android:textColor="@color/headings"/>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:id="@+id/SgpaSem2Value"
                                 android:textSize="13sp"
                                 android:text="9.3"/>
                         </LinearLayout>
@@ -358,12 +381,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Sem 3"
+                                android:id="@+id/SgpaSem3"
                                 android:textSize="11sp"
                                 android:textColor="@color/headings"/>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:id="@+id/SgpaSem3Value"
                                 android:textSize="13sp"
                                 android:text="9.8"/>
                             <TextView
@@ -371,12 +396,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Sem 4"
+                                android:id="@+id/SgpaSem4"
                                 android:textSize="11sp"
                                 android:textColor="@color/headings"/>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:id="@+id/SgpaSem4Value"
                                 android:textSize="13sp"
                                 android:text="9.3"/>
                         </LinearLayout>
@@ -390,6 +417,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Sem 5"
+                                android:id="@+id/SgpaSem5"
                                 android:textSize="11sp"
                                 android:textColor="@color/headings"/>
                             <TextView
@@ -397,18 +425,21 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:textSize="13sp"
+                                android:id="@+id/SgpaSem5Value"
                                 android:text="9.8"/>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Sem 6"
+                                android:id="@+id/SgpaSem6"
                                 android:textSize="11sp"
                                 android:textColor="@color/headings"/>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:id="@+id/SgpaSem6Value"
                                 android:textSize="13sp"
                                 android:text="9.3"/>
                         </LinearLayout>
@@ -422,6 +453,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Sem 7"
+                                android:id="@+id/SgpaSem7"
                                 android:textSize="11sp"
                                 android:textColor="@color/headings"/>
                             <TextView
@@ -429,18 +461,21 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:textSize="13sp"
+                                android:id="@+id/SgpaSem7Value"
                                 android:text="9.8"/>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Sem 8"
+                                android:id="@+id/SgpaSem8"
                                 android:textSize="11sp"
                                 android:textColor="@color/headings"/>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:id="@+id/SgpaSem8Value"
                                 android:textSize="13sp"
                                 android:text="9.3"/>
                         </LinearLayout>
@@ -453,8 +488,15 @@
                     android:layout_marginTop="20dp"
                     android:background="@color/grey" />
 
-
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Save"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/rounded_corners"
+                    android:layout_marginTop="10sp"/>
             </LinearLayout>
+
         </androidx.core.widget.NestedScrollView>
     </RelativeLayout>
 
