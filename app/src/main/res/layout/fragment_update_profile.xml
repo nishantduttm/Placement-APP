@@ -36,15 +36,15 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/imgUser"
-            android:id="@+id/userName"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15sp"
-            android:fontFamily="sans-serif-light"
-            android:text="Nishant"
-            android:textColor="#FFFFFF"
+            android:fontFamily="@font/abril_fatface"
+            android:text="Nishant Dutt Mishra"
+            android:textColor="#000000"
             android:textSize="32sp" />
 
     </RelativeLayout>
@@ -152,13 +152,14 @@
                             android:textColor="@color/headings"
                             android:textSize="13sp" />
 
-                        <TextView
+                        <EditText
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/ClassNameValue"
                             android:layout_marginLeft="15sp"
                             android:layout_weight="3"
                             android:text="SE"
+                            android:gravity="center"
                             android:textSize="18sp" />
                     </LinearLayout>
 
@@ -174,15 +175,18 @@
                             android:layout_weight="1"
                             android:id="@+id/DivName"
                             android:text="Div"
+                            android:layout_marginLeft="7dp"
                             android:textColor="@color/headings"
                             android:textSize="13sp" />
 
-                        <TextView
+                        <EditText
                             android:layout_width="wrap_content"
                             android:layout_weight="3"
                             android:id="@+id/DivNameValue"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15sp"
+                            android:gravity="center"
+                            android:layout_marginRight="10dp"
                             android:text="2"
                             android:textSize="18sp" />
                     </LinearLayout>
@@ -207,7 +211,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
                         android:fontFamily="sans-serif-light"
-                        android:text="Roll"
+                        android:text="PRN No."
                         android:id="@+id/Roll"
                         android:textColor="@color/headings"
                         android:textSize="13sp" />
@@ -216,9 +220,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15sp"
+                        android:gravity="center"
                         android:layout_weight="1"
-                        android:id="@+id/RollValue"
-                        android:text="23205"
+                        android:id="@+id/prnValue"
+                        android:layout_marginRight="10dp"
+                        android:hint="71915713H"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -277,13 +283,15 @@
                         android:textColor="@color/headings"
                         android:textSize="13sp" />
 
-                    <TextView
+                    <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:id="@+id/mobileNoValue"
+                        android:hint="9999999999"
+                        android:gravity="center"
                         android:layout_marginLeft="15sp"
-                        android:text="99999999999"
+                        android:layout_marginRight="30dp"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -327,13 +335,13 @@
                                 android:textColor="@color/headings"
                                 android:textSize="11sp"
                                 android:layout_weight="1"/>
-                            <TextView
+                            <EditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:gravity="center"
                                 android:id="@+id/overallSgpaValue"
-                                android:textSize="13sp"
-                                android:text="9.3"/>
+                                android:textSize="13sp" />
 
                         </LinearLayout>
                         <LinearLayout
@@ -348,28 +356,30 @@
                                 android:id="@+id/SgpaSem1"
                                 android:textSize="11sp"
                                 android:textColor="@color/headings"/>
-                            <TextView
+                            <EditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:textSize="13sp"
                                 android:id="@+id/SgpaSem1Value"
-                                android:text="9.8"/>
+                                android:gravity="center" />
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Sem 2"
+                                android:layout_marginLeft="7dp"
                                 android:id="@+id/SgpaSem2"
                                 android:textSize="11sp"
                                 android:textColor="@color/headings"/>
-                            <TextView
+                            <EditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:id="@+id/SgpaSem2Value"
-                                android:textSize="13sp"
-                                android:text="9.3"/>
+                                android:gravity="center"
+                                android:layout_marginRight="10dp"
+                                android:textSize="13sp" />
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -384,13 +394,13 @@
                                 android:id="@+id/SgpaSem3"
                                 android:textSize="11sp"
                                 android:textColor="@color/headings"/>
-                            <TextView
+                            <EditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:id="@+id/SgpaSem3Value"
-                                android:textSize="13sp"
-                                android:text="9.8"/>
+                                android:gravity="center"
+                                android:textSize="13sp" />
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -398,14 +408,16 @@
                                 android:text="Sem 4"
                                 android:id="@+id/SgpaSem4"
                                 android:textSize="11sp"
+                                android:layout_marginLeft="7dp"
                                 android:textColor="@color/headings"/>
-                            <TextView
+                            <EditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:id="@+id/SgpaSem4Value"
                                 android:textSize="13sp"
-                                android:text="9.3"/>
+                                android:gravity="center"
+                                android:layout_marginRight="10dp" />
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -420,28 +432,30 @@
                                 android:id="@+id/SgpaSem5"
                                 android:textSize="11sp"
                                 android:textColor="@color/headings"/>
-                            <TextView
+                            <EditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:textSize="13sp"
-                                android:id="@+id/SgpaSem5Value"
-                                android:text="9.8"/>
+                                android:gravity="center"
+                                android:id="@+id/SgpaSem5Value" />
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Sem 6"
+                                android:layout_marginLeft="7dp"
                                 android:id="@+id/SgpaSem6"
                                 android:textSize="11sp"
                                 android:textColor="@color/headings"/>
-                            <TextView
+                            <EditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:id="@+id/SgpaSem6Value"
                                 android:textSize="13sp"
-                                android:text="9.3"/>
+                                android:gravity="center"
+                                android:layout_marginRight="10dp" />
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -456,28 +470,30 @@
                                 android:id="@+id/SgpaSem7"
                                 android:textSize="11sp"
                                 android:textColor="@color/headings"/>
-                            <TextView
+                            <EditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:textSize="13sp"
-                                android:id="@+id/SgpaSem7Value"
-                                android:text="9.8"/>
+                                android:gravity="center"
+                                android:id="@+id/SgpaSem7Value" />
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Sem 8"
+                                android:layout_marginLeft="7dp"
                                 android:id="@+id/SgpaSem8"
                                 android:textSize="11sp"
                                 android:textColor="@color/headings"/>
-                            <TextView
+                            <EditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:id="@+id/SgpaSem8Value"
                                 android:textSize="13sp"
-                                android:text="9.3"/>
+                                android:gravity="center"
+                                android:layout_marginRight="10dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -489,9 +505,11 @@
                     android:background="@color/grey" />
 
                 <Button
+                    android:id="@+id/saveUserButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Save"
+                    android:layout_marginBottom="15dp"
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/rounded_corners"
                     android:layout_marginTop="10sp"/>

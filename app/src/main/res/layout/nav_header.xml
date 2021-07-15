@@ -14,17 +14,16 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="201dp"
-            android:layout_height="129dp"
+            android:layout_width="234dp"
+            android:layout_height="121dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="25dp"
-            android:layout_marginBottom="15dp"
             android:background="@drawable/logo" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="27dp"
+            android:layout_marginBottom="15dp"
             android:fontFamily="@font/aldrich"
             android:text="Placement App"
             android:textColor="@color/cardview_light_background"
