@@ -1,8 +1,9 @@
 package com.example.placementapp.pojo;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class StudentUser extends User{
+public class StudentUser extends User implements Serializable {
     private String branch;
     private String prn;
     private String year;

@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import com.example.placementapp.Animation.MyBounceInterpolator;
 import com.example.placementapp.R;
 import com.example.placementapp.activities.RegisterActivity;
+import com.example.placementapp.admin.fragments.ViewStudentsProfile;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.helper.SharedPrefHelper;
@@ -65,8 +68,10 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
     private EditText sem7;
     private EditText sem8;
 
+    private boolean check;
 
     private Button save;
+    private Button back;
 
     //Firebase
     private DatabaseReference readData;
@@ -83,38 +88,30 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        user_name = SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(),Constants.SharedPrefConstants.KEY_NAME);
-        branch = SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(),Constants.SharedPrefConstants.KEY_BRANCH);
-        mailId = SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(),Constants.SharedPrefConstants.KEY_MAIL);
-        prn = SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(),Constants.SharedPrefConstants.KEY_PRN);
+    }
 
-        readData = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN + "/" + prn);
-        readData.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                user = snapshot.getValue(StudentUser.class);
+    public void setValuesInProfile() {
+        if(user.getYear() != null)
+            yearView.setText(user.getYear());
+        if(user.getDiv() != null)
+            divView.setText(user.getDiv());
+        if(user.getMobile() != null)
+            mobileView.setText(user.getMobile());
+        if(user.getSemResults() != null)
+        {
+            Map<String,String> map = user.getSemResults();
 
-                if(user.getYear() != null)
-                    yearView.setText(user.getYear());
-                if(user.getDiv() != null)
-                    divView.setText(user.getDiv());
-                if(user.getMobile() != null)
-                    mobileView.setText(user.getMobile());
-                if(user.getSemResults() != null)
+            for(Map.Entry<String,String> entry : map.entrySet()) {
+                semResults.get(entry.getKey()).setText(entry.getValue());
+                if(check)
                 {
-                    Map<String,String> map = user.getSemResults();
-
-                    for(Map.Entry<String,String> entry : map.entrySet())
-                        semResults.get(entry.getKey()).setText(entry.getValue());
+                    EditText text = semResults.get(entry.getKey());
+                    text.setFocusable(false);
+                    text.setFocusableInTouchMode(false);
+                    text.setClickable(false);
                 }
             }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-            }
-        });
-
-        writeData = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN + "/" + prn);
+        }
     }
 
     @Override
@@ -132,6 +129,7 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
         divView = v.findViewById(R.id.DivNameValue);
         mobileView = v.findViewById(R.id.mobileNoValue);
         save = v.findViewById(R.id.saveUserButton);
+        back = v.findViewById(R.id.BackButton);
         overall = v.findViewById(R.id.overallSgpaValue);
         sem1 = v.findViewById(R.id.SgpaSem1Value);
         sem2 = v.findViewById(R.id.SgpaSem2Value);
@@ -141,7 +139,79 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
         sem6 = v.findViewById(R.id.SgpaSem6Value);
         sem7 = v.findViewById(R.id.SgpaSem7Value);
         sem8 = v.findViewById(R.id.SgpaSem8Value);
+
+         check = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(), Constants.SharedPrefConstants.KEY_TYPE)
+                 .equals(Constants.UserTypes.ADMIN);
+
         storeSemInList(v);
+
+        if(SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(), Constants.SharedPrefConstants.KEY_TYPE)
+                .equals(Constants.UserTypes.ADMIN))
+        {
+            Bundle bundle = getArguments();
+            user = (StudentUser) bundle.getSerializable("profileDetails");
+
+            user_name = user.getName();
+            branch = user.getBranch();
+            mailId = user.getMail();
+            prn = user.getPrn();
+
+            setValuesInProfile();
+
+            save.setVisibility(View.GONE);
+            back.setVisibility(View.VISIBLE);
+
+            back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Fragment frag = new ViewStudentsProfile();
+
+                    FragmentManager manager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction trans = manager.beginTransaction();
+
+                    trans.replace(R.id.activity_main_frame_layout,frag);
+                    trans.addToBackStack(null);
+                    trans.setCustomAnimations(R.anim.fade_in,R.anim.fade_out);
+                    trans.commit();
+                }
+            });
+
+            divView.setFocusable(false);
+            divView.setFocusableInTouchMode(false);
+            divView.setClickable(false);
+
+            yearView.setFocusable(false);
+            yearView.setFocusableInTouchMode(false);
+            yearView.setClickable(false);
+
+            mobileView.setFocusable(false);
+            mobileView.setFocusableInTouchMode(false);
+            mobileView.setClickable(false);
+
+        }
+        else
+        {
+            user_name = SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(),Constants.SharedPrefConstants.KEY_NAME);
+            branch = SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(),Constants.SharedPrefConstants.KEY_BRANCH);
+            mailId = SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(),Constants.SharedPrefConstants.KEY_MAIL);
+            prn = SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(),Constants.SharedPrefConstants.KEY_PRN);
+
+
+            readData = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN + "/" + prn);
+            readData.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    user = snapshot.getValue(StudentUser.class);
+                    setValuesInProfile();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                }
+            });
+
+            writeData = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN + "/" + prn);
+        }
 
         if(user_name != null && branch != null && mailId != null && prn != null)
         {

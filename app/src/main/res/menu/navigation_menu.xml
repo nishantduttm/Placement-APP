@@ -8,6 +8,9 @@
         <item
             android:id="@+id/admin_navigation_drawer_send_notifications"
             android:title="Send Notifications"/>
+        <item
+            android:id="@+id/admin_view_students_profile"
+            android:title="View Students Profile"/>
     </group>
 
     <group android:checkableBehavior="single"
@@ -18,14 +21,14 @@
         <item
             android:id="@+id/student_navigation_drawer_view_applications"
             android:title="View Your Applications"/>
+        <item
+            android:id="@+id/navigation_drawer_update_profile"
+            android:title="Update Profile"/>
     </group>
 
     <item
         android:id="@+id/navigation_drawer_view_all_notifications"
         android:title="View All Notifications"/>
-    <item
-        android:id="@+id/navigation_drawer_update_profile"
-        android:title="Update Profile"/>
 
     <item
         android:id="@+id/log_out"

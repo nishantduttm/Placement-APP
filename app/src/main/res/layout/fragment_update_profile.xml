@@ -160,7 +160,19 @@
                             android:layout_weight="3"
                             android:text="SE"
                             android:gravity="center"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:visibility="visible"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/AdminClassNameValue"
+                            android:layout_marginLeft="15sp"
+                            android:layout_weight="3"
+                            android:text="SE"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:visibility="gone"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -188,7 +200,20 @@
                             android:gravity="center"
                             android:layout_marginRight="10dp"
                             android:text="2"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:visibility="visible"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_weight="3"
+                            android:id="@+id/AdminDivNameValue"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15sp"
+                            android:gravity="center"
+                            android:layout_marginRight="10dp"
+                            android:text="2"
+                            android:textSize="18sp"
+                            android:visibility="gone"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -292,7 +317,20 @@
                         android:gravity="center"
                         android:layout_marginLeft="15sp"
                         android:layout_marginRight="30dp"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:visibility="visible"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/AdminMobileNoValue"
+                        android:hint="9999999999"
+                        android:gravity="center"
+                        android:layout_marginLeft="15sp"
+                        android:layout_marginRight="30dp"
+                        android:textSize="18sp"
+                        android:visibility="gone"/>
                 </LinearLayout>
 
                 <View
@@ -341,7 +379,17 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:id="@+id/overallSgpaValue"
-                                android:textSize="13sp" />
+                                android:textSize="13sp"
+                                android:visibility="visible"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:id="@+id/AdminOverallSgpaValue"
+                                android:textSize="13sp"
+                                android:visibility="gone"/>
 
                         </LinearLayout>
                         <LinearLayout
@@ -362,7 +410,17 @@
                                 android:layout_weight="1"
                                 android:textSize="13sp"
                                 android:id="@+id/SgpaSem1Value"
-                                android:gravity="center" />
+                                android:gravity="center"
+                                android:visibility="visible"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textSize="13sp"
+                                android:id="@+id/AdminSgpaSem1Value"
+                                android:gravity="center"
+                                android:visibility="gone"/>
+
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -379,7 +437,17 @@
                                 android:id="@+id/SgpaSem2Value"
                                 android:gravity="center"
                                 android:layout_marginRight="10dp"
-                                android:textSize="13sp" />
+                                android:textSize="13sp"
+                                android:visibility="visible"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:id="@+id/AdminSgpaSem2Value"
+                                android:gravity="center"
+                                android:layout_marginRight="10dp"
+                                android:textSize="13sp"
+                                android:visibility="gone"/>
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -400,7 +468,17 @@
                                 android:layout_weight="1"
                                 android:id="@+id/SgpaSem3Value"
                                 android:gravity="center"
-                                android:textSize="13sp" />
+                                android:textSize="13sp"
+                                android:visibility="visible"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:id="@+id/AdminSgpaSem3Value"
+                                android:gravity="center"
+                                android:textSize="13sp"
+                                android:visibility="gone"/>
+
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -417,7 +495,17 @@
                                 android:id="@+id/SgpaSem4Value"
                                 android:textSize="13sp"
                                 android:gravity="center"
-                                android:layout_marginRight="10dp" />
+                                android:layout_marginRight="10dp"
+                                android:visibility="visible"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:id="@+id/AdminSgpaSem4Value"
+                                android:textSize="13sp"
+                                android:gravity="center"
+                                android:layout_marginRight="10dp"
+                                android:visibility="gone"/>
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -438,7 +526,17 @@
                                 android:layout_weight="1"
                                 android:textSize="13sp"
                                 android:gravity="center"
-                                android:id="@+id/SgpaSem5Value" />
+                                android:id="@+id/SgpaSem5Value"
+                                android:visibility="visible"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textSize="13sp"
+                                android:gravity="center"
+                                android:id="@+id/AdminSgpaSem5Value"
+                                android:visibility="gone"/>
+
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -455,7 +553,17 @@
                                 android:id="@+id/SgpaSem6Value"
                                 android:textSize="13sp"
                                 android:gravity="center"
-                                android:layout_marginRight="10dp" />
+                                android:layout_marginRight="10dp"
+                                android:visibility="visible"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:id="@+id/AdminSgpaSem6Value"
+                                android:textSize="13sp"
+                                android:gravity="center"
+                                android:layout_marginRight="10dp"
+                                android:visibility="gone"/>
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -476,7 +584,17 @@
                                 android:layout_weight="1"
                                 android:textSize="13sp"
                                 android:gravity="center"
-                                android:id="@+id/SgpaSem7Value" />
+                                android:id="@+id/SgpaSem7Value"
+                                android:visibility="visible"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textSize="13sp"
+                                android:gravity="center"
+                                android:id="@+id/AdminSgpaSem7Value"
+                                android:visibility="gone"/>
+
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -493,7 +611,17 @@
                                 android:id="@+id/SgpaSem8Value"
                                 android:textSize="13sp"
                                 android:gravity="center"
-                                android:layout_marginRight="10dp" />
+                                android:layout_marginRight="10dp"
+                                android:visibility="visible"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:id="@+id/AdminSgpaSem8Value"
+                                android:textSize="13sp"
+                                android:gravity="center"
+                                android:layout_marginRight="10dp"
+                                android:visibility="gone"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -512,7 +640,19 @@
                     android:layout_marginBottom="15dp"
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/rounded_corners"
-                    android:layout_marginTop="10sp"/>
+                    android:layout_marginTop="10sp"
+                    android:visibility="visible"/>
+
+                <Button
+                    android:id="@+id/BackButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Back"
+                    android:layout_marginBottom="15dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/rounded_corners"
+                    android:layout_marginTop="10sp"
+                    android:visibility="gone"/>
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>

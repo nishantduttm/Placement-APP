@@ -12,6 +12,7 @@ import com.example.placementapp.admin.fragments.SendNotificationFragment;
 
 import com.example.placementapp.R;
 import com.example.placementapp.admin.fragments.ViewNotificationList;
+import com.example.placementapp.admin.fragments.ViewStudentsProfile;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.student.UpdateProfile;
@@ -156,6 +157,12 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             case R.id.navigation_drawer_update_profile: {
                 toolbar.setTitle("Update Profile");
                 fragment = new UpdateProfile();
+                startTransactionFragment(fragment);
+                break;
+            }
+            case R.id.admin_view_students_profile: {
+                toolbar.setTitle("View Students Profile");
+                fragment = new ViewStudentsProfile();
                 startTransactionFragment(fragment);
                 break;
             }
