@@ -21,6 +21,7 @@ import com.example.placementapp.activities.RegisterActivity;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.helper.SharedPrefHelper;
+import com.example.placementapp.pojo.StudentUser;
 import com.example.placementapp.pojo.User;
 import com.example.placementapp.utils.StringUtils;
 import com.google.firebase.database.DataSnapshot;
@@ -70,6 +71,7 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
     //Firebase
     private DatabaseReference readData;
     private DatabaseReference writeData;
+    private StudentUser user;
 
     //Sem_Results
     private Map<String,EditText> semResults = new HashMap<>();
@@ -90,7 +92,7 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
         readData.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                User user = snapshot.getValue(User.class);
+                user = snapshot.getValue(StudentUser.class);
 
                 if(user.getYear() != null)
                     yearView.setText(user.getYear());
@@ -208,10 +210,12 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
                     for(Map.Entry<String,EditText> entry : semResults.entrySet())
                         map.put(entry.getKey(),entry.getValue().getText().toString());
 
-                    User u = new User(mailId,
-                            SharedPrefHelper.getEntryfromSharedPreferences(view.getContext(), Constants.SharedPrefConstants.KEY_PASSWORD),
+                    StudentUser u = new StudentUser(mailId,
+                            user.getPassword(),
                             user_name,
-                            SharedPrefHelper.getEntryfromSharedPreferences(view.getContext(), Constants.SharedPrefConstants.KEY_TYPE),
+                            user.getType(),
+                            user.getBranch(),
+                            user.getPrn(),
                             year,
                             div,
                             mobile,
