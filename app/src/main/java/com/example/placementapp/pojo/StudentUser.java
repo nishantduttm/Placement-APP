@@ -27,6 +27,22 @@ public class StudentUser extends User implements Serializable {
         this.semResults = semResults;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("StudentUser{");
+        sb.append("branch='").append(branch).append('\'');
+        sb.append(", prn='").append(prn).append('\'');
+        sb.append(", year='").append(year).append('\'');
+        sb.append(", div='").append(div).append('\'');
+        sb.append(", mobile='").append(mobile).append('\'');
+        sb.append(", semResults=").append(semResults);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    public StudentUser() {
+    }
+
     public String getYear() {
         return year;
     }
@@ -65,9 +81,6 @@ public class StudentUser extends User implements Serializable {
 
     public void setPrn(String prn) {
         this.prn = prn;
-    }
-
-    public StudentUser() {
     }
 
     public String getBranch() {

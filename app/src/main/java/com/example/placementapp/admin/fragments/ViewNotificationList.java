@@ -15,6 +15,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.placementapp.Adapters.RecyclerViewAdapterViewNotifcation;
 import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
@@ -22,6 +30,10 @@ import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.pojo.ApplicationForm;
 import com.example.placementapp.pojo.Notification;
+import com.example.placementapp.pojo.NotificationDto;
+import com.example.placementapp.pojo.NotificationsList;
+import com.example.placementapp.utils.HttpUtils;
+import com.example.placementapp.utils.StringUtils;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +41,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,37 +51,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-public class ViewNotificationList extends Fragment implements ValueEventListener, AdapterView.OnItemSelectedListener {
+public class ViewNotificationList extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private static final List<String> list;
-    private static final Cache<String, List<Notification>> notificationCache;
-    private static final String NOTIFICATIONS_CACHE_KEY = "CACHE_NOTIFICATIONS_";
-    private DatabaseReference myApplicationRef;
+
     Set<Long> myApplication;
+
     static {
         list = new ArrayList<>();
         list.add("Choose a Stream");
+        list.add("ALL");
         list.add("Comp");
         list.add("Mech");
         list.add("Civil");
         list.add("MechSandwich");
-        notificationCache = CacheBuilder.newBuilder().build();
     }
 
-    private static List<Notification> notificationList;
+    private static List<NotificationDto> notificationList;
 
-    private DatabaseReference ref;
     private RecyclerView recyclerView;
     private RecyclerViewAdapterViewNotifcation notificationAdapter;
     private ProgressBar progressBar;
-    private SwipeRefreshLayout notificationRefresh;
 
     private TextView branchText;
     private String branch = "ALL";
@@ -92,8 +97,9 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
 
         notificationList = new ArrayList<>();
         myApplication = new HashSet<>();
+        progressBar = v.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         userType = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(), Constants.SharedPrefConstants.KEY_TYPE);
-        this.ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_NOTIFICATIONS);
         if (userType.equals(Constants.UserTypes.ADMIN)) {
             initializeViewForAdmin(inflater, container, v);
         } else if (userType.equals(Constants.UserTypes.STUDENT)) {
@@ -102,7 +108,6 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
         }
         recyclerView = v.findViewById(R.id.recycler_view);
         recyclerView.setVisibility(View.GONE);
-        progressBar = v.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
         notificationAdapter = new RecyclerViewAdapterViewNotifcation(notificationList, this, userType);
         RecyclerView.LayoutManager manager = new GridLayoutManager(getContext(), 1);
@@ -135,8 +140,9 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
                     branch = spinner.getSelectedItem().toString();
                 }
                 dialogInterface.dismiss();
-                this.ref.addListenerForSingleValueEvent(this);
-                //getDataFromCache(ref);
+
+                // TODO Get Data from Web service call for selected Filter
+                new ViewNotificationTaskRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Constants.HttpConstants.GET_NOTIFICATIONS_URL, branch);
             });
 
             builder.setNegativeButton("Dismiss", (dialogInterface, i) -> dialogInterface.dismiss());
@@ -145,77 +151,19 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
         });
-        this.ref.addListenerForSingleValueEvent(this);
-    }
-
-    private List<Notification> getDataFromCache(DatabaseReference ref) {
-        List<Notification> notifications = null;
-        //List<Notification> notifications = notificationCache.getIfPresent(NOTIFICATIONS_CACHE_KEY + branch);
-        //notifications == null || notifications.isEmpty()
-        if (true) {
-            this.ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_NOTIFICATIONS);
-            this.ref.addListenerForSingleValueEvent(this);
-        } else {
-            notificationList.clear();
-            for (Notification notify : notifications) {
-                if (!branch.equals("ALL")) {
-                    if (notify.getBranch().equals(branch))
-                        notificationList.add(notify);
-                } else {
-                    notificationList.add(notify);
-                }
-            }
-            Log.i("STATS AFTER: ", String.valueOf(notifications.size()));
-            displayList();
-        }
-        return notificationList;
+        // TODO Get All notifications for Admin From Server
+        new ViewNotificationTaskRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Constants.HttpConstants.GET_NOTIFICATIONS_URL, branch);
     }
 
     private void initializeViewForStudent(View v) {
         TextView notificationText = v.findViewById(R.id.notificationtext);
         notificationText.setVisibility(View.VISIBLE);
         branch = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(), Constants.SharedPrefConstants.KEY_BRANCH);
-
-        ref.addListenerForSingleValueEvent(ViewNotificationList.this);
+        // TODO Make call to server with student specific branch
+        new ViewNotificationTaskRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Constants.HttpConstants.GET_NOTIFICATIONS_URL, branch);
     }
 
-    public class ViewNotificationTaskRunner extends AsyncTask<DataSnapshot, String, List<Notification>> {
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        void getNotification(Map<String, Notification> notifications) {
-            for (Map.Entry<String, Notification> entry : notifications.entrySet()) {
-                Notification notification = entry.getValue();
-                if (!branch.equals("ALL")) {
-                    if (notification.getBranch().equals(branch)) {
-                        if (myApplication.size() != 0) {
-                            if (!myApplication.contains(Long.parseLong(notification.getTime())))
-                                notificationList.add(notification);
-                        } else {
-                            notificationList.add(notification);
-                        }
-                    }
-                } else {
-                    notificationList.add(notification);
-                }
-                DatabaseReference refToGetCount = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + entry.getKey());
-                refToGetCount.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        int count = (int) snapshot.getChildrenCount();
-                        notification.setCount(String.valueOf(count));
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        showToast("System Error..Please try again later");
-                    }
-                });
-            }
-            notificationList.sort((a, b) -> {
-                return (int) (Long.parseLong(b.time) - Long.parseLong(a.time));
-            });
-        }
-
+    public class ViewNotificationTaskRunner extends AsyncTask<String, String, List<Notification>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -223,44 +171,45 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
 
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
-        protected List<Notification> doInBackground(DataSnapshot... snapshots) {
-            DataSnapshot snapshot = snapshots[0];
+        protected List<Notification> doInBackground(String... urls) {
+            String url = urls[0];
+            String branch = urls[1];
             notificationList.clear();
-            Map<String, Notification> notifications = snapshot.getValue(new GenericTypeIndicator<Map<String, Notification>>() {
-            });
-
-            if (notifications == null)
+            // TODO make call to Web server
+            if (StringUtils.isBlank(url) || StringUtils.isBlank(branch)) {
+                Log.e("Error", "No Url/branch to make Http Call");
                 showToast("No Notifications Yet! Stay Tuned!");
-            else {
-                if (userType.equals(Constants.UserTypes.STUDENT)) {
-                    myApplicationRef = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPILED_COMPANIES + userPRN);
-                    myApplicationRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot1) {
-                            Map<String, ApplicationForm> applications = snapshot1.getValue(new GenericTypeIndicator<Map<String, ApplicationForm>>() {
-                            });
-
-                            if (applications != null) {
-                                for (Map.Entry<String, ApplicationForm> entry : applications.entrySet()) {
-                                    ApplicationForm applicationForm = entry.getValue();
-                                    myApplication.add(Long.parseLong(applicationForm.getCompanyId()));
-                                }
-                            }
-                            Log.i("myApplications", myApplication.toString());
-                            getNotification(notifications);
-                            displayList();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                } else {
-                    getNotification(notifications);
-                }
+                return null;
             }
+            HttpUtils.addRequestToHttpQueue(constructHttpRequest(url, branch), getContext());
             return null;
+        }
+
+        private Request<?> constructHttpRequest(String url, String branch) {
+            url = url + branch;
+            return new JsonObjectRequest(
+                    Request.Method.GET,
+                    url,
+                    null,
+                    this::populateNotificationsList,
+                    error -> {
+                        Log.e("Error", "HTTP Call failed: ");
+                    }
+            );
+        }
+
+        private void populateNotificationsList(JSONObject jsonObject) {
+            if (jsonObject == null)
+                return;
+            Log.i("Object",jsonObject.toString());
+            notificationList.addAll(new Gson().fromJson(jsonObject.toString(), NotificationsList.class).getNotifications());
+            if (notificationList.isEmpty()) {
+                Log.i("Data",notificationList.toString());
+                showToast("No Notifications Yet! Stay Tuned!");
+            }
+            else {
+                displayList();
+            }
         }
 
         @Override
@@ -284,18 +233,11 @@ public class ViewNotificationList extends Fragment implements ValueEventListener
     }
 
     @Override
-    public void onDataChange(@NonNull DataSnapshot snapshot) {
-        new ViewNotificationTaskRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, snapshot);
-    }
-
-    @Override
-    public void onCancelled(@NonNull DatabaseError error) {
-        showToast("System Error..Please try again later");
-    }
-
-    @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        branch = adapterView.getSelectedItem().toString();
+        if (i == 0)
+            branch = list.get(1);
+        else
+            branch = adapterView.getSelectedItem().toString();
     }
 
     @Override

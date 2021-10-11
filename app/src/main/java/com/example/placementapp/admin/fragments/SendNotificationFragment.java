@@ -19,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.placementapp.Animation.MyBounceInterpolator;
 import com.example.placementapp.R;
@@ -26,7 +28,11 @@ import com.example.placementapp.admin.helper.MySingleton;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.pojo.Notification;
+import com.example.placementapp.pojo.NotificationDto;
+import com.example.placementapp.pojo.UserDto;
+import com.example.placementapp.utils.HttpUtils;
 import com.google.firebase.database.DatabaseReference;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,10 +52,11 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
     private RadioGroup radioGroup;
     private EditText salary;
     private EditText venue;
-    private EditText eligibility;
+    private EditText companyDescription;
 
     private TextView date;
 
+    private boolean isNotificationDataSaved = false;
     final private String contentType = "application/json";
     final String TAG = "NOTIFICATION TAG";
 
@@ -77,7 +84,7 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         companyName = view.findViewById(R.id.companyName);
         salary = view.findViewById(R.id.packageEditText);
         venue = view.findViewById(R.id.venue);
-        eligibility = view.findViewById(R.id.eligibility);
+        companyDescription = view.findViewById(R.id.companyDescription);
         date = view.findViewById(R.id.dateView);
 
         //Intializing Date TextView
@@ -92,13 +99,13 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
             venue.setOnTouchListener(this);
         }
 
-        if (eligibility != null) {
-            eligibility.setVerticalScrollBarEnabled(true);
-            eligibility.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
-            eligibility.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
-            eligibility.setMovementMethod(ScrollingMovementMethod.getInstance());
+        if (companyDescription != null) {
+            companyDescription.setVerticalScrollBarEnabled(true);
+            companyDescription.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+            companyDescription.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
+            companyDescription.setMovementMethod(ScrollingMovementMethod.getInstance());
 
-            eligibility.setOnTouchListener(this);
+            companyDescription.setOnTouchListener(this);
         }
 
         radioGroup = view.findViewById(R.id.radioGroup);
@@ -133,19 +140,20 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         String venueValue = venue.getText().toString();
         String salaryValue = salary.getText().toString();
         String dateValue = date.getText().toString();
-        String eligibilityValue = eligibility.getText().toString();
+        String companyDescriptionValue = companyDescription.getText().toString();
 
 
-        if (isInputValid(companyNamevalue, venueValue, salaryValue, dateValue, eligibilityValue)) {
-            String time = String.valueOf(System.currentTimeMillis());
+        if (isInputValid(companyNamevalue, venueValue, salaryValue, dateValue, companyDescriptionValue)) {
+
             RadioButton radioButton = this.getView().findViewById(radioGroup.getCheckedRadioButtonId());
             TOPIC = "/topics/" + radioButton.getText();
-            Notification notification = new Notification(time, companyNamevalue, venueValue, radioButton.getText().toString(), salaryValue, eligibilityValue, dateValue, "0");
-            new SendNotifyRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, notification);
+
+            NotificationDto notificationDto = new NotificationDto(companyNamevalue, radioButton.getText().toString(), dateValue, salaryValue, venueValue, companyDescriptionValue);
+            new SendNotifyRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, notificationDto);
         }
     }
 
-    private boolean isInputValid(String companyNameValue, String venueValue, String salaryValue, String dateValue, String eligibilityValue) {
+    private boolean isInputValid(String companyNameValue, String venueValue, String salaryValue, String dateValue, String companyDescriptionValue) {
         boolean isValid = true;
         if (companyNameValue.isEmpty()) {
             companyName.setError("This field cannot be empty");
@@ -163,8 +171,8 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
             date.setError("This field cannot be empty");
             isValid = false;
         }
-        if (eligibilityValue.isEmpty()) {
-            eligibility.setError("This field cannot be empty");
+        if (companyDescriptionValue.isEmpty()) {
+            companyDescription.setError("This field cannot be empty");
             isValid = false;
         }
         if (radioGroup.getCheckedRadioButtonId() == -1) {
@@ -174,33 +182,75 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         return isValid;
     }
 
-    private class SendNotifyRunner extends AsyncTask<Notification, String, AtomicReference<Constants.StatusEnum>> {
+    private class SendNotifyRunner extends AsyncTask<NotificationDto, String, AtomicReference<Constants.StatusEnum>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
         @Override
-        protected AtomicReference<Constants.StatusEnum> doInBackground(Notification... notifications) {
-            Notification notificationBean = notifications[0];
-            DatabaseReference databaseReference = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_NOTIFICATIONS + "/" + notificationBean.getTime());
-            databaseReference.setValue(notificationBean);
+        protected AtomicReference<Constants.StatusEnum> doInBackground(NotificationDto... notifications) {
+            NotificationDto notificationBean = notifications[0];
+            persistInDatabase(notificationBean);
 
-            NOTIFICATION_TITLE = notificationBean.getCompanyName();
-            NOTIFICATION_MESSAGE = "Placement Drive Scheduled";
+            if (isNotificationDataSaved) {
+                NOTIFICATION_TITLE = notificationBean.getCompanyName();
+                NOTIFICATION_MESSAGE = "Placement Drive Scheduled";
 
-            JSONObject notification = new JSONObject();
-            JSONObject notificationBody = new JSONObject();
-            try {
-                notificationBody.put("title", NOTIFICATION_TITLE);
-                notificationBody.put("message", NOTIFICATION_MESSAGE);
+                JSONObject notification = new JSONObject();
+                JSONObject notificationBody = new JSONObject();
+                try {
+                    notificationBody.put("title", NOTIFICATION_TITLE);
+                    notificationBody.put("message", NOTIFICATION_MESSAGE);
 
-                notification.put("to", TOPIC);
-                notification.put("data", notificationBody);
-            } catch (JSONException e) {
-                Log.e(TAG, "onCreate: " + e.getMessage());
+                    notification.put("to", TOPIC);
+                    notification.put("data", notificationBody);
+                } catch (JSONException e) {
+                    Log.e(TAG, "onCreate: " + e.getMessage());
+                }
+                return sendNotification(notification);
             }
-            return sendNotification(notification);
+            AtomicReference<Constants.StatusEnum> responseCode = new AtomicReference<>();
+            responseCode.set(Constants.StatusEnum.FAILURE);
+            return responseCode;
+        }
+    }
+
+    private void persistInDatabase(NotificationDto notificationBean) {
+        try {
+//            String jsonString = new Gson().toJson(notificationBean, NotificationDto.class);
+            JSONObject requestObject = new JSONObject();
+            requestObject.put("companyName",notificationBean.getCompanyName());
+            requestObject.put("companyBranch",notificationBean.getCompanyBranch());
+            requestObject.put("date",notificationBean.getDate());
+            requestObject.put("companyPackage",notificationBean.getCompanyPackage());
+            requestObject.put("companyVenue",notificationBean.getCompanyVenue());
+            requestObject.put("companyDescription",notificationBean.getCompanyDescription());
+
+            JsonObjectRequest request = new JsonObjectRequest(
+                    Request.Method.POST,
+                    Constants.HttpConstants.SAVE_NOTIFICATION_URL,
+                    requestObject,
+                    this::parseResponse,
+                    error -> {
+                        Log.e("Error", "Http Call Error");
+                    }
+            );
+            HttpUtils.addRequestToHttpQueue(request,getContext());
+        } catch (JSONException e) {
+            Log.e("Error", ""+e);
+        }
+    }
+
+
+    private void parseResponse(JSONObject resp) {
+        if (resp == null) {
+            return;
+        }
+        try {
+            isNotificationDataSaved = Constants.HttpConstants.SUCCESS.equals(resp.getString("statusCode"));
+        } catch (Exception e) {
+            Log.e("Notification Status", "Notification Could not be saved");
         }
     }
 
@@ -211,7 +261,7 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
                     Toast.makeText(getContext(), "Notification Sent Successfully", Toast.LENGTH_SHORT).show();
                     companyName.setText("");
                     venue.setText("");
-                    eligibility.setText("");
+                    companyDescription.setText("");
                     salary.setText("");
                     date.setText("");
                 },
@@ -225,7 +275,7 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
             }
         };
 
-        MySingleton.getInstance(getContext()).addToRequestQueue(jsonObjectRequest);
+        HttpUtils.addRequestToHttpQueue(jsonObjectRequest,getContext());
         return responseCode;
     }
 

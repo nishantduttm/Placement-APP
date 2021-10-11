@@ -214,19 +214,19 @@
                         android:nestedScrollingEnabled="true" />
 
                     <TextView
-                        android:id="@+id/eligibilityTextView"
+                        android:id="@+id/companyDescriptionTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Enter Eligibility Criteria:"
+                        android:layout_below="@id/venue"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Enter Company Description:"
                         android:textColor="#000000"
                         android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_below="@id/venue"/>
+                        android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/eligibility"
+                        android:id="@+id/companyDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -239,7 +239,7 @@
                         android:padding="10dp"
                         android:textColor="#FFFFFF"
                         android:layout_marginTop="10dp"
-                        android:layout_below="@id/eligibilityTextView"
+                        android:layout_below="@id/companyDescriptionTextView"
                         android:maxLines="2"
                         android:minLines="2"
                         android:nestedScrollingEnabled="true" />
@@ -255,7 +255,7 @@
                         android:text="Send Notification"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        android:layout_below="@id/eligibility"
+                        android:layout_below="@id/companyDescription"
                         android:layout_marginTop="15dp"
                         android:layout_marginBottom="20dp"/>
 

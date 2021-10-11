@@ -368,7 +368,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Overall SGPA"
+                                android:text="Overall CGPA"
                                 android:id="@+id/overallSgpa"
                                 android:textColor="@color/headings"
                                 android:textSize="11sp"
@@ -388,6 +388,41 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:id="@+id/AdminOverallSgpaValue"
+                                android:textSize="13sp"
+                                android:visibility="gone"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingLeft="40sp"
+                            android:paddingRight="40sp"
+                            android:paddingBottom="20sp">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Overall Percentage"
+                                android:id="@+id/overallPercentage"
+                                android:textColor="@color/headings"
+                                android:textSize="11sp"
+                                android:layout_weight="1"/>
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:id="@+id/overallPercentageValue"
+                                android:textSize="13sp"
+                                android:visibility="visible"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:id="@+id/AdminOverallPercentageValue"
                                 android:textSize="13sp"
                                 android:visibility="gone"/>
 

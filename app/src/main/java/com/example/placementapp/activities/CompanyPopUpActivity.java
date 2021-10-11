@@ -1,28 +1,23 @@
 package com.example.placementapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.placementapp.Animation.MyBounceInterpolator;
 import com.example.placementapp.R;
 import com.example.placementapp.admin.fragments.ViewStudentsList;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.SharedPrefHelper;
-import com.example.placementapp.pojo.Notification;
+import com.example.placementapp.pojo.NotificationDto;
 import com.example.placementapp.student.StudentApplicationStatusActivity;
 
 public class CompanyPopUpActivity extends Activity implements View.OnClickListener {
 
-    private Notification notification;
+    private NotificationDto notification;
     private TextView companyName;
     private TextView venue;
     private TextView eligibility;
@@ -37,7 +32,7 @@ public class CompanyPopUpActivity extends Activity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_company_popup);
 
-        notification = (Notification) getIntent().getSerializableExtra("details");
+        notification = (NotificationDto) getIntent().getSerializableExtra("details");
 
         userType = SharedPrefHelper.getEntryfromSharedPreferences(this.getBaseContext(), Constants.SharedPrefConstants.KEY_TYPE);
 
@@ -63,10 +58,10 @@ public class CompanyPopUpActivity extends Activity implements View.OnClickListen
 
     private void setValues() {
         companyName.setText(notification.getCompanyName());
-        venue.setText(notification.getVenue());
-        eligibility.setText(notification.getEligibility());
+        venue.setText(notification.getCompanyVenue());
+        eligibility.setText(notification.getCompanyDescription());
         date.setText(notification.getDate());
-        salary.setText(notification.getSalary());
+        salary.setText(notification.getCompanyPackage());
     }
 
     private void initializeValues() {
@@ -84,14 +79,14 @@ public class CompanyPopUpActivity extends Activity implements View.OnClickListen
         if(userType.equals(Constants.UserTypes.ADMIN))
         {
             Intent intent = new Intent(view.getContext(), ViewStudentsList.class);
-            intent.putExtra("companyID", notification.getTime());
+            intent.putExtra("companyID", notification.getNotificationId());
             view.getContext().startActivity(intent);
         }
         else
         {
             Intent intent = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
             intent.putExtra("companyName", companyName.getText().toString());
-            intent.putExtra("companyID", notification.getTime());
+            intent.putExtra("companyID", notification.getNotificationId());
             view.getContext().startActivity(intent);
         }
     }

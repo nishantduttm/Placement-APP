@@ -6,4 +6,9 @@ public abstract class StringUtils {
     {
         return (string!=null) && (string.length()>0);
     }
+
+    public static boolean isBlank(String string)
+    {
+        return !isNotBlank(string);
+    }
 }

@@ -42,6 +42,7 @@ public class PlacementDashboardFragment extends Fragment implements ValueEventLi
     private TextView onHoldCompaniesView;
     private ProgressBar dashboardProgressBar;
     private TextView nameTextView;
+
     public PlacementDashboardFragment() {
     }
 

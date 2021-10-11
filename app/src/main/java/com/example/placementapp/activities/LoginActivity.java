@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
@@ -14,6 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.placementapp.Animation.MyBounceInterpolator;
 import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
@@ -21,16 +24,22 @@ import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.pojo.StudentUser;
 import com.example.placementapp.pojo.User;
+import com.example.placementapp.pojo.UserDto;
+import com.example.placementapp.utils.HttpUtils;
 import com.example.placementapp.utils.StringUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, ValueEventListener {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     public DatabaseReference ref;
     public Button loginButton;
     public EditText prnView;
@@ -40,7 +49,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public String password;
     public String prn;
 
-    private int loginStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,45 +77,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         MyBounceInterpolator interpolator = new MyBounceInterpolator(0.05, 5);
         myAnim.setInterpolator(interpolator);
         view.startAnimation(myAnim);
+        progressBar.setVisibility(View.VISIBLE);
         prn = prnView.getText().toString();
         password = passwordView.getText().toString();
         checkLoginStatus(prn, password);
     }
 
-    private class LoginTaskRunner extends AsyncTask<DataSnapshot, String, Constants.StatusEnum> {
-
-        @Override
-        protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Constants.StatusEnum doInBackground(DataSnapshot... snapshots) {
-            return validateLogin(snapshots[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Constants.StatusEnum result) {
-            progressBar.setVisibility(View.GONE);
-            switch (result) {
-                case SUCCESS:
-                    Toast.makeText(LoginActivity.this, "Logged In Successfully", Toast.LENGTH_SHORT).show();
-                    redirectIntent();
-                    break;
-                case INCORRECT:
-                    passwordView.setError("Incorrect Password!");
-                    Toast.makeText(LoginActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
-                    break;
-                case INVALID:
-                    Toast.makeText(LoginActivity.this, "No Account Registered! Please Register First!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
     private void checkLoginStatus(String username, String password) {
         if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
-            ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN + "/" + username);
-            ref.addListenerForSingleValueEvent(this);
+            loginUser(constructHttpRequest(username, password));
         } else {
             if (!StringUtils.isNotBlank(username)) {
                 prnView.setError("Cannot Be Blank");
@@ -120,32 +98,70 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    @Override
-    public void onDataChange(@NonNull DataSnapshot snapshot) {
-        new LoginTaskRunner().execute(snapshot);
+    private void loginUser(JsonObjectRequest jsonObjectRequest) {
+        if (jsonObjectRequest == null)
+            processResponseResult(Constants.StatusEnum.FAILURE);
+
+        else {
+            HttpUtils.addRequestToHttpQueue(jsonObjectRequest, this);
+        }
     }
 
-    private Constants.StatusEnum validateLogin(@NonNull DataSnapshot snapshot) {
-        StudentUser su = snapshot.getValue(StudentUser.class);
-        if (su != null) {
-            if (checkPassword(password, su)) {
-                storeInSharedPref(su);
-                return Constants.StatusEnum.SUCCESS;
-            } else {
-                return Constants.StatusEnum.INCORRECT;
-            }
-        } else {
-            User u = snapshot.getValue(User.class);
-            if (u != null) {
-                if (checkPassword(password, u)) {
-                    storeInSharedPref(u);
-                    return Constants.StatusEnum.SUCCESS;
-                } else {
-                    return Constants.StatusEnum.INCORRECT;
-                }
-            } else {
-                return Constants.StatusEnum.INVALID;
-            }
+    private JsonObjectRequest constructHttpRequest(String username, String password) {
+
+        try {
+            JSONObject loginObject = new JSONObject();
+            loginObject.put("prn", username);
+            loginObject.put("password", password);
+
+            return new JsonObjectRequest(
+                    Request.Method.POST,
+                    Constants.HttpConstants.USER_LOGIN_URL,
+                    loginObject,
+                    this::parseResponse,
+                    error -> processResponseResult(Constants.StatusEnum.FAILURE)
+            );
+        } catch (JSONException e) {
+            return null;
+        }
+
+    }
+
+    private void parseResponse(JSONObject resp) {
+        if (resp == null) {
+            processResponseResult(Constants.StatusEnum.FAILURE);
+            return;
+        }
+        try {
+            UserDto userDto = new Gson().fromJson(resp.toString(), UserDto.class);
+            Log.i("User", userDto.toString());
+
+            if (userDto.isLoginSuccessful()) {
+                processResponseResult(Constants.StatusEnum.SUCCESS);
+                storeInSharedPref(userDto);
+                redirectIntent();
+            } else
+                processResponseResult(Constants.StatusEnum.INVALID);
+
+        } catch (Exception e) {
+            processResponseResult(Constants.StatusEnum.FAILURE);
+        }
+    }
+
+    private void processResponseResult(Constants.StatusEnum result) {
+        progressBar.setVisibility(View.GONE);
+        switch (result) {
+            case FAILURE:
+                Toast.makeText(LoginActivity.this, "System Error. Please try again", Toast.LENGTH_SHORT).show();
+                break;
+
+            case INVALID:
+                Toast.makeText(LoginActivity.this, "Invalid Login Credentials", Toast.LENGTH_SHORT).show();
+                break;
+
+            case SUCCESS:
+                Toast.makeText(LoginActivity.this, "Login Successful.", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -153,16 +169,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return password.equals(u.getPassword());
     }
 
-    public void storeInSharedPref(User u) {
+    public void storeInSharedPref(UserDto u) {
         SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_NAME, u.getName());
-        if (u instanceof StudentUser) {
-            StudentUser su = (StudentUser) u;
-            SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_BRANCH, su.getBranch());
-            SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_PRN, su.getPrn());
+        SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_PRN, u.getPrn());
+
+        if (StringUtils.isNotBlank(u.getBranch()) && StringUtils.isNotBlank(u.getEmail())) {
+            SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_BRANCH, u.getBranch());
+            SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_MAIL, u.getEmail());
         }
-        SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_PASSWORD, password);
-        SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_MAIL, u.getMail());
-        SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_TYPE, String.valueOf(u.getType()));
+
+        SharedPrefHelper.saveEntryinSharedPreferences(getContext(), Constants.SharedPrefConstants.KEY_TYPE, u.getUserType());
     }
 
     public void redirectIntent() {
@@ -173,12 +189,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return this.getApplicationContext();
     }
 
-    @Override
-    public void onCancelled(@NonNull DatabaseError error) {
-        Toast.makeText(LoginActivity.this, "System Issue.. Please try again later", Toast.LENGTH_SHORT).show();
-    }
+
     public void onBackPressed() {
-       finishAffinity();
+        finishAffinity();
     }
 
 }

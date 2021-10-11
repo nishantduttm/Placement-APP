@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +22,22 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.placementapp.R;
 import com.example.placementapp.activities.CompanyPopUpActivity;
 import com.example.placementapp.admin.fragments.ViewNotificationList;
 import com.example.placementapp.admin.fragments.ViewStudentsProfile;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.pojo.Notification;
+import com.example.placementapp.pojo.NotificationDto;
 import com.example.placementapp.pojo.StudentUser;
+import com.example.placementapp.pojo.UserDto;
 import com.example.placementapp.student.UpdateProfile;
+import com.example.placementapp.utils.HttpUtils;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,19 +45,21 @@ import java.util.List;
 public class RecyclerViewAdapterViewStudentsProfile extends RecyclerView.Adapter<RecyclerViewAdapterViewStudentsProfile.MyViewHolder> implements View.OnClickListener {
 
     private Context context;
-    private List<StudentUser> studentsProfileList;
+    private List<UserDto> studentsProfileList;
     private ViewStudentsProfile fragment;
     private RelativeLayout hiddenView;
     private List<MyViewHolder> myViewHolders = new ArrayList<>();
     private ImageButton imgButton;
     private String userType;
 
-    public RecyclerViewAdapterViewStudentsProfile(Context context, List<StudentUser> studentsProfileList) {
+    private String url = Constants.HttpConstants.GET_SPECIFIC_USER_URL;
+
+    public RecyclerViewAdapterViewStudentsProfile(Context context, List<UserDto> studentsProfileList) {
         this.context = context;
         this.studentsProfileList = studentsProfileList;
     }
 
-    public RecyclerViewAdapterViewStudentsProfile(List<StudentUser> studentsProfileList, ViewStudentsProfile fragment, String userType) {
+    public RecyclerViewAdapterViewStudentsProfile(List<UserDto> studentsProfileList, ViewStudentsProfile fragment, String userType) {
         this.studentsProfileList = studentsProfileList;
         this.fragment = fragment;
         this.userType = userType;
@@ -65,7 +76,7 @@ public class RecyclerViewAdapterViewStudentsProfile extends RecyclerView.Adapter
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        StudentUser user = (StudentUser) studentsProfileList.get(position);
+        UserDto user = (UserDto) studentsProfileList.get(position);
         holder.cardView.setAnimation(AnimationUtils.loadAnimation(fragment.getContext(), R.anim.fade_scale_animation));
         holder.companyName.setText(user.getName());
 
@@ -84,19 +95,7 @@ public class RecyclerViewAdapterViewStudentsProfile extends RecyclerView.Adapter
 
         int pos = (int) view.getTag();
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("profileDetails", studentsProfileList.get(pos));
-
-        Fragment frag = new UpdateProfile();
-        frag.setArguments(bundle);
-
-        FragmentManager manager = fragment.getActivity().getSupportFragmentManager();
-        FragmentTransaction trans = manager.beginTransaction();
-
-        trans.replace(R.id.activity_main_frame_layout,frag);
-        trans.setCustomAnimations(R.anim.fade_in,R.anim.fade_out);
-        trans.commit();
-
+        HttpUtils.addRequestToHttpQueue(constructHttpRequest(url, studentsProfileList.get(pos)), fragment.getContext());
 
 //        holder.applicationsButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -118,6 +117,41 @@ public class RecyclerViewAdapterViewStudentsProfile extends RecyclerView.Adapter
 //        });
     }
 
+    private JsonObjectRequest constructHttpRequest(String url, UserDto userDto) {
+        try {
+            url = url + userDto.getPrn();
+
+            return new JsonObjectRequest(
+                    Request.Method.GET,
+                    url,
+                    null,
+                    this::getResponse,
+                    null
+            );
+        } catch (RuntimeException e) {
+            Log.i("Error", "Http Error");
+        }
+        return null;
+    }
+
+    private void getResponse(JSONObject jsonObject) {
+        if (jsonObject != null) {
+            UserDto userDto = new Gson().fromJson(jsonObject.toString(), UserDto.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("profileDetails",userDto);
+
+            Fragment frag = new UpdateProfile();
+            frag.setArguments(bundle);
+
+
+            FragmentManager manager = fragment.getActivity().getSupportFragmentManager();
+            FragmentTransaction trans = manager.beginTransaction();
+
+            trans.replace(R.id.activity_main_frame_layout,frag);
+            trans.setCustomAnimations(R.anim.fade_in,R.anim.fade_out);
+            trans.commit();
+        }
+    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView companyName;

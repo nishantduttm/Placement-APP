@@ -10,6 +10,7 @@ public class Notification implements Serializable {
     public String salary;
     public String eligibility;
     public String count;
+    public String date;
 
     public String getCount() {
         return count;
@@ -26,8 +27,6 @@ public class Notification implements Serializable {
     public void setTime(String time) {
         this.time = time;
     }
-
-    public String date;
 
     public Notification(String time,String companyName, String venue, String branch, String salary, String eligibility, String date, String count) {
         this.time = time;

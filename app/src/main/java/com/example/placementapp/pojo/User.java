@@ -8,6 +8,17 @@ public class User {
     private String name;
     private String type;
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("User{");
+        sb.append("mail='").append(mail).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", type='").append(type).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
+
     public User(String mail, String password, String name, String type) {
         this.mail = mail;
         this.password = password;

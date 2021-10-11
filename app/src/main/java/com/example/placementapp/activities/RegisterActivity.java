@@ -1,7 +1,6 @@
 package com.example.placementapp.activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -16,28 +15,27 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.placementapp.Animation.MyBounceInterpolator;
-import com.example.placementapp.R;
-import com.example.placementapp.constants.Constants;
-import com.example.placementapp.helper.FirebaseHelper;
-import com.example.placementapp.pojo.StudentUser;
-import com.example.placementapp.utils.StringUtils;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.regex.Pattern;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, ValueEventListener, AdapterView.OnItemSelectedListener {
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.placementapp.Animation.MyBounceInterpolator;
+import com.example.placementapp.R;
+import com.example.placementapp.constants.Constants;
+import com.example.placementapp.utils.HttpUtils;
+import com.example.placementapp.utils.StringUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Objects;
+import java.util.regex.Pattern;
+
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private static final String[] dropdownArray = {"Select Stream", "Comp", "Mech", "Civil", "MechSandwich"};
 
-    public DatabaseReference ref;
     public Button RegisterButton;
     public EditText passwordView;
     public EditText emailView;
@@ -52,26 +50,24 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public String name;
     public String branch;
     private String email = null;
-    private TextView loginView;
-    public StudentUser su;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_register);
         RegisterButton = findViewById(R.id.registerButton);
         passwordView = findViewById(R.id.password);
         emailView = findViewById(R.id.email);
         nameView = findViewById(R.id.Name);
-        loginView = findViewById(R.id.loginHereView);
+        TextView loginView = findViewById(R.id.loginHereView);
         prnView = findViewById(R.id.PRN);
         dropdown = findViewById(R.id.streamDropdown);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
 
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, R.layout.spinnert_row, R.id.streamDropdown, dropdownArray);
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(this, R.layout.spinnert_row, R.id.streamDropdown, dropdownArray);
         dropdown.setAdapter(adapter);
         dropdown.setOnItemSelectedListener(this);
 
@@ -99,8 +95,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if (StringUtils.isNotBlank(email) && StringUtils.isNotBlank(prn)) {
             if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(name) && pattern1.matcher(email).matches() && pattern2.matcher(prn).matches()) {
                 progressBar.setVisibility(View.VISIBLE);
-                ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN + "/" + prn);
-                ref.addListenerForSingleValueEvent(this);
+                // Call the Async Task runner
+                registerUser(constructHttpRequest());
             } else {
                 if (!pattern1.matcher(email).matches()) {
                     emailView.setError("Invalid Email Format");
@@ -129,54 +125,72 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public class RegisterTaskRunner extends AsyncTask<DataSnapshot, String, Constants.StatusEnum> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
+    private JsonObjectRequest constructHttpRequest() {
+        try {
+            JSONObject registrationObject = new JSONObject();
+            registrationObject.put("prn", prn);
+            registrationObject.put("name", name);
+            registrationObject.put("email", email);
+            registrationObject.put("password", password);
+            registrationObject.put("userType", Constants.UserTypes.STUDENT);
+            registrationObject.put("branch", branch);
+
+            return new JsonObjectRequest(
+                    Request.Method.POST,
+                    Constants.HttpConstants.USER_REGISTRATION_URL,
+                    registrationObject,
+                    this::parseResponse,
+                    error -> processResponseResult(Constants.StatusEnum.FAILURE)
+            );
+        } catch (JSONException e) {
+            return null;
         }
+    }
 
-        @Override
-        protected Constants.StatusEnum doInBackground(DataSnapshot... snapshots) {
-            return validateRegister(snapshots[0]);
+    private void parseResponse(JSONObject resp) {
+        if (resp == null) {
+            processResponseResult(Constants.StatusEnum.FAILURE);
+            return;
         }
-
-        @Override
-        protected void onPostExecute(Constants.StatusEnum result) {
-            progressBar.setVisibility(View.GONE);
-            switch (result) {
-                case INVALID:
-                    emailView.setError("Account Already Registered");
-                    Toast.makeText(RegisterActivity.this, "Account Already Registered.!", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case SUCCESS:
-                    Toast.makeText(RegisterActivity.this, "Registered Successfully..Please Login now", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
-                    startActivity(i);
+        try {
+            if (resp.getString(Constants.HttpConstants.KEY_STATUS_CODE).equals(Constants.HttpConstants.USER_REGISTERED)) {
+                processResponseResult(Constants.StatusEnum.SUCCESS);
+            } else if (resp.getString(Constants.HttpConstants.KEY_STATUS_CODE).equals(Constants.HttpConstants.EXISTING_USER)) {
+                processResponseResult(Constants.StatusEnum.INVALID);
             }
+        } catch (JSONException e) {
+            processResponseResult(Constants.StatusEnum.FAILURE);
         }
     }
 
-    @Override
-    public void onDataChange(@NonNull DataSnapshot snapshot) {
-        new RegisterTaskRunner().execute(snapshot);
+    private void registerUser(JsonObjectRequest request) {
+        if (request == null) {
+            processResponseResult(Constants.StatusEnum.FAILURE);
+            return;
+        }
+
+        HttpUtils.addRequestToHttpQueue(request, this);
     }
 
-    public Constants.StatusEnum validateRegister(DataSnapshot snapshot) {
-        su = snapshot.getValue(StudentUser.class);
-        if (su != null) {
-            return Constants.StatusEnum.INVALID;
-        } else {
-            su = new StudentUser(email, password, name, Constants.UserTypes.STUDENT, branch, prn);
-            ref.setValue(su);
-            return Constants.StatusEnum.SUCCESS;
+    private void processResponseResult(Constants.StatusEnum result) {
+        progressBar.setVisibility(View.GONE);
+        switch (result) {
+            case FAILURE:
+                Toast.makeText(RegisterActivity.this, "System Error. Please try again", Toast.LENGTH_SHORT).show();
+                break;
+
+            case INVALID:
+                emailView.setError("Account Already Registered");
+                Toast.makeText(RegisterActivity.this, "Account Already Registered.!", Toast.LENGTH_SHORT).show();
+                break;
+
+            case SUCCESS:
+                Toast.makeText(RegisterActivity.this, "Registered Successfully..Please Login now", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(i);
         }
     }
 
-    @Override
-    public void onCancelled(@NonNull DatabaseError error) {
-    }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

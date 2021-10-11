@@ -15,6 +15,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.placementapp.Adapters.RecyclerViewAdapterViewNotifcation;
 import com.example.placementapp.Adapters.RecyclerViewAdapterViewStudentsProfile;
 import com.example.placementapp.R;
@@ -23,7 +25,12 @@ import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.pojo.ApplicationForm;
 import com.example.placementapp.pojo.Notification;
+import com.example.placementapp.pojo.NotificationsList;
 import com.example.placementapp.pojo.StudentUser;
+import com.example.placementapp.pojo.UserDto;
+import com.example.placementapp.pojo.UserDtoList;
+import com.example.placementapp.utils.HttpUtils;
+import com.example.placementapp.utils.StringUtils;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +38,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,25 +53,24 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-public class ViewStudentsProfile extends Fragment implements ValueEventListener, AdapterView.OnItemSelectedListener {
+import org.json.JSONObject;
+
+public class ViewStudentsProfile extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private static final List<String> list;
-    private static final Cache<String, List<StudentUser>> studentProfileCache;
-    private static final String NOTIFICATIONS_CACHE_KEY = "CACHE_NOTIFICATIONS_";
-    private DatabaseReference myApplicationRef;
+
     static {
         list = new ArrayList<>();
         list.add("Choose a Stream");
+        list.add("All");
         list.add("Comp");
         list.add("Mech");
         list.add("Civil");
         list.add("MechSandwich");
-        studentProfileCache = CacheBuilder.newBuilder().build();
     }
 
-    private static List<StudentUser> studentsProfileList;
+    private static List<UserDto> studentsProfileList;
 
-    private DatabaseReference ref;
     private RecyclerView recyclerView;
     private RecyclerViewAdapterViewStudentsProfile profileAdapter;
     private ProgressBar progressBar;
@@ -94,7 +101,6 @@ public class ViewStudentsProfile extends Fragment implements ValueEventListener,
         studentsProfileList = new ArrayList<>();
 
         userType = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(), Constants.SharedPrefConstants.KEY_TYPE);
-        this.ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN);
 
         if (userType.equals(Constants.UserTypes.ADMIN)) {
             initializeViewForAdmin(inflater, container, v);
@@ -135,8 +141,8 @@ public class ViewStudentsProfile extends Fragment implements ValueEventListener,
                     branch = spinner.getSelectedItem().toString();
                 }
                 dialogInterface.dismiss();
-                this.ref.addListenerForSingleValueEvent(this);
                 //getDataFromCache(ref);
+                new ViewStudentsProfile.ViewStudentsProfileTaskRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Constants.HttpConstants.GET_USERS_URL, branch);
             });
 
             builder.setNegativeButton("Dismiss", (dialogInterface, i) -> dialogInterface.dismiss());
@@ -145,53 +151,11 @@ public class ViewStudentsProfile extends Fragment implements ValueEventListener,
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
         });
-        this.ref.addListenerForSingleValueEvent(this);
-    }
-
-    private List<StudentUser> getDataFromCache(DatabaseReference ref) {
-        List<StudentUser> users = null;
-        //List<Notification> notifications = notificationCache.getIfPresent(NOTIFICATIONS_CACHE_KEY + branch);
-        //notifications == null || notifications.isEmpty()
-        if (true) {
-            this.ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_LOGIN);
-            this.ref.addListenerForSingleValueEvent(this);
-        } else {
-            studentsProfileList.clear();
-            for (StudentUser user : users) {
-                if (!branch.equals("ALL")) {
-                    if (user.getBranch().equals(branch))
-                        studentsProfileList.add(user);
-                } else {
-                    studentsProfileList.add(user);
-                }
-            }
-            Log.i("STATS AFTER: ", String.valueOf(users.size()));
-            displayList();
-        }
-        return studentsProfileList;
+        new ViewStudentsProfile.ViewStudentsProfileTaskRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Constants.HttpConstants.GET_USERS_URL, branch);
     }
 
 
-    public class ViewStudentsProfileTaskRunner extends AsyncTask<DataSnapshot, String, List<StudentUser>> {
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        void getNotification(Map<String, StudentUser> users) {
-            for (Map.Entry<String, StudentUser> entry : users.entrySet()) {
-                StudentUser user = entry.getValue();
-                Log.i("Branch",branch);
-                if (!branch.equals("ALL")) {
-                    if (user.getType().equals(Constants.UserTypes.STUDENT) && user.getBranch().equals(branch)) {
-                        studentsProfileList.add(user);
-                    }
-                } else {
-                    if(user.getType().equals(Constants.UserTypes.STUDENT))
-                        studentsProfileList.add(user);
-                }
-            }
-            if(studentsProfileList.isEmpty())
-                showToast("No Students Yet..! Stay Tuned..!");
-            studentsProfileList.sort((a, b) -> a.getName().compareTo(b.getName()));
-        }
+    public class ViewStudentsProfileTaskRunner extends AsyncTask<String, String, List<UserDto>> {
 
         @Override
         protected void onPreExecute() {
@@ -200,22 +164,49 @@ public class ViewStudentsProfile extends Fragment implements ValueEventListener,
 
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
-        protected List<StudentUser> doInBackground(DataSnapshot... snapshots) {
-            DataSnapshot snapshot = snapshots[0];
+        protected List<UserDto> doInBackground(String... urls) {
+            String url = urls[0];
+            String branch = urls[1];
             studentsProfileList.clear();
-            Map<String, StudentUser> users = snapshot.getValue(new GenericTypeIndicator<Map<String, StudentUser>>() {
-            });
-
-            if (users == null)
+            // TODO make call to Web server
+            if (StringUtils.isBlank(url) || StringUtils.isBlank(branch)) {
+                Log.e("Error", "No Url/branch to make Http Call");
                 showToast("No Students Yet! Stay Tuned!");
-            else {
-                getNotification(users);
+                return null;
             }
+            HttpUtils.addRequestToHttpQueue(constructHttpRequest(url, branch), getContext());
             return null;
         }
 
+        private Request<?> constructHttpRequest(String url, String branch) {
+            url = url + branch;
+            return new JsonObjectRequest(
+                    Request.Method.GET,
+                    url,
+                    null,
+                    this::populateStudentsList,
+                    error -> {
+                        Log.e("Error", "HTTP Call failed: ");
+                    }
+            );
+        }
+
+        private void populateStudentsList(JSONObject jsonObject) {
+            if (jsonObject == null)
+                return;
+            Log.i("Object",jsonObject.toString());
+            studentsProfileList.addAll(new Gson().fromJson(jsonObject.toString(), UserDtoList.class).getUsers());
+            if (studentsProfileList.isEmpty()) {
+                Log.i("Data",studentsProfileList.toString());
+                showToast("No Students Yet! Stay Tuned!");
+            }
+            else {
+                displayList();
+            }
+        }
+
         @Override
-        protected void onPostExecute(List<StudentUser> users) {
+        protected void onPostExecute(List<UserDto> users) {
            /* if (!notificationList.isEmpty()) {
                 notificationCache.cleanUp();
                 notificationCache.put(NOTIFICATIONS_CACHE_KEY + branch, notificationList);
@@ -235,18 +226,11 @@ public class ViewStudentsProfile extends Fragment implements ValueEventListener,
     }
 
     @Override
-    public void onDataChange(@NonNull DataSnapshot snapshot) {
-        new ViewStudentsProfileTaskRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, snapshot);
-    }
-
-    @Override
-    public void onCancelled(@NonNull DatabaseError error) {
-        showToast("System Error..Please try again later");
-    }
-
-    @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        branch = adapterView.getSelectedItem().toString();
+        if (i == 0)
+            branch = list.get(1);
+        else
+            branch = adapterView.getSelectedItem().toString();
     }
 
     @Override

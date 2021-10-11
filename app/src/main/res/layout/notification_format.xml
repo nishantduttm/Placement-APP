@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/smartdp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <RelativeLayout
             android:id="@+id/fixedlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintVertical_bias="1.0">
 
 
             <ImageView
@@ -44,29 +44,21 @@
                 android:layout_width="108dp"
                 android:layout_height="87dp"
                 android:src="@drawable/indiralogo"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.011"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_centerVertical="true"/>
+
 
             <TextView
                 android:id="@+id/companyNameView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/imageView2"
                 android:fontFamily="@font/arbutus"
-                android:text="Syntel"
+                android:text="Aravind Pidaparthy"
                 android:textColor="#FFFFFF"
                 android:textSize="23sp"
-                android:textStyle="bold"
-                android:scrollHorizontally="false"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.185"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.242" />
-
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/statusTextView"
@@ -78,10 +70,10 @@
                 android:layout_marginBottom="16dp"
                 android:fontFamily="@font/arbutus"
                 android:text="Status :"
-                android:visibility="gone"
                 android:textColor="#FFFFFF"
                 android:textSize="15sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.026"
@@ -97,10 +89,10 @@
                 android:layout_marginLeft="15dp"
                 android:fontFamily="@font/arbutus"
                 android:text="In Process"
-                android:visibility="gone"
                 android:textColor="#FFFFFF"
                 android:textSize="17sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintBaseline_toBaselineOf="@id/statusTextView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -110,22 +102,19 @@
                 android:id="@+id/applicantsCountTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/companyNameView"
                 android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
-                android:layout_marginTop="11dp"
+                android:layout_marginTop="-26dp"
                 android:layout_marginBottom="16dp"
+                android:layout_toRightOf="@id/imageView2"
                 android:fontFamily="@font/arbutus"
+                android:gravity="center_vertical"
                 android:text="Applicants :"
                 android:textColor="#FFFFFF"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.026"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/companyNameView"
-                app:layout_constraintVertical_bias="1.0"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/applicantsCountView"
@@ -138,14 +127,14 @@
                 android:textColor="#FFFFFF"
                 android:textSize="17sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintBaseline_toBaselineOf="@id/applicantsCountTextView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/applicantsCountTextView"
-                android:visibility="gone"/>
+                app:layout_constraintStart_toEndOf="@+id/applicantsCountTextView" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </RelativeLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
