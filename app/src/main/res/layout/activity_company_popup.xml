@@ -76,7 +76,7 @@
                     android:layout_below="@id/dateTextView"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="65dp"
-                    android:text="Eligibility: "
+                    android:text="Description: "
                     android:textColor="#ff6347"
                     android:textSize="22sp"
                     android:textStyle="bold" />

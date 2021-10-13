@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/base_cardview"
@@ -10,7 +11,7 @@
     android:layout_marginRight="16dp"
     android:layout_marginBottom="10dp"
     android:padding="5dp"
-    app:cardBackgroundColor="#010523"
+    app:cardBackgroundColor="#7CB342"
     app:cardCornerRadius="8dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
@@ -23,8 +24,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintlayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/smartdp">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:id="@+id/fixedlayout"
@@ -56,7 +56,7 @@
                 android:layout_toRightOf="@id/imageView2"
                 android:fontFamily="@font/arbutus"
                 android:text="Aravind Pidaparthy"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textSize="23sp"
                 android:textStyle="bold" />
 

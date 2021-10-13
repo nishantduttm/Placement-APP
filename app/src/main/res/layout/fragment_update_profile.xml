@@ -217,6 +217,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
@@ -659,6 +660,106 @@
                                 android:visibility="gone"/>
                         </LinearLayout>
                     </LinearLayout>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/grey" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:text="10th %"
+                            android:id="@+id/tenthPercentageTextView"
+                            android:layout_weight="1"
+                            android:textColor="@color/headings"
+                            android:textSize="13sp" />
+
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tenthPercentageValue"
+                            android:layout_marginLeft="15sp"
+                            android:layout_weight="3"
+                            android:text="85"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:visibility="visible"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:layout_weight="1"
+                            android:id="@+id/twelvePercentageTextView"
+                            android:text="12th %"
+                            android:layout_marginLeft="7dp"
+                            android:textColor="@color/headings"
+                            android:textSize="13sp" />
+
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_weight="3"
+                            android:id="@+id/twelvePercentageValue"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_marginRight="10dp"
+                            android:text="83"
+                            android:textSize="18sp"
+                            android:visibility="visible"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_weight="4"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="No. of Live Backlogs: "
+                        android:id="@+id/noOfBacklogsTextValue"
+                        android:textColor="@color/headings"
+                        android:textSize="13sp" />
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/noOfBacklogsValue"
+                        android:hint="00"
+                        android:gravity="center"
+                        android:layout_marginLeft="10sp"
+                        android:layout_marginRight="30dp"
+                        android:textSize="18sp"
+                        android:visibility="visible"/>
                 </LinearLayout>
 
                 <View
