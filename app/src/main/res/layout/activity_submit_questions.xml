@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".student.SubmitQuestionsActivity">
+
+    <androidx.appcompat.widget.Toolbar android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorPrimaryDark"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        android:elevation="6dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:orientation="vertical"
+        android:paddingRight="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp"
+            android:fontFamily="@font/kanit_medium"
+            android:text="Submit Question"
+            android:textColor="#3f4658"
+            android:textSize="28dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/kanit_regular"
+            android:text="Question"
+            android:textColor="#BC3F4658"
+            android:textSize="18dp" />
+
+        <EditText
+            android:id="@+id/questionET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:inputType="textMultiLine" />
+
+
+        <Button
+            android:id="@+id/save_question"
+            android:layout_width="140dp"
+            android:layout_height="51dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="35dp"
+            android:background="#000000"
+            android:text="Save"
+            android:textColor="#ffff"
+            android:textSize="16dp" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

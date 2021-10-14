@@ -22,11 +22,12 @@
             android:id="@+id/student_navigation_drawer_view_applications"
             android:title="View Your Applications"/>
         <item
+            android:id="@+id/navigation_drawer_ask_a_question"
+            android:title="Ask a Question"/>
+        <item
             android:id="@+id/navigation_drawer_update_profile"
             android:title="Update Profile"/>
-        <item
-            android:id="@+id/navigation_drawer_prep_material"
-            android:title="Prep Material"/>
+
     </group>
 
     <item

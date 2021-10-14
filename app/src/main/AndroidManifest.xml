@@ -16,9 +16,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name="androidx.multidex.MultidexApplication"
         android:theme="@style/AppTheme">
-        <activity android:name=".student.WebActivity"></activity>
+        <activity
+            android:name=".student.SubmitQuestionsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_submit_questions"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".admin.activities.StatisticsActivity" />
         <activity
             android:name=".activities.SplashActivity"

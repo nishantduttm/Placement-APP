@@ -22,6 +22,7 @@ import com.example.placementapp.admin.fragments.ViewStudentsProfile;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.student.UpdateProfile;
+import com.example.placementapp.student.ViewQuestionsFragment;
 import com.example.placementapp.student.ViewYourApplicationsList;
 import com.example.placementapp.student.PrepMaterialFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -151,6 +152,12 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             case R.id.student_navigation_drawer_view_applications: {
                 toolbar.setTitle("View Your Applications");
                 fragment = new ViewYourApplicationsList();
+                startTransactionFragment(fragment);
+                break;
+            }
+            case R.id.navigation_drawer_ask_a_question: {
+                toolbar.setTitle("Question & Answers");
+                fragment = new ViewQuestionsFragment();
                 startTransactionFragment(fragment);
                 break;
             }
