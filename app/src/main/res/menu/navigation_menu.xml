@@ -24,6 +24,9 @@
         <item
             android:id="@+id/navigation_drawer_update_profile"
             android:title="Update Profile"/>
+        <item
+            android:id="@+id/navigation_drawer_prep_material"
+            android:title="Prep Material"/>
     </group>
 
     <item

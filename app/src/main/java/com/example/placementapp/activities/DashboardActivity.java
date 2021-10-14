@@ -7,25 +7,25 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.placementapp.PlacementDashboardFragment;
-import com.example.placementapp.admin.fragments.SendNotificationFragment;
-
-import com.example.placementapp.R;
-import com.example.placementapp.admin.fragments.ViewNotificationList;
-import com.example.placementapp.admin.fragments.ViewStudentsProfile;
-import com.example.placementapp.constants.Constants;
-import com.example.placementapp.helper.SharedPrefHelper;
-import com.example.placementapp.student.UpdateProfile;
-import com.example.placementapp.student.ViewYourApplicationsList;
-import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.messaging.FirebaseMessaging;
-
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+
+import com.example.placementapp.PlacementDashboardFragment;
+import com.example.placementapp.R;
+import com.example.placementapp.admin.fragments.SendNotificationFragment;
+import com.example.placementapp.admin.fragments.ViewNotificationList;
+import com.example.placementapp.admin.fragments.ViewStudentsProfile;
+import com.example.placementapp.constants.Constants;
+import com.example.placementapp.helper.SharedPrefHelper;
+import com.example.placementapp.student.UpdateProfile;
+import com.example.placementapp.student.ViewYourApplicationsList;
+import com.example.placementapp.student.PrepMaterialFragment;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -163,6 +163,12 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             case R.id.admin_view_students_profile: {
                 toolbar.setTitle("View Students Profile");
                 fragment = new ViewStudentsProfile();
+                startTransactionFragment(fragment);
+                break;
+            }
+            case R.id.navigation_drawer_prep_material: {
+                toolbar.setTitle("View Students Profile");
+                fragment = new PrepMaterialFragment();
                 startTransactionFragment(fragment);
                 break;
             }

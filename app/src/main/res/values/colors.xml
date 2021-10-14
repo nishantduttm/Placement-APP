@@ -5,6 +5,9 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="form_cardview">#F06292</color>
 
+    <color name="bg_screen1">#f64c73</color>
+    <color name="bg_screen2">#20d2bb</color>
+    <color name="bg_screen3">#3395ff</color>
 
     <color name="address">#2F7092</color>
     <color name="followers">#0D5D98</color>
