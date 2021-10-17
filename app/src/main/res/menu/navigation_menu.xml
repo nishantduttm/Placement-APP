@@ -25,6 +25,9 @@
             android:id="@+id/navigation_drawer_ask_a_question"
             android:title="Ask a Question"/>
         <item
+            android:id="@+id/navigation_drawer_prep_material"
+            android:title="Prep Material"/>
+        <item
             android:id="@+id/navigation_drawer_update_profile"
             android:title="Update Profile"/>
 

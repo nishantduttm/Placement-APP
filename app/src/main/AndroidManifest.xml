@@ -23,6 +23,7 @@
             android:label="@string/title_activity_submit_questions"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".admin.activities.StatisticsActivity" />
+        <activity android:name=".student.WebActivity"></activity>
         <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
