@@ -1,0 +1,282 @@
+Index: app/src/main/java/com/example/placementapp/student/StudentApplicationStatusActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.placementapp.student;\r\n\r\nimport android.app.DatePickerDialog;\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.RadioButton;\r\nimport android.widget.RadioGroup;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport com.example.placementapp.R;\r\nimport com.example.placementapp.constants.Constants;\r\nimport com.example.placementapp.helper.FirebaseHelper;\r\nimport com.example.placementapp.helper.SharedPrefHelper;\r\nimport com.example.placementapp.pojo.ApplicationForm;\r\nimport com.example.placementapp.pojo.FormStatus;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.Calendar;\r\nimport java.util.List;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\npublic class StudentApplicationStatusActivity extends AppCompatActivity implements View.OnClickListener {\r\n\r\n    private TextView studentName;\r\n    private TextView studentEmail;\r\n    private TextView studentBranch;\r\n    private TextView studentPRN;\r\n    private TextView companyName;\r\n    private TextView processDate;\r\n    private RadioGroup radioGroup1;\r\n    private RadioGroup radioGroup2;\r\n    private DatabaseReference ref;\r\n    private DatabaseReference refApplied;\r\n    private FormStatus formStatus;\r\n\r\n    private String companyId;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_student_application_status);\r\n        studentName = findViewById(R.id.student_name);\r\n        studentEmail = findViewById(R.id.student_email_address);\r\n        studentPRN = findViewById(R.id.student_prn);\r\n        companyName = findViewById(R.id.company_name);\r\n        studentBranch = findViewById(R.id.student_branch);\r\n        processDate = findViewById(R.id.process_date);\r\n        radioGroup1 = findViewById(R.id.radioGroup);\r\n        radioGroup2 = findViewById(R.id.radioGroup2);\r\n        Button saveButton = findViewById(R.id.save_button);\r\n        Button resetButton = findViewById(R.id.reset_button);\r\n\r\n        setValuesForNonEditable();  //For Setting Values on Non-Editable EditText Views..1\r\n\r\n        getAndSetCompanyNameFromIntent();  //For Setting Company Name on EditText..2\r\n\r\n\r\n        processDate.setOnClickListener(view -> {\r\n            dateDialogInitializer();   //Initializing DateDialog Panel..3\r\n        });\r\n\r\n        saveButton.setOnClickListener(this);\r\n\r\n        resetButton.setOnClickListener(view -> {\r\n\r\n        });\r\n    }\r\n\r\n    //    2\r\n    private void getAndSetCompanyNameFromIntent() {\r\n        Intent intent = getIntent();\r\n        companyName.setText(intent.getStringExtra(\"companyName\"));\r\n        companyId = intent.getStringExtra(\"companyID\");\r\n        if(companyId == null)\r\n            companyId = intent.getStringExtra(\"companyId\");\r\n    }\r\n\r\n    //    3\r\n    private void dateDialogInitializer() {\r\n        Calendar calendar = Calendar.getInstance();\r\n\r\n        int day = calendar.get(Calendar.DAY_OF_MONTH);\r\n        int month = calendar.get(Calendar.MONTH);\r\n        int year = calendar.get(Calendar.YEAR);\r\n\r\n        DatePickerDialog datePicker = new DatePickerDialog(this, (view, year1, monthOfYear, dayOfMonth) -> processDate.setText(dayOfMonth + \"/\" + (monthOfYear + 1) + \"/\" + year1), year, month, day);\r\n        datePicker.show();\r\n    }\r\n\r\n    //    1\r\n    private void setValuesForNonEditable() {\r\n\r\n        studentName.setText(SharedPrefHelper.getEntryfromSharedPreferences(this, Constants.SharedPrefConstants.KEY_NAME));\r\n        studentEmail.setText(SharedPrefHelper.getEntryfromSharedPreferences(this, Constants.SharedPrefConstants.KEY_MAIL));\r\n        studentBranch.setText(SharedPrefHelper.getEntryfromSharedPreferences(this, Constants.SharedPrefConstants.KEY_BRANCH));\r\n        studentPRN.setText(SharedPrefHelper.getEntryfromSharedPreferences(this, Constants.SharedPrefConstants.KEY_PRN));\r\n    }\r\n\r\n    @Override\r\n    public void onClick(View view) {\r\n        if (radioGroup1.getCheckedRadioButtonId() == -1)\r\n            Toast.makeText(this, \"Please Select a Process Round!!\", Toast.LENGTH_SHORT).show();\r\n        if (radioGroup2.getCheckedRadioButtonId() == -1)\r\n            Toast.makeText(this, \"Please Select a Status!!\", Toast.LENGTH_SHORT).show();\r\n        if (processDate.length() == 0) {\r\n            Toast.makeText(this, \"Please Select the Process Date!!\", Toast.LENGTH_SHORT).show();\r\n            processDate.setError(\"Please Select a Date!!\");\r\n        }\r\n\r\n        if (radioGroup1.getCheckedRadioButtonId() != -1 && radioGroup2.getCheckedRadioButtonId() != -1 && processDate.length() != 0) {\r\n            RadioButton radioButton1 = findViewById(radioGroup1.getCheckedRadioButtonId());\r\n            RadioButton radioButton2 = findViewById(radioGroup2.getCheckedRadioButtonId());\r\n\r\n            formStatus = new FormStatus(radioButton1.getText().toString(), processDate.getText().toString());\r\n\r\n            ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + companyId + \"/\" + studentPRN.getText().toString());\r\n            ref.addListenerForSingleValueEvent(new ValueEventListener() {\r\n                @Override\r\n                public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                    ApplicationForm retrievedForm = snapshot.getValue(ApplicationForm.class);\r\n                    if (retrievedForm == null) {\r\n                        //Get and set object FormStatus into the FormStatusList\r\n                        retrievedForm = new ApplicationForm(studentEmail.getText().toString(), studentPRN.getText().toString(), studentName.getText().toString(), studentBranch.getText().toString(), companyName.getText().toString(), companyId, new ArrayList<>(), radioButton2.getText().toString());\r\n                        retrievedForm.getFormStatusList().add(formStatus);\r\n                        ref.setValue(retrievedForm);\r\n                    } else {\r\n                        if (!retrievedForm.getFormStatusList().contains(formStatus)) {\r\n                            retrievedForm.getFormStatusList().add(formStatus);\r\n                            retrievedForm.setOverallStatus(radioButton2.getText().toString());\r\n                            ref.setValue(retrievedForm);\r\n                        } else {\r\n                            for (FormStatus status : retrievedForm.getFormStatusList()) {\r\n                                if (status.getProcessRound().equals(formStatus.getProcessRound())) {\r\n                                    status.setProcessDate(formStatus.getProcessDate());\r\n                                    break;\r\n                                }\r\n                            }\r\n                            retrievedForm.setOverallStatus(radioButton2.getText().toString());\r\n                            ref.setValue(retrievedForm);\r\n                        }\r\n                    }\r\n                }\r\n\r\n                @Override\r\n                public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n                }\r\n            });\r\n\r\n            refApplied = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPILED_COMPANIES + studentPRN.getText().toString() + \"/\" + companyId);\r\n            refApplied.addListenerForSingleValueEvent(new ValueEventListener() {\r\n                @Override\r\n                public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                    ApplicationForm retrievedForm = snapshot.getValue(ApplicationForm.class);\r\n                    if (retrievedForm == null) {\r\n                        //Get and set object FormStatus into the FormStatusList\r\n                        retrievedForm = new ApplicationForm(studentEmail.getText().toString(), studentPRN.getText().toString(), studentName.getText().toString(), studentBranch.getText().toString(), companyName.getText().toString(), companyId, new ArrayList<>(), radioButton2.getText().toString());\r\n                        retrievedForm.getFormStatusList().add(formStatus);\r\n                        refApplied.setValue(retrievedForm);\r\n                    } else {\r\n                        if (!retrievedForm.getFormStatusList().contains(formStatus)) {\r\n                            retrievedForm.getFormStatusList().add(formStatus);\r\n                            retrievedForm.setOverallStatus(radioButton2.getText().toString());\r\n                            refApplied.setValue(retrievedForm);\r\n                        } else {\r\n                            for (FormStatus status : retrievedForm.getFormStatusList()) {\r\n                                if (status.getProcessRound().equals(formStatus.getProcessRound())) {\r\n                                    status.setProcessDate(formStatus.getProcessDate());\r\n                                    break;\r\n                                }\r\n                            }\r\n                            retrievedForm.setOverallStatus(radioButton2.getText().toString());\r\n                            refApplied.setValue(retrievedForm);\r\n                        }\r\n                    }\r\n                }\r\n\r\n                @Override\r\n                public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n                }\r\n            });\r\n\r\n            Toast.makeText(this, \"Application Saved Successfully!\", Toast.LENGTH_SHORT).show();\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/student/StudentApplicationStatusActivity.java b/app/src/main/java/com/example/placementapp/student/StudentApplicationStatusActivity.java
+--- a/app/src/main/java/com/example/placementapp/student/StudentApplicationStatusActivity.java	(revision f9e678fa36bca63d63db79fd83f6098a6467f015)
++++ b/app/src/main/java/com/example/placementapp/student/StudentApplicationStatusActivity.java	(date 1634492689225)
+@@ -3,6 +3,7 @@
+ import android.app.DatePickerDialog;
+ import android.content.Intent;
+ import android.os.Bundle;
++import android.util.Log;
+ import android.view.View;
+ import android.widget.Button;
+ import android.widget.RadioButton;
+@@ -28,6 +29,9 @@
+ import androidx.annotation.NonNull;
+ import androidx.appcompat.app.AppCompatActivity;
+ 
++import org.json.JSONException;
++import org.json.JSONObject;
++
+ public class StudentApplicationStatusActivity extends AppCompatActivity implements View.OnClickListener {
+ 
+     private TextView studentName;
+@@ -120,6 +124,8 @@
+             RadioButton radioButton1 = findViewById(radioGroup1.getCheckedRadioButtonId());
+             RadioButton radioButton2 = findViewById(radioGroup2.getCheckedRadioButtonId());
+ 
++            saveApplicationForm();
++
+             formStatus = new FormStatus(radioButton1.getText().toString(), processDate.getText().toString());
+ 
+             ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + companyId + "/" + studentPRN.getText().toString());
+@@ -193,4 +199,16 @@
+             Toast.makeText(this, "Application Saved Successfully!", Toast.LENGTH_SHORT).show();
+         }
+     }
++
++    private void saveApplicationForm() {
++        try {
++            JSONObject jsonObject = new JSONObject();
++            jsonObject.put("prn", Constants.SharedPrefConstants.KEY_PRN);
++        }
++        catch(JSONException e)
++        {
++            Log.i("Error","JSON Exception");
++        }
++
++    }
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/placementapp/pojo/FormStatusDto.java
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/pojo/FormStatusDto.java b/app/src/main/java/com/example/placementapp/pojo/FormStatusDto.java
+deleted file mode 100644
+--- a/app/src/main/java/com/example/placementapp/pojo/FormStatusDto.java	(revision f9e678fa36bca63d63db79fd83f6098a6467f015)
++++ /dev/null	(revision f9e678fa36bca63d63db79fd83f6098a6467f015)
+@@ -1,57 +0,0 @@
+-package com.example.placementapp.pojo;
+-
+-import android.os.Parcel;
+-import android.os.Parcelable;
+-
+-public class FormStatusDto{
+-    private int formStatusId;
+-    private int applicationFormId;
+-    private String processRound;
+-    private String processDate;
+-
+-    public FormStatusDto() {
+-    }
+-
+-    public int getFormStatusId() {
+-        return formStatusId;
+-    }
+-
+-    public void setFormStatusId(int formStatusId) {
+-        this.formStatusId = formStatusId;
+-    }
+-
+-    public int getApplicationFormId() {
+-        return applicationFormId;
+-    }
+-
+-    public void setApplicationFormId(int applicationFormId) {
+-        this.applicationFormId = applicationFormId;
+-    }
+-
+-    public String getProcessRound() {
+-        return processRound;
+-    }
+-
+-    public void setProcessRound(String processRound) {
+-        this.processRound = processRound;
+-    }
+-
+-    public String getProcessDate() {
+-        return processDate;
+-    }
+-
+-    public void setProcessDate(String processDate) {
+-        this.processDate = processDate;
+-    }
+-
+-    @Override
+-    public String toString() {
+-        final StringBuilder sb = new StringBuilder("FormStatusDto{");
+-        sb.append("formStatusId=").append(formStatusId);
+-        sb.append(", applicationFormId=").append(applicationFormId);
+-        sb.append(", processRound='").append(processRound).append('\'');
+-        sb.append(", processDate='").append(processDate).append('\'');
+-        sb.append('}');
+-        return sb.toString();
+-    }
+-}
+Index: app/src/main/java/com/example/placementapp/pojo/FormStatusList.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/pojo/FormStatusList.java b/app/src/main/java/com/example/placementapp/pojo/FormStatusList.java
+new file mode 100644
+--- /dev/null	(date 1634489631989)
++++ b/app/src/main/java/com/example/placementapp/pojo/FormStatusList.java	(date 1634489631989)
+@@ -0,0 +1,31 @@
++package com.example.placementapp.pojo;
++
++import java.util.List;
++
++public class FormStatusList {
++
++    private List<FormStatus> formStatusList;
++
++    public FormStatusList() {
++    }
++
++    public FormStatusList(List<FormStatus> formStatusList) {
++        this.formStatusList = formStatusList;
++    }
++
++    public List<FormStatus> getFormStatusList() {
++        return formStatusList;
++    }
++
++    public void setFormStatusList(List<FormStatus> formStatusList) {
++        this.formStatusList = formStatusList;
++    }
++
++    @Override
++    public String toString() {
++        final StringBuilder sb = new StringBuilder("FormStatusList{");
++        sb.append("formStatusList=").append(formStatusList);
++        sb.append('}');
++        return sb.toString();
++    }
++}
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"DesignSurface\">\r\n    <option name=\"filePathToZoomLevelMap\">\r\n      <map>\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/drawable-v21/ic_baseline_edit_24.xml\" value=\"0.26615384615384613\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/activity_admin_navigation_drawer.xml\" value=\"0.25416666666666665\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/activity_company_popup.xml\" value=\"0.36666666666666664\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/activity_login.xml\" value=\"0.25416666666666665\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/activity_student_application_status.xml\" value=\"0.25416666666666665\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/activity_student_list.xml\" value=\"0.25416666666666665\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/activity_submit_answers.xml\" value=\"0.23550724637681159\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/activity_submit_questions.xml\" value=\"0.264\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/activity_view_answers.xml\" value=\"0.23550724637681159\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/answer_row_design.xml\" value=\"0.23550724637681159\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/fragment_notification_list.xml\" value=\"0.25416666666666665\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/fragment_placement_dashboard.xml\" value=\"0.25416666666666665\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/fragment_send_notification.xml\" value=\"0.264\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/fragment_update_profile.xml\" value=\"0.264\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/fragment_view_questions.xml\" value=\"0.2\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/fragment_view_students_profile.xml\" value=\"0.25416666666666665\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/notification_format.xml\" value=\"0.264\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/question_row_design.xml\" value=\"0.4\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/menu/navigation_menu.xml\" value=\"0.25416666666666665\" />\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_11\" default=\"false\" project-jdk-name=\"1.8\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\r\n  </component>\r\n  <component name=\"ProjectType\">\r\n    <option name=\"id\" value=\"Android\" />\r\n  </component>\r\n  <component name=\"VisualizationToolProject\">\r\n    <option name=\"state\">\r\n      <ProjectState>\r\n        <option name=\"scale\" value=\"0.1\" />\r\n      </ProjectState>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision f9e678fa36bca63d63db79fd83f6098a6467f015)
++++ b/.idea/misc.xml	(date 1634489120414)
+@@ -9,6 +9,7 @@
+         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_login.xml" value="0.25416666666666665" />
+         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_student_application_status.xml" value="0.25416666666666665" />
+         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_student_list.xml" value="0.25416666666666665" />
++        <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_student_status.xml" value="0.25416666666666665" />
+         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_submit_answers.xml" value="0.23550724637681159" />
+         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_submit_questions.xml" value="0.264" />
+         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_view_answers.xml" value="0.23550724637681159" />
+@@ -25,7 +26,7 @@
+       </map>
+     </option>
+   </component>
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/build/classes" />
+   </component>
+   <component name="ProjectType">
+Index: app/src/main/java/com/example/placementapp/pojo/ApplicationFormDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.placementapp.pojo;\r\n\r\npublic class ApplicationFormDto {\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/pojo/ApplicationFormDto.java b/app/src/main/java/com/example/placementapp/pojo/ApplicationFormDto.java
+--- a/app/src/main/java/com/example/placementapp/pojo/ApplicationFormDto.java	(revision f9e678fa36bca63d63db79fd83f6098a6467f015)
++++ b/app/src/main/java/com/example/placementapp/pojo/ApplicationFormDto.java	(date 1634487727469)
+@@ -1,4 +1,84 @@
+ package com.example.placementapp.pojo;
+ 
+ public class ApplicationFormDto {
++    private int applicationFormId;
++    private String mail;
++    private String prn;
++    private String name;
++    private String branch;
++    private String companyName;
++    private String overallStatus;
++
++    public ApplicationFormDto() {
++    }
++
++    public int getApplicationFormId() {
++        return applicationFormId;
++    }
++
++    public void setApplicationFormId(int applicationFormId) {
++        this.applicationFormId = applicationFormId;
++    }
++
++    public String getMail() {
++        return mail;
++    }
++
++    public void setMail(String mail) {
++        this.mail = mail;
++    }
++
++    public String getPrn() {
++        return prn;
++    }
++
++    public void setPrn(String prn) {
++        this.prn = prn;
++    }
++
++    public String getName() {
++        return name;
++    }
++
++    public void setName(String name) {
++        this.name = name;
++    }
++
++    public String getBranch() {
++        return branch;
++    }
++
++    public void setBranch(String branch) {
++        this.branch = branch;
++    }
++
++    public String getCompanyName() {
++        return companyName;
++    }
++
++    public void setCompanyName(String companyName) {
++        this.companyName = companyName;
++    }
++
++    public String getOverallStatus() {
++        return overallStatus;
++    }
++
++    public void setOverallStatus(String overallStatus) {
++        this.overallStatus = overallStatus;
++    }
++
++    @Override
++    public String toString() {
++        final StringBuilder sb = new StringBuilder("ApplicationFormDto{");
++        sb.append("applicationFormId=").append(applicationFormId);
++        sb.append(", mail='").append(mail).append('\'');
++        sb.append(", prn='").append(prn).append('\'');
++        sb.append(", name='").append(name).append('\'');
++        sb.append(", branch='").append(branch).append('\'');
++        sb.append(", companyName='").append(companyName).append('\'');
++        sb.append(", overallStatus='").append(overallStatus).append('\'');
++        sb.append('}');
++        return sb.toString();
++    }
+ }

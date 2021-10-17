@@ -9,6 +9,7 @@
         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_login.xml" value="0.25416666666666665" />
         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_student_application_status.xml" value="0.25416666666666665" />
         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_student_list.xml" value="0.25416666666666665" />
+        <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_student_status.xml" value="0.25416666666666665" />
         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_submit_answers.xml" value="0.23550724637681159" />
         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_submit_questions.xml" value="0.264" />
         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_view_answers.xml" value="0.23550724637681159" />
@@ -25,7 +26,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

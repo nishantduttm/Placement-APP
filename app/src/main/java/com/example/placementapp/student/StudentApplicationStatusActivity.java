@@ -50,6 +50,8 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
     private TextView processDate;
     private RadioGroup radioGroup1;
     private RadioGroup radioGroup2;
+    RadioButton radioButton1;
+    RadioButton radioButton2;
     private DatabaseReference ref;
     private DatabaseReference refApplied;
     private FormStatus formStatus;
@@ -129,8 +131,8 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
         }
 
         if (radioGroup1.getCheckedRadioButtonId() != -1 && radioGroup2.getCheckedRadioButtonId() != -1 && processDate.length() != 0) {
-            RadioButton radioButton1 = findViewById(radioGroup1.getCheckedRadioButtonId());
-            RadioButton radioButton2 = findViewById(radioGroup2.getCheckedRadioButtonId());
+             radioButton1 = findViewById(radioGroup1.getCheckedRadioButtonId());
+             radioButton2 = findViewById(radioGroup2.getCheckedRadioButtonId());
 
             formStatus = new FormStatus(radioButton1.getText().toString(), processDate.getText().toString());
 
@@ -187,65 +189,29 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
 
 
     void storeInFireBase(int applicationFormId){
-        ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + applicationFormId);
+        ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + applicationFormId+ "/");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ApplicationForm retrievedForm = snapshot.getValue(ApplicationForm.class);
-                if (retrievedForm == null) {
-                    //Get and set object FormStatus into the FormStatusList
-                    retrievedForm = new ApplicationForm(studentEmail.getText().toString(), studentPRN.getText().toString(), studentName.getText().toString(), studentBranch.getText().toString(), companyName.getText().toString(), companyId, new ArrayList<>(), radioButton2.getText().toString());
-                    retrievedForm.getFormStatusList().add(formStatus);
-                    ref.setValue(retrievedForm);
-                } else {
-                    if (!retrievedForm.getFormStatusList().contains(formStatus)) {
-                        retrievedForm.getFormStatusList().add(formStatus);
-                        retrievedForm.setOverallStatus(radioButton2.getText().toString());
-                        ref.setValue(retrievedForm);
-                    } else {
-                        for (FormStatus status : retrievedForm.getFormStatusList()) {
-                            if (status.getProcessRound().equals(formStatus.getProcessRound())) {
-                                status.setProcessDate(formStatus.getProcessDate());
-                                break;
-                            }
+                boolean existsInDb = false;
+
+                if(snapshot != null) {
+
+                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                        FormStatus dbFormStatus = childSnapshot.getValue(FormStatus.class);
+                        if (formStatus.getProcessRound().equals(dbFormStatus.getProcessRound())) {
+                            dbFormStatus.setProcessDate(formStatus.getProcessDate());
+                            ref.setValue(dbFormStatus);
+                            existsInDb = true;
+                            break;
                         }
-                        retrievedForm.setOverallStatus(radioButton2.getText().toString());
-                        ref.setValue(retrievedForm);
                     }
+                    if (!existsInDb)
+                        ref.setValue(formStatus);
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        refApplied = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPILED_COMPANIES + studentPRN.getText().toString() + "/" + companyId);
-        refApplied.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ApplicationForm retrievedForm = snapshot.getValue(ApplicationForm.class);
-                if (retrievedForm == null) {
-                    //Get and set object FormStatus into the FormStatusList
-                    retrievedForm = new ApplicationForm(studentEmail.getText().toString(), studentPRN.getText().toString(), studentName.getText().toString(), studentBranch.getText().toString(), companyName.getText().toString(), companyId, new ArrayList<>(), radioButton2.getText().toString());
-                    retrievedForm.getFormStatusList().add(formStatus);
-                    refApplied.setValue(retrievedForm);
-                } else {
-                    if (!retrievedForm.getFormStatusList().contains(formStatus)) {
-                        retrievedForm.getFormStatusList().add(formStatus);
-                        retrievedForm.setOverallStatus(radioButton2.getText().toString());
-                        refApplied.setValue(retrievedForm);
-                    } else {
-                        for (FormStatus status : retrievedForm.getFormStatusList()) {
-                            if (status.getProcessRound().equals(formStatus.getProcessRound())) {
-                                status.setProcessDate(formStatus.getProcessDate());
-                                break;
-                            }
-                        }
-                        retrievedForm.setOverallStatus(radioButton2.getText().toString());
-                        refApplied.setValue(retrievedForm);
-                    }
+                else
+                {
+                    ref.setValue(formStatus);
                 }
             }
 
@@ -256,6 +222,7 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
         });
 
     }
+
 }
 /*
 

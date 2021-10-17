@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class ApplicationFormDto implements Serializable {
     public int applicationFormId;
     public int notificationId;
-    public String  prn;
+    public String prn;
     public String overallStatus;
 
 
