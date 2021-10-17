@@ -3,6 +3,7 @@ package com.example.placementapp.student;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -10,16 +11,24 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.placementapp.R;
+import com.example.placementapp.activities.LoginActivity;
+import com.example.placementapp.activities.RegisterActivity;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.pojo.ApplicationForm;
+import com.example.placementapp.pojo.ApplicationFormDto;
 import com.example.placementapp.pojo.FormStatus;
+import com.example.placementapp.pojo.UserDto;
+import com.example.placementapp.utils.HttpUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +36,9 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class StudentApplicationStatusActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -122,7 +134,132 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
 
             formStatus = new FormStatus(radioButton1.getText().toString(), processDate.getText().toString());
 
-            ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + companyId + "/" + studentPRN.getText().toString());
+            updateStatus(constructHttpRequest(radioButton1.getText().toString()));
+
+            Toast.makeText(this, "Application Saved Successfully!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private JsonObjectRequest constructHttpRequest(String overAllStatus) {
+        try {
+            JSONObject applicationObject = new JSONObject();
+            applicationObject.put("prn", studentPRN);
+            applicationObject.put("notificationId", companyId);
+            applicationObject.put("overAllStatus", overAllStatus );
+
+            return new JsonObjectRequest(
+                    Request.Method.POST,
+                    Constants.HttpConstants.SAVE_APPLICATION_URL,
+                    applicationObject,
+                    this::parseResponse,
+                    error -> processResponseResult(Constants.StatusEnum.FAILURE)
+            );
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
+    private void parseResponse(JSONObject resp) {
+        if (resp == null) {
+            processResponseResult(Constants.StatusEnum.FAILURE);
+            return;
+        }
+        try {
+            ApplicationFormDto applicationFormDto = new Gson().fromJson(resp.toString(), ApplicationFormDto.class);
+            storeInFireBase(applicationFormDto.getApplicationFormId());
+        } catch (Exception e) {
+            processResponseResult(Constants.StatusEnum.FAILURE);
+        }
+    }
+
+    private void updateStatus(JsonObjectRequest request) {
+        if (request == null) {
+            processResponseResult(Constants.StatusEnum.FAILURE);
+            return;
+        }
+
+        HttpUtils.addRequestToHttpQueue(request, this);
+    }
+
+    private void processResponseResult(Constants.StatusEnum result) {
+    }
+
+
+
+    void storeInFireBase(int applicationFormId){
+        ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + applicationFormId);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ApplicationForm retrievedForm = snapshot.getValue(ApplicationForm.class);
+                if (retrievedForm == null) {
+                    //Get and set object FormStatus into the FormStatusList
+                    retrievedForm = new ApplicationForm(studentEmail.getText().toString(), studentPRN.getText().toString(), studentName.getText().toString(), studentBranch.getText().toString(), companyName.getText().toString(), companyId, new ArrayList<>(), radioButton2.getText().toString());
+                    retrievedForm.getFormStatusList().add(formStatus);
+                    ref.setValue(retrievedForm);
+                } else {
+                    if (!retrievedForm.getFormStatusList().contains(formStatus)) {
+                        retrievedForm.getFormStatusList().add(formStatus);
+                        retrievedForm.setOverallStatus(radioButton2.getText().toString());
+                        ref.setValue(retrievedForm);
+                    } else {
+                        for (FormStatus status : retrievedForm.getFormStatusList()) {
+                            if (status.getProcessRound().equals(formStatus.getProcessRound())) {
+                                status.setProcessDate(formStatus.getProcessDate());
+                                break;
+                            }
+                        }
+                        retrievedForm.setOverallStatus(radioButton2.getText().toString());
+                        ref.setValue(retrievedForm);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        refApplied = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPILED_COMPANIES + studentPRN.getText().toString() + "/" + companyId);
+        refApplied.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ApplicationForm retrievedForm = snapshot.getValue(ApplicationForm.class);
+                if (retrievedForm == null) {
+                    //Get and set object FormStatus into the FormStatusList
+                    retrievedForm = new ApplicationForm(studentEmail.getText().toString(), studentPRN.getText().toString(), studentName.getText().toString(), studentBranch.getText().toString(), companyName.getText().toString(), companyId, new ArrayList<>(), radioButton2.getText().toString());
+                    retrievedForm.getFormStatusList().add(formStatus);
+                    refApplied.setValue(retrievedForm);
+                } else {
+                    if (!retrievedForm.getFormStatusList().contains(formStatus)) {
+                        retrievedForm.getFormStatusList().add(formStatus);
+                        retrievedForm.setOverallStatus(radioButton2.getText().toString());
+                        refApplied.setValue(retrievedForm);
+                    } else {
+                        for (FormStatus status : retrievedForm.getFormStatusList()) {
+                            if (status.getProcessRound().equals(formStatus.getProcessRound())) {
+                                status.setProcessDate(formStatus.getProcessDate());
+                                break;
+                            }
+                        }
+                        retrievedForm.setOverallStatus(radioButton2.getText().toString());
+                        refApplied.setValue(retrievedForm);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+}
+/*
+
+ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + companyId + "/" + studentPRN.getText().toString());
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -189,8 +326,4 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
 
                 }
             });
-
-            Toast.makeText(this, "Application Saved Successfully!", Toast.LENGTH_SHORT).show();
-        }
-    }
-}
+ */

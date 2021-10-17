@@ -51,6 +51,7 @@ public abstract class Constants {
         public static final String GET_QUESTIONS_URL = "https://placement-server.herokuapp.com/rest/question/get-questions";
         public static final String SUBMIT_ANSWER_URL = "https://placement-server.herokuapp.com/rest/answer/submit-answer";
         public static final String GET_ANSWERS_URL = "https://placement-server.herokuapp.com/rest/answer/get-answers?questionId=";
+        public static final String SAVE_APPLICATION_URL = "https://placement-server.herokuapp.com/rest/application/save-application";
 
 
         public static final String KEY_STATUS_CODE = "statusCode";
