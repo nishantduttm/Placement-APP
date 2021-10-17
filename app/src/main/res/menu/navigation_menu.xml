@@ -34,6 +34,10 @@
     </group>
 
     <item
+        android:id="@+id/navigation_drawer_prep_material"
+        android:title="Preparation Material"/>
+
+    <item
         android:id="@+id/navigation_drawer_view_all_notifications"
         android:title="View All Notifications"/>
 

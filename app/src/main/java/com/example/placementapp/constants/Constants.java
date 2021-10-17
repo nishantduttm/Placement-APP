@@ -48,6 +48,9 @@ public abstract class Constants {
         public static final String GET_SPECIFIC_USER_URL = "https://placement-server.herokuapp.com/rest/user/get-user?prn=";
         public static final String UPDATE_USER_PROFILE_URL = "https://placement-server.herokuapp.com/rest/user/update-profile";
         public static final String SUBMIT_QUESTION_URL = "https://placement-server.herokuapp.com/rest/question/submit-question";
+        public static final String GET_QUESTIONS_URL = "https://placement-server.herokuapp.com/rest/question/get-questions";
+        public static final String SUBMIT_ANSWER_URL = "https://placement-server.herokuapp.com/rest/answer/submit-answer";
+        public static final String GET_ANSWERS_URL = "https://placement-server.herokuapp.com/rest/answer/get-answers?questionId=";
 
 
         public static final String KEY_STATUS_CODE = "statusCode";

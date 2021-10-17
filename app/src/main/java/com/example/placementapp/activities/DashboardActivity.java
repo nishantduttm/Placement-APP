@@ -174,7 +174,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 break;
             }
             case R.id.navigation_drawer_prep_material: {
-                toolbar.setTitle("Prep Materials");
+                toolbar.setTitle("Preparation Material");
                 fragment = new PrepMaterialFragment();
                 startTransactionFragment(fragment);
                 break;

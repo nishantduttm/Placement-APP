@@ -1,0 +1,1191 @@
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:dist=\"http://schemas.android.com/apk/distribution\"\r\n    package=\"com.example.placementapp\">\r\n\r\n    <uses-permission android:name=\"android.permission.INTERNET\" />\r\n    <uses-permission android:name=\"com.google.android.c2dm.permission.RECEIVE\" />\r\n    <uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />\r\n    <uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />\r\n\r\n    <dist:module dist:instant=\"true\" />\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/AppTheme\">\r\n        <activity\r\n            android:name=\".student.SubmitQuestionsActivity\"\r\n            android:exported=\"false\"\r\n            android:label=\"@string/title_activity_submit_questions\"\r\n            android:theme=\"@style/AppTheme.NoActionBar\" />\r\n        <activity android:name=\".admin.activities.StatisticsActivity\" />\r\n        <activity\r\n            android:name=\".activities.SplashActivity\"\r\n            android:theme=\"@style/AppTheme.NoActionBar\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.DEFAULT\" />\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n        <activity\r\n            android:name=\".activities.CompanyPopUpActivity\"\r\n            android:theme=\"@style/AppTheme.CustomTheme\" />\r\n        <activity android:name=\".student.StudentApplicationStatusActivity\" />\r\n        <activity\r\n            android:name=\".admin.fragments.ViewStudentsList\"\r\n            android:theme=\"@style/AppTheme.NoActionBar\" />\r\n        <activity\r\n            android:name=\".activities.LoginActivity\"\r\n            android:theme=\"@style/AppTheme\" />\r\n        <activity\r\n            android:name=\".activities.DashboardActivity\"\r\n            android:theme=\"@style/AppTheme.NoActionBar\" />\r\n        <activity android:name=\".activities.RegisterActivity\" />\r\n        <activity android:name=\".admin.activities.StudentStatus\" />\r\n\r\n        <meta-data\r\n            android:name=\"preloaded_fonts\"\r\n            android:resource=\"@array/preloaded_fonts\" />\r\n\r\n        <service android:name=\".service.MyFirebaseInstanceIDService\">\r\n            <intent-filter>\r\n                <action android:name=\"com.google.firebase.INSTANCE_ID_EVENT\" />\r\n            </intent-filter>\r\n        </service>\r\n        <service\r\n            android:name=\".service.MyFirebaseMessagingService\"\r\n            android:permission=\"com.google.android.c2dm.permission.SEND\">\r\n            <intent-filter>\r\n                <action android:name=\"com.google.firebase.MESSAGING_EVENT\" />\r\n                <action android:name=\"com.google.android.c2dm.intent.RECEIVE\" />\r\n            </intent-filter>\r\n        </service>\r\n    </application>\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision b2004e3ae4c58fb896a4cbc137d6a747de83920c)
++++ b/app/src/main/AndroidManifest.xml	(date 1634481012874)
+@@ -18,9 +18,17 @@
+         android:supportsRtl="true"
+         android:theme="@style/AppTheme">
+         <activity
++            android:name=".student.ViewAnswersActivity"
++            android:exported="false" />
++        <activity
+             android:name=".student.SubmitQuestionsActivity"
+             android:exported="false"
+             android:label="@string/title_activity_submit_questions"
++            android:theme="@style/AppTheme.NoActionBar" />
++        <activity
++            android:name=".student.SubmitAnswersActivity"
++            android:exported="false"
++            android:label="@string/title_activity_submit_answers"
+             android:theme="@style/AppTheme.NoActionBar" />
+         <activity android:name=".admin.activities.StatisticsActivity" />
+         <activity
+Index: app/src/main/res/menu/navigation_menu.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<menu xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    tools:showIn=\"navigation_view\">\r\n\r\n    <group android:checkableBehavior=\"single\"\r\n        android:id=\"@+id/admin_group\">\r\n        <item\r\n            android:id=\"@+id/admin_navigation_drawer_send_notifications\"\r\n            android:title=\"Send Notifications\"/>\r\n        <item\r\n            android:id=\"@+id/admin_view_students_profile\"\r\n            android:title=\"View Students Profile\"/>\r\n    </group>\r\n\r\n    <group android:checkableBehavior=\"single\"\r\n        android:id=\"@+id/student_group\">\r\n        <item\r\n            android:id=\"@+id/nav_placementdashboard\"\r\n            android:title=\"Placement Dashboard\"/>\r\n        <item\r\n            android:id=\"@+id/student_navigation_drawer_view_applications\"\r\n            android:title=\"View Your Applications\"/>\r\n        <item\r\n            android:id=\"@+id/navigation_drawer_ask_a_question\"\r\n            android:title=\"Ask a Question\"/>\r\n        <item\r\n            android:id=\"@+id/navigation_drawer_update_profile\"\r\n            android:title=\"Update Profile\"/>\r\n\r\n    </group>\r\n\r\n    <item\r\n        android:id=\"@+id/navigation_drawer_view_all_notifications\"\r\n        android:title=\"View All Notifications\"/>\r\n\r\n    <item\r\n        android:id=\"@+id/log_out\"\r\n        android:title=\"Log Out\" />\r\n\r\n\r\n\r\n</menu>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/menu/navigation_menu.xml b/app/src/main/res/menu/navigation_menu.xml
+--- a/app/src/main/res/menu/navigation_menu.xml	(revision b2004e3ae4c58fb896a4cbc137d6a747de83920c)
++++ b/app/src/main/res/menu/navigation_menu.xml	(date 1634481586769)
+@@ -30,6 +30,10 @@
+ 
+     </group>
+ 
++    <item
++        android:id="@+id/navigation_drawer_prep_material"
++        android:title="Preparation Material"/>
++
+     <item
+         android:id="@+id/navigation_drawer_view_all_notifications"
+         android:title="View All Notifications"/>
+Index: app/src/main/java/com/example/placementapp/Adapters/RecyclerViewAdapterViewQuestions.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//package com.example.placementapp.Adapters;\r\n//\r\n//import android.content.Context;\r\n//import android.content.Intent;\r\n//import android.view.LayoutInflater;\r\n//import android.view.View;\r\n//import android.view.ViewGroup;\r\n//import android.widget.ImageView;\r\n//import android.widget.TextView;\r\n//\r\n//import androidx.annotation.NonNull;\r\n//import androidx.recyclerview.widget.RecyclerView;\r\n//\r\n//import com.example.placementapp.R;\r\n//import com.example.placementapp.pojo.QuestionDto;\r\n//\r\n//import java.util.List;\r\n//\r\n//public class RecyclerViewAdapterViewQuestions extends RecyclerView.Adapter<RecyclerViewAdapterViewQuestions.MyViewHolder> {\r\n//\r\n//    List<QuestionDto> questionList;\r\n//    Context context;\r\n//\r\n//    public RecyclerViewAdapterViewQuestions(Context context, List<QuestionDto> questionList)\r\n//    {\r\n//        this.context = context;\r\n//        this.questionList = questionList;\r\n//    }\r\n//\r\n//    @Override\r\n//    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {\r\n//// infalte the item Layout\r\n//        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.question_row_design, parent, false);\r\n//// set the view's size, margins, paddings and layout parameters\r\n//        MyViewHolder vh = new MyViewHolder(v); // pass the view to View Holder\r\n//        return vh;\r\n//    }\r\n//\r\n//    @Override\r\n//    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {\r\n//        QuestionDto question = questionList.get(position);\r\n//        holder.questionTF.setText(question.getQuestion());\r\n//\r\n//        holder.writeAnswer.setOnClickListener(new View.OnClickListener() {\r\n//            @Override\r\n//            public void onClick(View view) {\r\n//                Intent intent = new Intent(view.getContext(),AnswerSubmitActivity.class);\r\n//                intent.putExtra(\"question\",questionList.get(position).getQuestion());\r\n//                intent.putExtra(\"questionID\",questionList.get(position).getQuestionID());\r\n//                view.getContext().startActivity(intent);\r\n//            }\r\n//        });\r\n//\r\n//\r\n//        holder.readAnswer.setOnClickListener(new View.OnClickListener() {\r\n//            @Override\r\n//            public void onClick(View view) {\r\n//                Intent intent = new Intent(view.getContext(), ViewAnswersActivity.class);\r\n//                intent.putExtra(\"question\",questionList.get(position).getQuestion());\r\n//                intent.putExtra(\"questionID\",questionList.get(position).getQuestionID());\r\n//                view.getContext().startActivity(intent);\r\n//            }\r\n//        });\r\n//    }\r\n//\r\n//    @Override\r\n//    public int getItemCount() {\r\n//        return questionList.size();\r\n//    }\r\n//\r\n//    public class MyViewHolder extends RecyclerView.ViewHolder {\r\n//        // init the item view's\r\n//        TextView questionTF;\r\n//        ImageView writeAnswer;\r\n//        ImageView readAnswer;\r\n//        public MyViewHolder(final View itemView) {\r\n//            super(itemView);\r\n//\r\n//// get the reference of item view's\r\n//            questionTF = (TextView) itemView.findViewById(R.id.questionTV);\r\n//            writeAnswer = itemView.findViewById(R.id.write_answer);\r\n//            readAnswer = itemView.findViewById(R.id.read_answer);\r\n//        }\r\n//    }\r\n//}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/Adapters/RecyclerViewAdapterViewQuestions.java b/app/src/main/java/com/example/placementapp/Adapters/RecyclerViewAdapterViewQuestions.java
+--- a/app/src/main/java/com/example/placementapp/Adapters/RecyclerViewAdapterViewQuestions.java	(revision b2004e3ae4c58fb896a4cbc137d6a747de83920c)
++++ b/app/src/main/java/com/example/placementapp/Adapters/RecyclerViewAdapterViewQuestions.java	(date 1634481012878)
+@@ -1,85 +1,88 @@
+-//package com.example.placementapp.Adapters;
+-//
+-//import android.content.Context;
+-//import android.content.Intent;
+-//import android.view.LayoutInflater;
+-//import android.view.View;
+-//import android.view.ViewGroup;
+-//import android.widget.ImageView;
+-//import android.widget.TextView;
+-//
+-//import androidx.annotation.NonNull;
+-//import androidx.recyclerview.widget.RecyclerView;
+-//
+-//import com.example.placementapp.R;
+-//import com.example.placementapp.pojo.QuestionDto;
+-//
+-//import java.util.List;
+-//
+-//public class RecyclerViewAdapterViewQuestions extends RecyclerView.Adapter<RecyclerViewAdapterViewQuestions.MyViewHolder> {
+-//
+-//    List<QuestionDto> questionList;
+-//    Context context;
+-//
+-//    public RecyclerViewAdapterViewQuestions(Context context, List<QuestionDto> questionList)
+-//    {
+-//        this.context = context;
+-//        this.questionList = questionList;
+-//    }
+-//
+-//    @Override
+-//    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+-//// infalte the item Layout
+-//        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.question_row_design, parent, false);
+-//// set the view's size, margins, paddings and layout parameters
+-//        MyViewHolder vh = new MyViewHolder(v); // pass the view to View Holder
+-//        return vh;
+-//    }
+-//
+-//    @Override
+-//    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+-//        QuestionDto question = questionList.get(position);
+-//        holder.questionTF.setText(question.getQuestion());
+-//
+-//        holder.writeAnswer.setOnClickListener(new View.OnClickListener() {
+-//            @Override
+-//            public void onClick(View view) {
+-//                Intent intent = new Intent(view.getContext(),AnswerSubmitActivity.class);
+-//                intent.putExtra("question",questionList.get(position).getQuestion());
+-//                intent.putExtra("questionID",questionList.get(position).getQuestionID());
+-//                view.getContext().startActivity(intent);
+-//            }
+-//        });
+-//
+-//
+-//        holder.readAnswer.setOnClickListener(new View.OnClickListener() {
+-//            @Override
+-//            public void onClick(View view) {
+-//                Intent intent = new Intent(view.getContext(), ViewAnswersActivity.class);
+-//                intent.putExtra("question",questionList.get(position).getQuestion());
+-//                intent.putExtra("questionID",questionList.get(position).getQuestionID());
+-//                view.getContext().startActivity(intent);
+-//            }
+-//        });
+-//    }
+-//
+-//    @Override
+-//    public int getItemCount() {
+-//        return questionList.size();
+-//    }
+-//
+-//    public class MyViewHolder extends RecyclerView.ViewHolder {
+-//        // init the item view's
+-//        TextView questionTF;
+-//        ImageView writeAnswer;
+-//        ImageView readAnswer;
+-//        public MyViewHolder(final View itemView) {
+-//            super(itemView);
+-//
+-//// get the reference of item view's
+-//            questionTF = (TextView) itemView.findViewById(R.id.questionTV);
+-//            writeAnswer = itemView.findViewById(R.id.write_answer);
+-//            readAnswer = itemView.findViewById(R.id.read_answer);
+-//        }
+-//    }
+-//}
++package com.example.placementapp.Adapters;
++
++import android.annotation.SuppressLint;
++import android.content.Context;
++import android.content.Intent;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.ImageView;
++import android.widget.TextView;
++
++import androidx.annotation.NonNull;
++import androidx.recyclerview.widget.RecyclerView;
++
++import com.example.placementapp.R;
++import com.example.placementapp.pojo.QuestionDto;
++import com.example.placementapp.student.SubmitAnswersActivity;
++import com.example.placementapp.student.ViewAnswersActivity;
++
++import java.util.List;
++
++public class RecyclerViewAdapterViewQuestions extends RecyclerView.Adapter<RecyclerViewAdapterViewQuestions.MyViewHolder> {
++
++    List<QuestionDto> questionList;
++    Context context;
++
++    public RecyclerViewAdapterViewQuestions(Context context, List<QuestionDto> questionList)
++    {
++        this.context = context;
++        this.questionList = questionList;
++    }
++
++    @Override
++    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
++// inflate the item Layout
++        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.question_row_design, parent, false);
++// set the view's size, margins, paddings and layout parameters
++        MyViewHolder vh = new MyViewHolder(v); // pass the view to View Holder
++        return vh;
++    }
++
++    @Override
++    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
++        QuestionDto question = questionList.get(position);
++        holder.questionTF.setText(question.getQuestion());
++
++        holder.writeAnswer.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View view) {
++                Intent intent = new Intent(view.getContext(), SubmitAnswersActivity.class);
++                intent.putExtra("question",questionList.get(position).getQuestion());
++                intent.putExtra("questionID",questionList.get(position).getQuestionId());
++                view.getContext().startActivity(intent);
++            }
++        });
++
++
++        holder.readAnswer.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View view) {
++                Intent intent = new Intent(view.getContext(), ViewAnswersActivity.class);
++                intent.putExtra("question",questionList.get(position).getQuestion());
++                intent.putExtra("questionID",questionList.get(position).getQuestionId());
++                view.getContext().startActivity(intent);
++            }
++        });
++    }
++
++    @Override
++    public int getItemCount() {
++        return questionList.size();
++    }
++
++    public class MyViewHolder extends RecyclerView.ViewHolder {
++        // init the item view's
++        TextView questionTF;
++        ImageView writeAnswer;
++        ImageView readAnswer;
++        public MyViewHolder(final View itemView) {
++            super(itemView);
++
++// get the reference of item view's
++            questionTF = (TextView) itemView.findViewById(R.id.questionTV);
++            writeAnswer = itemView.findViewById(R.id.write_answer);
++            readAnswer = itemView.findViewById(R.id.read_answer);
++        }
++    }
++}
+Index: app/src/main/java/com/example/placementapp/constants/Constants.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.placementapp.constants;\r\n\r\npublic abstract class Constants {\r\n\r\n    public class UserTypes {\r\n        public static final String ADMIN = \"0\";\r\n        public static final String STUDENT = \"1\";\r\n    }\r\n\r\n    public class FirebaseConstants {\r\n        public static final String PATH_LOGIN = \"Login\";\r\n        public static final String PATH_NOTIFICATIONS = \"Notification\";\r\n        public static final String PATH_APPLICATIONS = \"Applications/\";\r\n        public static final String PATH_APPILED_COMPANIES = \"AppliedCompanies/\";\r\n        public static final String FIREBASE_SERVER_KEY = \"key=AAAAcbbeSbc:APA91bEO3kDXcK8khLywCXAMuV7516Fttdp5re70s80NzaZrQ-F6QUIxUemg87qZCrAc3nX7f9hitS8uA69dMvW6MfC7AhyQDLnaxC9tUGJBg61aCeaHuyjAvbIy5N2Kg0LRMx87VPOp\";\r\n        public static final String FCM_API = \"https://fcm.googleapis.com/fcm/send\";\r\n    }\r\n\r\n    public class SharedPrefConstants {\r\n        public static final String SHARED_PREF = \"MyPreferences\";\r\n        public static final String KEY_PASSWORD = \"password\";\r\n        public static final String KEY_NAME = \"name\";\r\n        public static final String KEY_BRANCH = \"branch\";\r\n        public static final String KEY_MAIL = \"mail\";\r\n        public static final String KEY_PRN = \"prn\";\r\n        public static final String KEY_TYPE = \"type\";\r\n    }\r\n\r\n    public enum StatusEnum {\r\n        SUCCESS,\r\n        INCORRECT,\r\n        INVALID,\r\n        FAILURE\r\n    }\r\n\r\n    public enum NavigationView {\r\n        STUDENT,\r\n        ADMIN\r\n    }\r\n\r\n    public class HttpConstants {\r\n        public static final String USER_REGISTRATION_URL = \"https://placement-server.herokuapp.com/rest/user/register\";\r\n        public static final String USER_LOGIN_URL = \"https://placement-server.herokuapp.com/rest/user/login\";\r\n        public static final String SAVE_NOTIFICATION_URL = \"https://placement-server.herokuapp.com/rest/notification/save-notification\";\r\n        public static final String GET_NOTIFICATIONS_URL = \"https://placement-server.herokuapp.com/rest/notification/get-notifications?branch=\";\r\n        public static final String GET_NOTIFICATION_DETAILS_URL = \"https://placement-server.herokuapp.com/rest/notification/get-notification?id=\";\r\n        public static final String GET_USERS_URL = \"https://placement-server.herokuapp.com/rest/user/get-users?branch=\";\r\n        public static final String GET_SPECIFIC_USER_URL = \"https://placement-server.herokuapp.com/rest/user/get-user?prn=\";\r\n        public static final String UPDATE_USER_PROFILE_URL = \"https://placement-server.herokuapp.com/rest/user/update-profile\";\r\n        public static final String SUBMIT_QUESTION_URL = \"https://placement-server.herokuapp.com/rest/question/submit-question\";\r\n\r\n\r\n        public static final String KEY_STATUS_CODE = \"statusCode\";\r\n        public static final String USER_REGISTERED = \"201\";\r\n        public static final String EXISTING_USER = \"301\";\r\n        public static final String SUCCESS = \"200\";\r\n        public static final String FAILURE = \"305\";\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/constants/Constants.java b/app/src/main/java/com/example/placementapp/constants/Constants.java
+--- a/app/src/main/java/com/example/placementapp/constants/Constants.java	(revision b2004e3ae4c58fb896a4cbc137d6a747de83920c)
++++ b/app/src/main/java/com/example/placementapp/constants/Constants.java	(date 1634481012890)
+@@ -48,6 +48,9 @@
+         public static final String GET_SPECIFIC_USER_URL = "https://placement-server.herokuapp.com/rest/user/get-user?prn=";
+         public static final String UPDATE_USER_PROFILE_URL = "https://placement-server.herokuapp.com/rest/user/update-profile";
+         public static final String SUBMIT_QUESTION_URL = "https://placement-server.herokuapp.com/rest/question/submit-question";
++        public static final String GET_QUESTIONS_URL = "https://placement-server.herokuapp.com/rest/question/get-questions";
++        public static final String SUBMIT_ANSWER_URL = "https://placement-server.herokuapp.com/rest/answer/submit-answer";
++        public static final String GET_ANSWERS_URL = "https://placement-server.herokuapp.com/rest/answer/get-answers?questionId=";
+ 
+ 
+         public static final String KEY_STATUS_CODE = "statusCode";
+Index: app/src/main/java/com/example/placementapp/pojo/QuestionsList.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/pojo/QuestionsList.java b/app/src/main/java/com/example/placementapp/pojo/QuestionsList.java
+new file mode 100644
+--- /dev/null	(date 1634481012938)
++++ b/app/src/main/java/com/example/placementapp/pojo/QuestionsList.java	(date 1634481012938)
+@@ -0,0 +1,16 @@
++package com.example.placementapp.pojo;
++
++import java.util.List;
++
++public class QuestionsList {
++
++    private List<QuestionDto> questionDtos;
++
++    public List<QuestionDto> getQuestionDtos() {
++        return questionDtos;
++    }
++
++    public void setQuestionDtos(List<QuestionDto> questionDtos) {
++        this.questionDtos = questionDtos;
++    }
++}
+Index: app/src/main/java/com/example/placementapp/Adapters/RecyclerViewAdapterViewAnswers.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/Adapters/RecyclerViewAdapterViewAnswers.java b/app/src/main/java/com/example/placementapp/Adapters/RecyclerViewAdapterViewAnswers.java
+new file mode 100644
+--- /dev/null	(date 1634481012942)
++++ b/app/src/main/java/com/example/placementapp/Adapters/RecyclerViewAdapterViewAnswers.java	(date 1634481012942)
+@@ -0,0 +1,60 @@
++package com.example.placementapp.Adapters;
++
++import android.content.Context;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.TextView;
++
++import androidx.annotation.NonNull;
++import androidx.recyclerview.widget.RecyclerView;
++
++import com.example.placementapp.R;
++import com.example.placementapp.pojo.AnswerDto;
++
++import java.util.List;
++
++public class RecyclerViewAdapterViewAnswers extends RecyclerView.Adapter<RecyclerViewAdapterViewAnswers.MyViewHolder>  {
++
++    List<AnswerDto> answerList;
++    Context context;
++
++    public RecyclerViewAdapterViewAnswers(Context context, List<AnswerDto> answerList)
++    {
++        this.context = context;
++        this.answerList = answerList;
++    }
++
++    @NonNull
++    @Override
++    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
++        // infalte the item Layout
++        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.answer_row_design, parent, false);
++// set the view's size, margins, paddings and layout parameters
++        MyViewHolder vh = new MyViewHolder(v); // pass the view to View Holder
++        return vh;
++    }
++
++    @Override
++    public void onBindViewHolder(@NonNull RecyclerViewAdapterViewAnswers.MyViewHolder holder, int position) {
++        AnswerDto answer = answerList.get(position);
++        holder.usernameTF.setText(answer.getStudentName());
++        holder.answerTF.setText(answer.getAnswer());
++
++    }
++
++    @Override
++    public int getItemCount() { return answerList.size(); }
++
++    public class MyViewHolder extends RecyclerView.ViewHolder {
++        // init the item view's
++        TextView answerTF, usernameTF;
++        public MyViewHolder(final View itemView) {
++            super(itemView);
++
++// get the reference of item view's
++            answerTF = itemView.findViewById(R.id.answerTV);
++            usernameTF = itemView.findViewById(R.id.usernameTV);
++        }
++    }
++}
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>apply plugin: 'com.android.application'\r\napply plugin: 'com.google.gms.google-services'\r\n\r\nandroid {\r\n    compileSdkVersion 30\r\n    buildToolsVersion \"30.0.1\"\r\n\r\n    defaultConfig {\r\n        applicationId \"com.example.placementapp\"\r\n        minSdkVersion 16\r\n        targetSdkVersion 30\r\n        versionCode 1\r\n        versionName \"1.0\"\r\n        multiDexEnabled true\r\n\r\n        vectorDrawables.useSupportLibrary = true\r\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n        }\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility JavaVersion.VERSION_1_8\r\n        targetCompatibility JavaVersion.VERSION_1_8\r\n    }\r\n    buildFeatures {\r\n        viewBinding true\r\n    }\r\n}\r\n\r\ndependencies {\r\n    implementation fileTree(dir: \"libs\", include: [\"*.jar\"])\r\n    implementation 'androidx.appcompat:appcompat:1.2.0'\r\n    implementation 'com.google.android.material:material:1.0.0'\r\n    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'\r\n    implementation 'com.android.support:multidex:1.0.3'\r\n    implementation 'androidx.navigation:navigation-fragment:2.1.0'\r\n    implementation 'androidx.navigation:navigation-ui:2.1.0'\r\n    implementation 'androidx.annotation:annotation:1.1.0'\r\n    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'\r\n    implementation 'com.google.firebase:firebase-database:19.4.0'\r\n    implementation 'androidx.legacy:legacy-support-v4:1.0.0'\r\n    implementation 'com.google.firebase:firebase-auth:19.4.0'\r\n    implementation 'com.android.volley:volley:1.1.1'\r\n    implementation 'com.google.firebase:firebase-messaging:20.3.0'\r\n    implementation 'androidx.recyclerview:recyclerview:1.1.0'\r\n    implementation 'androidx.cardview:cardview:1.0.0'\r\n    implementation 'com.google.code.gson:gson:2.8.5'\r\n    implementation 'com.google.android.material:material:1.2.1'\r\n    testImplementation 'junit:junit:4.12'\r\n    androidTestImplementation 'androidx.test.ext:junit:1.1.1'\r\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'\r\n    // Import the BoM for the Firebase platform\r\n    implementation platform('com.google.firebase:firebase-bom:25.12.0')\r\n\r\n    // https://mvnrepository.com/artifact/com.google.guava/guava\r\n    compile group: 'com.google.guava', name: 'guava', version: '11.0.2'\r\n\r\n\r\n\r\n    // Declare the dependency for the Firebase Authentication library\r\n    // When using the BoM, you don't specify versions in Firebase library dependencies\r\n    implementation 'com.google.firebase:firebase-auth'\r\n\r\n    // Also declare the dependency for the Google Play services library and specify its version\r\n    implementation 'com.google.android.gms:play-services-auth:18.1.0'\r\n    implementation 'com.android.volley:volley:1.1.1'\r\n\r\n    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'\r\n\r\n\r\n    //update profile\r\n    //noinspection GradleCompatible\r\n    compile 'com.android.support:design:30.1.0'\r\n    compile 'com.android.support:percent:30.1.0'\r\n    compile 'com.android.support:cardview-v7:30.1.0'\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle b/app/build.gradle
+--- a/app/build.gradle	(revision b2004e3ae4c58fb896a4cbc137d6a747de83920c)
++++ b/app/build.gradle	(date 1634481012894)
+@@ -50,6 +50,7 @@
+     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+     implementation 'androidx.cardview:cardview:1.0.0'
+     implementation 'com.google.code.gson:gson:2.8.5'
++    implementation 'de.hdodenhof:circleimageview:2.1.0'
+     implementation 'com.google.android.material:material:1.2.1'
+     testImplementation 'junit:junit:4.12'
+     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+Index: app/src/main/java/com/example/placementapp/pojo/AnswersList.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/pojo/AnswersList.java b/app/src/main/java/com/example/placementapp/pojo/AnswersList.java
+new file mode 100644
+--- /dev/null	(date 1634481012950)
++++ b/app/src/main/java/com/example/placementapp/pojo/AnswersList.java	(date 1634481012950)
+@@ -0,0 +1,16 @@
++package com.example.placementapp.pojo;
++
++import java.util.List;
++
++public class AnswersList {
++
++    private List<AnswerDto> answerDtos;
++
++    public List<AnswerDto> getAnswerDtos() {
++        return answerDtos;
++    }
++
++    public void setAnswerDtos(List<AnswerDto> answerDtos) {
++        this.answerDtos = answerDtos;
++    }
++}
+Index: app/src/main/java/com/example/placementapp/activities/DashboardActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.placementapp.activities;\r\n\r\nimport android.content.Intent;\r\nimport android.os.AsyncTask;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.MenuItem;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.appcompat.app.ActionBarDrawerToggle;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.appcompat.widget.Toolbar;\r\nimport androidx.core.view.GravityCompat;\r\nimport androidx.drawerlayout.widget.DrawerLayout;\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport com.example.placementapp.PlacementDashboardFragment;\r\nimport com.example.placementapp.R;\r\nimport com.example.placementapp.admin.fragments.SendNotificationFragment;\r\nimport com.example.placementapp.admin.fragments.ViewNotificationList;\r\nimport com.example.placementapp.admin.fragments.ViewStudentsProfile;\r\nimport com.example.placementapp.constants.Constants;\r\nimport com.example.placementapp.helper.SharedPrefHelper;\r\nimport com.example.placementapp.student.UpdateProfile;\r\nimport com.example.placementapp.student.ViewQuestionsFragment;\r\nimport com.example.placementapp.student.ViewYourApplicationsList;\r\nimport com.example.placementapp.student.PrepMaterialFragment;\r\nimport com.google.android.material.navigation.NavigationView;\r\nimport com.google.firebase.messaging.FirebaseMessaging;\r\n\r\npublic class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {\r\n\r\n    private Toolbar toolbar;\r\n    private DrawerLayout drawerLayout;\r\n    private NavigationView navigationView;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_admin_navigation_drawer);\r\n\r\n        // 6 - Configure all views\r\n        this.configureToolBar();\r\n        this.configureDrawerLayout();\r\n        this.configureNavigationView();\r\n\r\n        new DashboardTaskRunner().execute();\r\n    }\r\n\r\n    private class DashboardTaskRunner extends AsyncTask<String, String, Constants.NavigationView> {\r\n        @Override\r\n        protected void onPreExecute() {\r\n            super.onPreExecute();\r\n        }\r\n\r\n        @Override\r\n        protected void onPostExecute(Constants.NavigationView navigationViewEnum) {\r\n            switch (navigationViewEnum) {\r\n                case ADMIN:\r\n                    navigationView.getMenu().removeGroup(R.id.student_group);\r\n                    startTransactionFragment(new ViewNotificationList());\r\n                    break;\r\n\r\n                case STUDENT:\r\n                    navigationView.getMenu().removeGroup(R.id.admin_group);\r\n                    startTransactionFragment(new PlacementDashboardFragment());\r\n                    break;\r\n            }\r\n        }\r\n\r\n        @Override\r\n        protected Constants.NavigationView doInBackground(String... strings) {\r\n            String userType = SharedPrefHelper.getEntryfromSharedPreferences(DashboardActivity.this.getApplicationContext(), Constants.SharedPrefConstants.KEY_TYPE);\r\n            if (userType.equals(Constants.UserTypes.ADMIN)) {\r\n                return Constants.NavigationView.ADMIN;\r\n            }\r\n\r\n            if (userType.equals(Constants.UserTypes.STUDENT)) {\r\n                String userBranch = SharedPrefHelper.getEntryfromSharedPreferences(DashboardActivity.this.getApplicationContext(), Constants.SharedPrefConstants.KEY_BRANCH);\r\n                if (userBranch != null)\r\n                    allotStudentsToTopic(userBranch);\r\n                else\r\n                    Log.i(\"Info\", \"Null\");\r\n                return Constants.NavigationView.STUDENT;\r\n            }\r\n            return null;\r\n        }\r\n    }\r\n\r\n    private void allotStudentsToTopic(String userBranch) {\r\n        switch (userBranch) {\r\n            case \"Comp\": {\r\n                FirebaseMessaging.getInstance().subscribeToTopic(\"Comp\");\r\n                break;\r\n            }\r\n\r\n            case \"Mech\": {\r\n                FirebaseMessaging.getInstance().subscribeToTopic(\"Mech\");\r\n                break;\r\n            }\r\n\r\n            case \"Civil\": {\r\n                FirebaseMessaging.getInstance().subscribeToTopic(\"Civil\");\r\n                break;\r\n            }\r\n\r\n            case \"MechSandwich\": {\r\n                FirebaseMessaging.getInstance().subscribeToTopic(\"MechSandwich\");\r\n                break;\r\n            }\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void onBackPressed() {\r\n        // 5 - Handle back click to close menu\r\n        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {\r\n            this.drawerLayout.closeDrawer(GravityCompat.START);\r\n        } else {\r\n            finishAffinity();\r\n            finish();\r\n        }\r\n    }\r\n\r\n\r\n    @Override\r\n    public boolean onNavigationItemSelected(MenuItem item) {\r\n        // 4 - Handle Navigation Item Click\r\n        int id = item.getItemId();\r\n\r\n        Fragment fragment;\r\n        switch (id) {\r\n            case R.id.nav_placementdashboard: {\r\n                toolbar.setTitle(\"Placement Dashboard\");\r\n                fragment = new PlacementDashboardFragment();\r\n                startTransactionFragment(fragment);\r\n                break;\r\n            }\r\n\r\n            case R.id.admin_navigation_drawer_send_notifications: {\r\n                toolbar.setTitle(\"Send Notifications\");\r\n                fragment = new SendNotificationFragment();\r\n                startTransactionFragment(fragment);\r\n                break;\r\n            }\r\n            case R.id.navigation_drawer_view_all_notifications: {\r\n                toolbar.setTitle(\"View All Notifications\");\r\n                fragment = new ViewNotificationList();\r\n                startTransactionFragment(fragment);\r\n                break;\r\n            }\r\n            case R.id.student_navigation_drawer_view_applications: {\r\n                toolbar.setTitle(\"View Your Applications\");\r\n                fragment = new ViewYourApplicationsList();\r\n                startTransactionFragment(fragment);\r\n                break;\r\n            }\r\n            case R.id.navigation_drawer_ask_a_question: {\r\n                toolbar.setTitle(\"Question & Answers\");\r\n                fragment = new ViewQuestionsFragment();\r\n                startTransactionFragment(fragment);\r\n                break;\r\n            }\r\n            case R.id.navigation_drawer_update_profile: {\r\n                toolbar.setTitle(\"Update Profile\");\r\n                fragment = new UpdateProfile();\r\n                startTransactionFragment(fragment);\r\n                break;\r\n            }\r\n            case R.id.admin_view_students_profile: {\r\n                toolbar.setTitle(\"View Students Profile\");\r\n                fragment = new ViewStudentsProfile();\r\n                startTransactionFragment(fragment);\r\n                break;\r\n            }\r\n            case R.id.navigation_drawer_prep_material: {\r\n                toolbar.setTitle(\"View Students Profile\");\r\n                fragment = new PrepMaterialFragment();\r\n                startTransactionFragment(fragment);\r\n                break;\r\n            }\r\n            case R.id.log_out: {\r\n                logOutFromApp();\r\n            }\r\n\r\n            default:\r\n                break;\r\n        }\r\n\r\n        this.drawerLayout.closeDrawer(GravityCompat.START);\r\n        return true;\r\n    }\r\n\r\n    private void logOutFromApp() {\r\n        if (SharedPrefHelper.clearEntriesInSharedPrefs(this.getApplicationContext())) {\r\n            Toast.makeText(this, \"Logged Out Successfully\", Toast.LENGTH_SHORT).show();\r\n            startActivity(new Intent(DashboardActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));\r\n            finish();\r\n        }\r\n    }\r\n\r\n    // 1 - Configure Toolbar\r\n    private void configureToolBar() {\r\n        this.toolbar = findViewById(R.id.activity_admin_main_toolbar);\r\n        setSupportActionBar(toolbar);\r\n    }\r\n\r\n    // 2 - Configure Drawer Layout\r\n    private void configureDrawerLayout() {\r\n        this.drawerLayout = findViewById(R.id.drawer_layout);\r\n        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);\r\n        drawerLayout.addDrawerListener(toggle);\r\n        toggle.syncState();\r\n    }\r\n\r\n    // 3 - Configure NavigationView\r\n    private void configureNavigationView() {\r\n        this.navigationView = findViewById(R.id.nav_view);\r\n        navigationView.setNavigationItemSelectedListener(this);\r\n    }\r\n\r\n    private void startTransactionFragment(Fragment fragment) {\r\n        if (fragment != null && !fragment.isVisible()) {\r\n            getSupportFragmentManager().beginTransaction()\r\n                    .replace(R.id.activity_main_frame_layout, fragment).commit();\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/activities/DashboardActivity.java b/app/src/main/java/com/example/placementapp/activities/DashboardActivity.java
+--- a/app/src/main/java/com/example/placementapp/activities/DashboardActivity.java	(revision b2004e3ae4c58fb896a4cbc137d6a747de83920c)
++++ b/app/src/main/java/com/example/placementapp/activities/DashboardActivity.java	(date 1634481709617)
+@@ -174,7 +174,7 @@
+                 break;
+             }
+             case R.id.navigation_drawer_prep_material: {
+-                toolbar.setTitle("View Students Profile");
++                toolbar.setTitle("Preparation Material");
+                 fragment = new PrepMaterialFragment();
+                 startTransactionFragment(fragment);
+                 break;
+Index: app/src/main/java/com/example/placementapp/student/ViewAnswersActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/student/ViewAnswersActivity.java b/app/src/main/java/com/example/placementapp/student/ViewAnswersActivity.java
+new file mode 100644
+--- /dev/null	(date 1634481012954)
++++ b/app/src/main/java/com/example/placementapp/student/ViewAnswersActivity.java	(date 1634481012954)
+@@ -0,0 +1,110 @@
++package com.example.placementapp.student;
++
++import androidx.appcompat.app.AppCompatActivity;
++import androidx.recyclerview.widget.RecyclerView;
++
++import android.app.ProgressDialog;
++import android.content.Intent;
++import android.os.Bundle;
++import android.util.Log;
++import android.view.View;
++import android.widget.TextView;
++import android.widget.Toast;
++
++import com.android.volley.Request;
++import com.android.volley.toolbox.JsonObjectRequest;
++import com.example.placementapp.Adapters.RecyclerViewAdapterViewAnswers;
++import com.example.placementapp.Adapters.RecyclerViewAdapterViewQuestions;
++import com.example.placementapp.R;
++import com.example.placementapp.constants.Constants;
++import com.example.placementapp.pojo.AnswerDto;
++import com.example.placementapp.pojo.AnswersList;
++import com.example.placementapp.pojo.QuestionDto;
++import com.example.placementapp.pojo.QuestionsList;
++import com.example.placementapp.utils.HttpUtils;
++import com.google.gson.Gson;
++
++import org.json.JSONObject;
++
++import java.util.ArrayList;
++import java.util.List;
++
++public class ViewAnswersActivity extends AppCompatActivity {
++
++    private List<AnswerDto> answerList;
++    private TextView questionTV;
++    private String question;
++    private Integer questionID;
++    private RecyclerViewAdapterViewAnswers madapter;
++    private RecyclerView recyclerView;
++    private ProgressDialog loadingbar;
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setContentView(R.layout.activity_view_answers);
++
++        questionTV = findViewById(R.id.questionTV);
++        recyclerView = findViewById(R.id.list);
++
++        Intent intent = getIntent();
++        question = intent.getStringExtra("question");
++        questionID = intent.getIntExtra("questionID",-1);
++
++        Log.i("Check",String.valueOf(questionID));
++
++        questionTV.setText(question);
++
++        answerList = new ArrayList<>();
++
++        getNotificationsFromDb();
++
++        madapter = new RecyclerViewAdapterViewAnswers(ViewAnswersActivity.this,answerList);
++        recyclerView.setAdapter(madapter);
++
++        loadingbar = new ProgressDialog(this);
++        loadingbar.setTitle("Fetching answers");
++        loadingbar.setMessage("Please wait while we are fetching latest answers for you");
++        loadingbar.setCanceledOnTouchOutside(true);
++        loadingbar.show();
++    }
++
++    private void getNotificationsFromDb() {
++        String url = Constants.HttpConstants.GET_ANSWERS_URL + String.valueOf(questionID);
++        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
++                Request.Method.GET,
++                url,
++                null,
++                this::parseResponse,
++                error -> {
++                    Log.i("Error","JsonObjectRequestError");}
++        );
++
++        HttpUtils.addRequestToHttpQueue(jsonObjectRequest,this);
++    }
++
++    private void parseResponse(JSONObject jsonObject) {
++        if(jsonObject!=null)
++        {
++            answerList.clear();
++            answerList.addAll(new Gson().fromJson(jsonObject.toString(), AnswersList.class).getAnswerDtos());
++            if (answerList.isEmpty()) {
++                Log.i("Data",answerList.toString());
++                loadingbar.dismiss();
++                Toast.makeText(this, "No Answers Posted Yet..!", Toast.LENGTH_SHORT).show();
++            }
++            else {
++                if (recyclerView != null && madapter != null) {
++                    loadingbar.dismiss();
++                    recyclerView.setVisibility(View.VISIBLE);
++                    recyclerView.setAdapter(madapter);
++                    madapter.notifyDataSetChanged();
++                }
++            }
++        }
++        else
++        {
++            Toast.makeText(this, "Empty List Returned", Toast.LENGTH_SHORT).show();
++        }
++    }
++}
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_submit_answers.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_submit_answers.xml b/app/src/main/res/layout/activity_submit_answers.xml
+new file mode 100644
+--- /dev/null	(date 1634481012906)
++++ b/app/src/main/res/layout/activity_submit_answers.xml	(date 1634481012906)
+@@ -0,0 +1,69 @@
++<?xml version="1.0" encoding="utf-8"?>
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    tools:context=".student.SubmitAnswersActivity">
++
++    <androidx.appcompat.widget.Toolbar android:id="@+id/toolbar"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_alignParentTop="true"
++        android:background="@color/colorPrimaryDark"
++        android:minHeight="?attr/actionBarSize"
++        android:theme="?attr/actionBarTheme"
++        android:elevation="6dp" />
++
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_marginLeft="14dp"
++        android:layout_marginRight="14dp"
++        android:orientation="vertical"
++        android:paddingRight="12dp">
++
++        <TextView
++            android:id="@+id/questionTV"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_marginTop="100dp"
++            android:fontFamily="@font/kanit_medium"
++            android:text="Question"
++            android:layout_marginLeft="8dp"
++            android:textColor="#3f4658"
++            android:textSize="28dp" />
++
++        <TextView
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_marginLeft="8dp"
++            android:layout_marginTop="35dp"
++            android:fontFamily="@font/kanit_regular"
++            android:text="Answer"
++            android:textColor="#BC3F4658"
++            android:textSize="18dp" />
++
++        <EditText
++            android:id="@+id/answerET"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_marginLeft="12dp"
++            android:inputType="textMultiLine" />
++
++
++        <Button
++            android:id="@+id/save_answer"
++            android:layout_width="140dp"
++            android:layout_height="51dp"
++            android:layout_gravity="center"
++            android:layout_marginTop="35dp"
++            android:background="#000000"
++            android:text="Save"
++            android:textColor="#ffff"
++            android:textSize="16dp" />
++
++    </LinearLayout>
++
++
++</RelativeLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/example/placementapp/pojo/AnswerDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/pojo/AnswerDto.java b/app/src/main/java/com/example/placementapp/pojo/AnswerDto.java
+new file mode 100644
+--- /dev/null	(date 1634481012910)
++++ b/app/src/main/java/com/example/placementapp/pojo/AnswerDto.java	(date 1634481012910)
+@@ -0,0 +1,64 @@
++package com.example.placementapp.pojo;
++
++import java.io.Serializable;
++
++public class AnswerDto implements Serializable {
++
++    private Integer questionId;
++    private Integer answerId;
++    private String answer;
++    private String studentName;
++
++    public AnswerDto(Integer questionId, Integer answerId, String answer, String studentName) {
++        this.questionId = questionId;
++        this.answerId = answerId;
++        this.answer = answer;
++        this.studentName = studentName;
++    }
++
++    public AnswerDto() {
++    }
++
++    public Integer getQuestionId() {
++        return questionId;
++    }
++
++    public void setQuestionId(Integer questionId) {
++        this.questionId = questionId;
++    }
++
++    public Integer getAnswerId() {
++        return answerId;
++    }
++
++    public void setAnswerId(Integer answerId) {
++        this.answerId = answerId;
++    }
++
++    public String getAnswer() {
++        return answer;
++    }
++
++    public void setAnswer(String answer) {
++        this.answer = answer;
++    }
++
++    public String getStudentName() {
++        return studentName;
++    }
++
++    public void setStudentName(String studentName) {
++        this.studentName = studentName;
++    }
++
++    @Override
++    public String toString() {
++        final StringBuilder sb = new StringBuilder("AnswerDto{");
++        sb.append("questionId=").append(questionId);
++        sb.append(", answerId=").append(answerId);
++        sb.append(", answer='").append(answer).append('\'');
++        sb.append(", studentName='").append(studentName).append('\'');
++        sb.append('}');
++        return sb.toString();
++    }
++}
+Index: app/src/main/java/com/example/placementapp/pojo/ApplicationFormDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/pojo/ApplicationFormDto.java b/app/src/main/java/com/example/placementapp/pojo/ApplicationFormDto.java
+new file mode 100644
+--- /dev/null	(date 1634486996710)
++++ b/app/src/main/java/com/example/placementapp/pojo/ApplicationFormDto.java	(date 1634486996710)
+@@ -0,0 +1,4 @@
++package com.example.placementapp.pojo;
++
++public class ApplicationFormDto {
++}
+Index: app/src/main/java/com/example/placementapp/pojo/FormStatusDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/pojo/FormStatusDto.java b/app/src/main/java/com/example/placementapp/pojo/FormStatusDto.java
+new file mode 100644
+--- /dev/null	(date 1634481012918)
++++ b/app/src/main/java/com/example/placementapp/pojo/FormStatusDto.java	(date 1634481012918)
+@@ -0,0 +1,57 @@
++package com.example.placementapp.pojo;
++
++import android.os.Parcel;
++import android.os.Parcelable;
++
++public class FormStatusDto{
++    private int formStatusId;
++    private int applicationFormId;
++    private String processRound;
++    private String processDate;
++
++    public FormStatusDto() {
++    }
++
++    public int getFormStatusId() {
++        return formStatusId;
++    }
++
++    public void setFormStatusId(int formStatusId) {
++        this.formStatusId = formStatusId;
++    }
++
++    public int getApplicationFormId() {
++        return applicationFormId;
++    }
++
++    public void setApplicationFormId(int applicationFormId) {
++        this.applicationFormId = applicationFormId;
++    }
++
++    public String getProcessRound() {
++        return processRound;
++    }
++
++    public void setProcessRound(String processRound) {
++        this.processRound = processRound;
++    }
++
++    public String getProcessDate() {
++        return processDate;
++    }
++
++    public void setProcessDate(String processDate) {
++        this.processDate = processDate;
++    }
++
++    @Override
++    public String toString() {
++        final StringBuilder sb = new StringBuilder("FormStatusDto{");
++        sb.append("formStatusId=").append(formStatusId);
++        sb.append(", applicationFormId=").append(applicationFormId);
++        sb.append(", processRound='").append(processRound).append('\'');
++        sb.append(", processDate='").append(processDate).append('\'');
++        sb.append('}');
++        return sb.toString();
++    }
++}
+Index: app/src/main/res/layout/answer_row_design.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/answer_row_design.xml b/app/src/main/res/layout/answer_row_design.xml
+new file mode 100644
+--- /dev/null	(date 1634481012934)
++++ b/app/src/main/res/layout/answer_row_design.xml	(date 1634481012934)
+@@ -0,0 +1,57 @@
++<androidx.cardview.widget.CardView android:id="@+id/card_view"
++    android:layout_width="match_parent"
++    android:layout_height="wrap_content"
++    card_view:cardCornerRadius="10dp"
++    card_view:cardElevation="5dp"
++    android:layout_margin="10dp"
++    card_view:contentPadding="15dp"
++    xmlns:card_view="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    xmlns:android="http://schemas.android.com/apk/res/android">
++
++    <RelativeLayout
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_gravity="center">
++
++        <LinearLayout
++            android:id="@+id/layout1"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:orientation="horizontal">
++            <de.hdodenhof.circleimageview.CircleImageView
++                android:layout_width="50dp"
++                android:layout_height="50dp"
++                android:id="@+id/profile_image"
++                android:src="@mipmap/ic_launcher"/>
++
++            <TextView
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:text="username"
++                android:id="@+id/usernameTV"
++                android:layout_toRightOf="@id/profile_image"
++                android:layout_toEndOf="@id/profile_image"
++                android:layout_marginLeft="10dp"
++                android:layout_marginTop="10dp"
++                android:textSize="20sp"
++                android:textColor="#000"
++                android:textStyle="bold"/>
++
++        </LinearLayout>
++
++        <TextView
++            android:id="@+id/answerTV"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_below="@id/layout1"
++            android:layout_marginTop="10dp"
++            android:text="Answer"
++            android:textSize="20sp"
++            android:paddingTop="5dp"
++            android:paddingBottom="10dp"
++            android:textColor="#000"/>
++
++    </RelativeLayout>
++
++</androidx.cardview.widget.CardView>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"DesignSurface\">\r\n    <option name=\"filePathToZoomLevelMap\">\r\n      <map>\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/drawable-v21/ic_baseline_edit_24.xml\" value=\"0.26615384615384613\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/activity_admin_navigation_drawer.xml\" value=\"0.25416666666666665\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/activity_company_popup.xml\" value=\"0.36666666666666664\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/activity_login.xml\" value=\"0.25416666666666665\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/activity_student_application_status.xml\" value=\"0.25416666666666665\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/activity_student_list.xml\" value=\"0.25416666666666665\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/activity_submit_questions.xml\" value=\"0.264\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/fragment_notification_list.xml\" value=\"0.25416666666666665\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/fragment_placement_dashboard.xml\" value=\"0.25416666666666665\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/fragment_send_notification.xml\" value=\"0.264\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/fragment_update_profile.xml\" value=\"0.264\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/fragment_view_questions.xml\" value=\"0.2\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/fragment_view_students_profile.xml\" value=\"0.25416666666666665\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/notification_format.xml\" value=\"0.264\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/layout/question_row_design.xml\" value=\"0.4\" />\r\n        <entry key=\"..\\:/Placement-APP/app/src/main/res/menu/navigation_menu.xml\" value=\"0.25416666666666665\" />\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_11\" default=\"false\" project-jdk-name=\"1.8\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\r\n  </component>\r\n  <component name=\"ProjectType\">\r\n    <option name=\"id\" value=\"Android\" />\r\n  </component>\r\n  <component name=\"VisualizationToolProject\">\r\n    <option name=\"state\">\r\n      <ProjectState>\r\n        <option name=\"scale\" value=\"0.1\" />\r\n      </ProjectState>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision b2004e3ae4c58fb896a4cbc137d6a747de83920c)
++++ b/.idea/misc.xml	(date 1634481012914)
+@@ -9,7 +9,10 @@
+         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_login.xml" value="0.25416666666666665" />
+         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_student_application_status.xml" value="0.25416666666666665" />
+         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_student_list.xml" value="0.25416666666666665" />
++        <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_submit_answers.xml" value="0.23550724637681159" />
+         <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_submit_questions.xml" value="0.264" />
++        <entry key="..\:/Placement-APP/app/src/main/res/layout/activity_view_answers.xml" value="0.23550724637681159" />
++        <entry key="..\:/Placement-APP/app/src/main/res/layout/answer_row_design.xml" value="0.23550724637681159" />
+         <entry key="..\:/Placement-APP/app/src/main/res/layout/fragment_notification_list.xml" value="0.25416666666666665" />
+         <entry key="..\:/Placement-APP/app/src/main/res/layout/fragment_placement_dashboard.xml" value="0.25416666666666665" />
+         <entry key="..\:/Placement-APP/app/src/main/res/layout/fragment_send_notification.xml" value="0.264" />
+Index: app/src/main/res/layout/activity_view_answers.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_view_answers.xml b/app/src/main/res/layout/activity_view_answers.xml
+new file mode 100644
+--- /dev/null	(date 1634481012886)
++++ b/app/src/main/res/layout/activity_view_answers.xml	(date 1634481012886)
+@@ -0,0 +1,51 @@
++<?xml version="1.0" encoding="utf-8"?>
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    tools:context=".student.ViewAnswersActivity">
++
++    <androidx.appcompat.widget.Toolbar android:id="@+id/toolbar"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_alignParentTop="true"
++        android:background="@color/colorPrimaryDark"
++        android:minHeight="?attr/actionBarSize"
++        android:theme="?attr/actionBarTheme"
++        android:elevation="6dp" />
++
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_marginLeft="5dp"
++        android:layout_marginRight="5dp"
++        android:orientation="vertical">
++
++        <TextView
++            android:id="@+id/questionTV"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_marginTop="100dp"
++            android:fontFamily="@font/kanit_medium"
++            android:text="Question"
++            android:layout_marginLeft="5dp"
++            android:textColor="#3f4658"
++            android:textSize="28dp" />
++
++
++        <androidx.recyclerview.widget.RecyclerView
++            android:id="@+id/list"
++            android:layout_width="match_parent"
++            android:layout_height="match_parent"
++            android:layout_marginLeft="5dp"
++            android:layout_marginRight="5dp"
++            android:layout_marginTop="20dp"
++            android:layout_marginBottom="65dp"
++            app:layoutManager="LinearLayoutManager"
++            tools:listitem="@layout/answer_row_design" />
++
++    </LinearLayout>
++
++
++</RelativeLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/example/placementapp/student/SubmitAnswersActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/student/SubmitAnswersActivity.java b/app/src/main/java/com/example/placementapp/student/SubmitAnswersActivity.java
+new file mode 100644
+--- /dev/null	(date 1634481012898)
++++ b/app/src/main/java/com/example/placementapp/student/SubmitAnswersActivity.java	(date 1634481012898)
+@@ -0,0 +1,130 @@
++package com.example.placementapp.student;
++
++import android.content.Intent;
++import android.os.Bundle;
++import android.view.View;
++import android.widget.Button;
++import android.widget.EditText;
++import android.widget.TextView;
++import android.widget.Toast;
++
++import androidx.annotation.NonNull;
++import androidx.appcompat.app.AppCompatActivity;
++
++import com.android.volley.Request;
++import com.android.volley.toolbox.JsonObjectRequest;
++import com.example.placementapp.R;
++import com.example.placementapp.constants.Constants;
++import com.example.placementapp.helper.SharedPrefHelper;
++import com.example.placementapp.utils.HttpUtils;
++import com.example.placementapp.utils.StringUtils;
++import com.google.android.gms.tasks.OnCompleteListener;
++import com.google.android.gms.tasks.Task;
++import com.google.firebase.auth.FirebaseAuth;
++import com.google.firebase.auth.FirebaseUser;
++import com.google.firebase.database.DatabaseReference;
++import com.google.firebase.database.FirebaseDatabase;
++
++import org.json.JSONException;
++import org.json.JSONObject;
++
++public class SubmitAnswersActivity extends AppCompatActivity {
++
++    private TextView questionTV;
++    private EditText answerET;
++    private Button submit;
++    private String question;
++    private Integer questionID;
++    private String answer, answerID, username;
++    private String studentName;
++    DatabaseReference ref;
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setContentView(R.layout.activity_submit_answers);
++
++        questionTV = findViewById(R.id.questionTV);
++        answerET = findViewById(R.id.answerET);
++        submit = findViewById(R.id.save_answer);
++
++        Intent intent = getIntent();
++        question = intent.getStringExtra("question");
++        questionID = intent.getIntExtra("questionID",-1);
++
++        studentName = SharedPrefHelper.getEntryfromSharedPreferences(this.getApplicationContext(), Constants.SharedPrefConstants.KEY_NAME);
++
++        questionTV.setText(question);
++
++
++        submit.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View view) {
++                answer = answerET.getText().toString();
++
++                if(StringUtils.isNotBlank(answer))
++                {
++                    submitAnswer(answer);
++                }
++                else
++                {
++                    answerET.setError("Answer Cannot Be Empty");
++                    Toast.makeText(SubmitAnswersActivity.this, "Answer Cannot Be Empty", Toast.LENGTH_SHORT).show();
++                }
++            }
++        });
++    }
++
++    private void submitAnswer(String answer) {
++        HttpUtils.addRequestToHttpQueue(constructHttpRequest(answer),this);
++    }
++
++    private Request<?> constructHttpRequest(String answer) {
++        try{
++            JSONObject jsonObject = new JSONObject();
++            jsonObject.put("questionId",questionID);
++            jsonObject.put("answer",answer);
++            jsonObject.put("studentName",studentName);
++
++            return new JsonObjectRequest(
++                    Request.Method.POST,
++                    Constants.HttpConstants.SUBMIT_ANSWER_URL,
++                    jsonObject,
++                    this::parseResponse,
++                    error -> {processResponseResult(Constants.StatusEnum.FAILURE);}
++            );
++        }
++        catch(JSONException e)
++        {
++            processResponseResult(Constants.StatusEnum.FAILURE);
++        }
++        return null;
++    }
++
++    private void processResponseResult(Constants.StatusEnum result) {
++        switch (result) {
++            case FAILURE:
++                Toast.makeText(SubmitAnswersActivity.this, "System Error. Please try again", Toast.LENGTH_SHORT).show();
++                break;
++
++            case SUCCESS:
++                Toast.makeText(SubmitAnswersActivity.this, "Answer Posted Successfully", Toast.LENGTH_SHORT).show();
++        }
++    }
++
++    private void parseResponse(JSONObject resp) {
++        if (resp == null) {
++            processResponseResult(Constants.StatusEnum.FAILURE);
++            return;
++        }
++        try {
++            if (resp.getString(Constants.HttpConstants.KEY_STATUS_CODE).equals(Constants.HttpConstants.SUCCESS)) {
++                processResponseResult(Constants.StatusEnum.SUCCESS);
++            } else if (resp.getString(Constants.HttpConstants.KEY_STATUS_CODE).equals(Constants.HttpConstants.FAILURE)) {
++                processResponseResult(Constants.StatusEnum.FAILURE);
++            }
++        } catch (JSONException e) {
++            processResponseResult(Constants.StatusEnum.FAILURE);
++        }
++    }
++}
+Index: app/src/main/java/com/example/placementapp/student/ViewQuestionsFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.placementapp.student;\r\n\r\nimport android.app.ProgressDialog;\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\n\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\n\r\nimport com.example.placementapp.R;\r\nimport com.example.placementapp.pojo.QuestionDto;\r\nimport com.google.android.material.floatingactionbutton.FloatingActionButton;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\npublic class ViewQuestionsFragment extends Fragment {\r\n\r\n    private List<QuestionDto> questionList;\r\n    //private RecyclerViewAdapterViewQuestions madapter;\r\n    private RecyclerView recyclerView;\r\n    private ProgressDialog loadingbar;\r\n\r\n    public ViewQuestionsFragment() {\r\n        // Required empty public constructor\r\n    }\r\n\r\n    @Override\r\n    public void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        questionList = new ArrayList<>();\r\n    }\r\n\r\n    @Override\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        // Inflate the layout for this fragment\r\n        View view = inflater.inflate(R.layout.fragment_view_questions, container, false);\r\n\r\n        recyclerView = view.findViewById(R.id.list);\r\n\r\n        FloatingActionButton fab = view.findViewById(R.id.fab);\r\n        fab.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                Intent i = new Intent(getContext(), SubmitQuestionsActivity.class);\r\n                startActivity(i);\r\n            }\r\n        });\r\n\r\n//        madapter = new RecyclerViewAdapterViewQuestions(getContext(), questionList);\r\n//        recyclerView.setAdapter(madapter);\r\n//\r\n//        loadingbar = new ProgressDialog(view.getContext());\r\n//        loadingbar.setTitle(\"Fetching questions\");\r\n//        loadingbar.setMessage(\"Please wait while we update your feed\");\r\n//        loadingbar.setCanceledOnTouchOutside(true);\r\n//        loadingbar.show();\r\n\r\n        return view;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/placementapp/student/ViewQuestionsFragment.java b/app/src/main/java/com/example/placementapp/student/ViewQuestionsFragment.java
+--- a/app/src/main/java/com/example/placementapp/student/ViewQuestionsFragment.java	(revision b2004e3ae4c58fb896a4cbc137d6a747de83920c)
++++ b/app/src/main/java/com/example/placementapp/student/ViewQuestionsFragment.java	(date 1634481012922)
+@@ -7,13 +7,25 @@
+ import androidx.fragment.app.Fragment;
+ import androidx.recyclerview.widget.RecyclerView;
+ 
++import android.util.Log;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
++import android.widget.Toast;
+ 
++import com.android.volley.Request;
++import com.android.volley.toolbox.JsonObjectRequest;
++import com.example.placementapp.Adapters.RecyclerViewAdapterViewQuestions;
+ import com.example.placementapp.R;
++import com.example.placementapp.constants.Constants;
++import com.example.placementapp.pojo.NotificationsList;
+ import com.example.placementapp.pojo.QuestionDto;
++import com.example.placementapp.pojo.QuestionsList;
++import com.example.placementapp.utils.HttpUtils;
+ import com.google.android.material.floatingactionbutton.FloatingActionButton;
++import com.google.gson.Gson;
++
++import org.json.JSONObject;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+@@ -21,7 +33,7 @@
+ public class ViewQuestionsFragment extends Fragment {
+ 
+     private List<QuestionDto> questionList;
+-    //private RecyclerViewAdapterViewQuestions madapter;
++    private RecyclerViewAdapterViewQuestions madapter;
+     private RecyclerView recyclerView;
+     private ProgressDialog loadingbar;
+ 
+@@ -33,6 +45,46 @@
+     public void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         questionList = new ArrayList<>();
++        getNotificationsFromDb();
++    }
++
++    private void getNotificationsFromDb() {
++
++        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
++                Request.Method.GET,
++                Constants.HttpConstants.GET_QUESTIONS_URL,
++                null,
++                this::parseResponse,
++                error -> {
++                    Log.i("Error","JsonObjectRequestError");}
++        );
++
++        HttpUtils.addRequestToHttpQueue(jsonObjectRequest,this.getContext());
++    }
++
++    private void parseResponse(JSONObject jsonObject) {
++        if(jsonObject!=null)
++        {
++            questionList.clear();
++            questionList.addAll(new Gson().fromJson(jsonObject.toString(), QuestionsList.class).getQuestionDtos());
++            if (questionList.isEmpty()) {
++                Log.i("Data",questionList.toString());
++                loadingbar.dismiss();
++                Toast.makeText(this.getContext(), "No Questions Posted Yet..!", Toast.LENGTH_SHORT).show();
++            }
++            else {
++                if (recyclerView != null && madapter != null) {
++                    loadingbar.dismiss();
++                    recyclerView.setVisibility(View.VISIBLE);
++                    recyclerView.setAdapter(madapter);
++                    madapter.notifyDataSetChanged();
++                }
++            }
++        }
++        else
++        {
++            Toast.makeText(this.getContext(), "Empty List Returned", Toast.LENGTH_SHORT).show();
++        }
+     }
+ 
+     @Override
+@@ -52,14 +104,14 @@
+             }
+         });
+ 
+-//        madapter = new RecyclerViewAdapterViewQuestions(getContext(), questionList);
+-//        recyclerView.setAdapter(madapter);
+-//
+-//        loadingbar = new ProgressDialog(view.getContext());
+-//        loadingbar.setTitle("Fetching questions");
+-//        loadingbar.setMessage("Please wait while we update your feed");
+-//        loadingbar.setCanceledOnTouchOutside(true);
+-//        loadingbar.show();
++        madapter = new RecyclerViewAdapterViewQuestions(getContext(), questionList);
++        recyclerView.setAdapter(madapter);
++
++        loadingbar = new ProgressDialog(view.getContext());
++        loadingbar.setTitle("Fetching questions");
++        loadingbar.setMessage("Please wait while we update your feed");
++        loadingbar.setCanceledOnTouchOutside(true);
++        loadingbar.show();
+ 
+         return view;
+     }
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><resources>\r\n    <string name=\"app_name\">Placement APP</string>\r\n    <string name=\"action_settings\">Settings</string>\r\n    <!-- Strings used for fragments for navigation -->\r\n    <string name=\"first_fragment_label\">First Fragment</string>\r\n    <string name=\"second_fragment_label\">Second Fragment</string>\r\n    <string name=\"next\">Next</string>\r\n    <string name=\"previous\">Previous</string>\r\n\r\n    <string name=\"hello_first_fragment\">Hello first fragment</string>\r\n    <string name=\"hello_second_fragment\">Hello second fragment. Arg: %1$s</string>\r\n    <string name=\"title_activity_login\">LoginActivity</string>\r\n    <string name=\"prompt_email\">Email</string>\r\n    <string name=\"prompt_password\">Password</string>\r\n    <string name=\"action_sign_in\">Sign in or register</string>\r\n    <string name=\"action_sign_in_short\">Sign in</string>\r\n    <string name=\"welcome\">\"Welcome !\"</string>\r\n    <string name=\"invalid_username\">Not a valid username</string>\r\n    <string name=\"invalid_password\">Password must be >5 characters</string>\r\n    <string name=\"login_failed\">\"Login failed\"</string>\r\n    <string name=\"title_activity_admin\">Admin</string>\r\n    <string name=\"navigation_drawer_open\">Open navigation drawer</string>\r\n    <string name=\"navigation_drawer_close\">Close navigation drawer</string>\r\n    <string name=\"nav_header_title\">Android Studio</string>\r\n    <string name=\"nav_header_subtitle\">android.studio@android.com</string>\r\n    <string name=\"nav_header_desc\">Navigation header</string>\r\n\r\n    <string name=\"open\">open</string>\r\n    <string name=\"close\">Close</string>\r\n    <!-- TODO: Remove or change this placeholder text -->\r\n    <string name=\"hello_blank_fragment\">Hello blank fragment</string>\r\n    <string name=\"title_activity_submit_questions\">SubmitQuestionsActivity</string>\r\n</resources>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+--- a/app/src/main/res/values/strings.xml	(revision b2004e3ae4c58fb896a4cbc137d6a747de83920c)
++++ b/app/src/main/res/values/strings.xml	(date 1634481012926)
+@@ -30,4 +30,5 @@
+     <!-- TODO: Remove or change this placeholder text -->
+     <string name="hello_blank_fragment">Hello blank fragment</string>
+     <string name="title_activity_submit_questions">SubmitQuestionsActivity</string>
++    <string name="title_activity_submit_answers">SubmitAnswersActivity</string>
+ </resources>
+\ No newline at end of file

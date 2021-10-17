@@ -18,9 +18,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".student.ViewAnswersActivity"
+            android:exported="false" />
+        <activity
             android:name=".student.SubmitQuestionsActivity"
             android:exported="false"
             android:label="@string/title_activity_submit_questions"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".student.SubmitAnswersActivity"
+            android:exported="false"
+            android:label="@string/title_activity_submit_answers"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".admin.activities.StatisticsActivity" />
         <activity android:name=".student.WebActivity"></activity>
