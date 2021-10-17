@@ -32,7 +32,9 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,10 +55,11 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
     RadioButton radioButton1;
     RadioButton radioButton2;
     private DatabaseReference ref;
+    private DatabaseReference ref2;
     private DatabaseReference refApplied;
     private FormStatus formStatus;
 
-    private String companyId;
+    private Integer companyId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +96,9 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
     private void getAndSetCompanyNameFromIntent() {
         Intent intent = getIntent();
         companyName.setText(intent.getStringExtra("companyName"));
-        companyId = intent.getStringExtra("companyID");
+        companyId = intent.getIntExtra("companyID",-1);
         if(companyId == null)
-            companyId = intent.getStringExtra("companyId");
+            companyId = intent.getIntExtra("companyID",-1);
     }
 
     //    3
@@ -136,7 +139,7 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
 
             formStatus = new FormStatus(radioButton1.getText().toString(), processDate.getText().toString());
 
-            updateStatus(constructHttpRequest(radioButton1.getText().toString()));
+            updateStatus(constructHttpRequest(radioButton2.getText().toString()));
 
             Toast.makeText(this, "Application Saved Successfully!", Toast.LENGTH_SHORT).show();
         }
@@ -145,9 +148,11 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
     private JsonObjectRequest constructHttpRequest(String overAllStatus) {
         try {
             JSONObject applicationObject = new JSONObject();
-            applicationObject.put("prn", studentPRN);
+            applicationObject.put("prn", studentPRN.getText().toString());
             applicationObject.put("notificationId", companyId);
-            applicationObject.put("overAllStatus", overAllStatus );
+            applicationObject.put("overallStatus", overAllStatus );
+
+            Log.i("notificationId",applicationObject.toString());
 
             return new JsonObjectRequest(
                     Request.Method.POST,
@@ -168,7 +173,7 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
         }
         try {
             ApplicationFormDto applicationFormDto = new Gson().fromJson(resp.toString(), ApplicationFormDto.class);
-            storeInFireBase(applicationFormDto.getApplicationFormId());
+            storeInFireBase(applicationFormDto.getApplicationId());
         } catch (Exception e) {
             processResponseResult(Constants.StatusEnum.FAILURE);
         }
@@ -189,29 +194,31 @@ public class StudentApplicationStatusActivity extends AppCompatActivity implemen
 
 
     void storeInFireBase(int applicationFormId){
-        ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + applicationFormId+ "/");
+        ref2 = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + applicationFormId + "/" + System.currentTimeMillis());
+        ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + applicationFormId + "/");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean existsInDb = false;
 
                 if(snapshot != null) {
-
                     for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                         FormStatus dbFormStatus = childSnapshot.getValue(FormStatus.class);
                         if (formStatus.getProcessRound().equals(dbFormStatus.getProcessRound())) {
                             dbFormStatus.setProcessDate(formStatus.getProcessDate());
-                            ref.setValue(dbFormStatus);
+                            Map<String,Object> map = new HashMap<>();
+                            map.put(childSnapshot.getKey(),dbFormStatus);
+                            ref.updateChildren(map);
                             existsInDb = true;
                             break;
                         }
                     }
                     if (!existsInDb)
-                        ref.setValue(formStatus);
+                        ref2.setValue(formStatus);
                 }
                 else
                 {
-                    ref.setValue(formStatus);
+                    ref2.setValue(formStatus);
                 }
             }
 

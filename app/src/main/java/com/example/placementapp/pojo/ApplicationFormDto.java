@@ -3,14 +3,17 @@ package com.example.placementapp.pojo;
 import java.io.Serializable;
 
 public class ApplicationFormDto implements Serializable {
-    public int applicationFormId;
+    public int applicationId;
     public int notificationId;
     public String prn;
     public String overallStatus;
 
+    public int getApplicationId() {
+        return applicationId;
+    }
 
-    public int getApplicationFormId() {
-        return applicationFormId;
+    public void setApplicationId(int applicationId) {
+        this.applicationId = applicationId;
     }
 
     public int getNotificationId() {
@@ -23,10 +26,6 @@ public class ApplicationFormDto implements Serializable {
 
     public String getOverallStatus() {
         return overallStatus;
-    }
-
-    public void setApplicationFormId(int applicationFormId) {
-        this.applicationFormId = applicationFormId;
     }
 
     public void setNotificationId(int notificationId) {
