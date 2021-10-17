@@ -1,10 +1,14 @@
 package com.example.placementapp.student;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -36,10 +40,16 @@ import com.example.placementapp.pojo.User;
 import com.example.placementapp.pojo.UserDto;
 import com.example.placementapp.utils.HttpUtils;
 import com.example.placementapp.utils.StringUtils;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -52,6 +62,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static android.app.Activity.RESULT_OK;
+
 public class UpdateProfile extends Fragment implements View.OnClickListener {
 
     private String user_name;
@@ -61,6 +73,7 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
     private String year;
     private String div;
     private String mobile;
+    private String cvUrl;
 
     //Widgets
     private TextView nameHeadingView;
@@ -86,11 +99,11 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
 
     private Button save;
     private Button back;
-
+    private Button uploadCv;
+    Uri fileUri;
     private UserDto user;
 
     private String url = Constants.HttpConstants.GET_SPECIFIC_USER_URL;
-
     //Sem_Results
     private Map<String, EditText> semResults = new HashMap<>();
 
@@ -145,6 +158,7 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
         mobileView = v.findViewById(R.id.mobileNoValue);
         save = v.findViewById(R.id.saveUserButton);
         back = v.findViewById(R.id.BackButton);
+        uploadCv = v.findViewById(R.id.uploadCvButton);
         cgpa = v.findViewById(R.id.overallSgpaValue);
         percentage = v.findViewById(R.id.overallPercentageValue);
         sem1 = v.findViewById(R.id.SgpaSem1Value);
@@ -155,6 +169,7 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
         sem6 = v.findViewById(R.id.SgpaSem6Value);
         sem7 = v.findViewById(R.id.SgpaSem7Value);
         sem8 = v.findViewById(R.id.SgpaSem8Value);
+
 
         cgpa.setFocusable(false);
         cgpa.setFocusableInTouchMode(false);
@@ -196,6 +211,15 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
                     trans.addToBackStack(null);
                     trans.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                     trans.commit();
+                }
+            });
+            uploadCv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent();
+                    i.setAction(Intent.ACTION_GET_CONTENT);
+                    i.setType("application/pdf");
+                    startActivityForResult(i, 1);
                 }
             });
 
@@ -250,6 +274,41 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
                     Log.i("Error", "HTTP Error");
                 }
         );
+    }
+    ProgressDialog dialog;
+    @Override
+    public  void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            dialog = new ProgressDialog(this.getContext());
+            dialog.setMessage("Uploading");
+            dialog.show();
+            fileUri = data.getData();
+            final String timeStamp = ""+ System.currentTimeMillis();
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+            final String messagePushId = timeStamp;
+            final StorageReference filepath = storageReference.child(messagePushId + "." + "pdf");
+            filepath.putFile(fileUri).continueWithTask(new Continuation() {
+                @Override
+                public Object then(@NonNull Task task) throws Exception {
+                    if(!task.isSuccessful()){
+                        throw task.getException();
+                    }
+                    return filepath.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri>  task) {
+                    if(task.isSuccessful()){
+                        dialog.dismiss();
+                        Uri uri = task.getResult();
+                        cvUrl = uri.toString();
+                    }else{
+                        dialog.dismiss();
+                    }
+                }
+            });
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -315,6 +374,7 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
                     jsonObject.put("division", div);
                     jsonObject.put("year", year);
                     jsonObject.put("mobile", mobile);
+                    jsonObject.put("cvUrl", cvUrl);
 
                     JSONObject mapObject = new JSONObject();
                     for(Map.Entry<String,EditText> entry : semResults.entrySet())

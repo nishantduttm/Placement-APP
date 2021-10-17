@@ -761,6 +761,25 @@
                         android:textSize="18sp"
                         android:visibility="visible"/>
                 </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/grey" />
+
+                <Button
+                    android:id="@+id/uploadCvButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10sp"
+                    android:layout_marginBottom="10sp"
+                    android:background="@drawable/rounded_corners"
+                    android:padding="5dp"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="35dp"
+                    android:text="Upload CV"
+                    android:visibility="visible" />
 
                 <View
                     android:layout_width="match_parent"
