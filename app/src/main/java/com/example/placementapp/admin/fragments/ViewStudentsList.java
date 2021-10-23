@@ -2,14 +2,15 @@ package com.example.placementapp.admin.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.placementapp.Adapters.RecyclerViewAdapterViewNotifcation;
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,32 +27,38 @@ import android.widget.Toast;
 import com.example.placementapp.Adapters.RecyclerViewAdapterViewStudents;
 import com.example.placementapp.R;
 import com.example.placementapp.admin.activities.StatisticsActivity;
-import com.example.placementapp.admin.activities.StudentStatus;
 import com.example.placementapp.constants.Constants;
-import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.pojo.ApplicationForm;
-import com.example.placementapp.pojo.Notification;
 import com.example.placementapp.pojo.Statistics;
+import com.example.placementapp.pojo.StudentApplicationDto;
+import com.example.placementapp.pojo.StudentApplicationList;
+import com.example.placementapp.utils.HttpUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ViewStudentsList extends Activity implements ValueEventListener, AdapterView.OnItemSelectedListener{
+public class ViewStudentsList extends Activity implements AdapterView.OnItemSelectedListener {
 
     private DatabaseReference ref;
     private RecyclerView recyclerView;
     private RecyclerViewAdapterViewStudents studentsAdapter;
-    private List<ApplicationForm> studentList;
-    private ProgressBar progressBar;
+    private List<StudentApplicationDto> studentList;
+    private ProgressDialog loadingbar;
     private FloatingActionButton floatingActionButton;
+
+
 
     private Statistics statistics;
 
@@ -61,8 +68,10 @@ public class ViewStudentsList extends Activity implements ValueEventListener, Ad
     private int inProcessCount = 0;
     private int onHoldCount = 0;
 
+    private int companyID;
+
     private TextView selectStatusView;
-    private String status;
+    private String status = "All Students";
 
     public RecyclerView getRecyclerView() {
         return recyclerView;
@@ -81,14 +90,19 @@ public class ViewStudentsList extends Activity implements ValueEventListener, Ad
         super.onCreate(savedInstanceState);
         studentList = new ArrayList<>();
 
+        loadingbar = new ProgressDialog(ViewStudentsList.this);
+
         setContentView(R.layout.activity_student_list);
 
         selectStatusView = findViewById(R.id.selectStatusView);
 
-        String companyID = getIntent().getStringExtra("companyID");
+        companyID = getIntent().getIntExtra("companyID", -1);
 
-        ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + companyID);
-        ref.addListenerForSingleValueEvent(this);
+
+//        ref = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPLICATIONS + companyID);
+//        ref.addListenerForSingleValueEvent(this);
+
+        getApplicationsFromDb();
 
         selectStatusView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,8 +132,13 @@ public class ViewStudentsList extends Activity implements ValueEventListener, Ad
                             selectStatusView.setText(spinner.getSelectedItem().toString());
                             status = spinner.getSelectedItem().toString();
                         }
+                        if (recyclerView != null) {
+                            studentsAdapter = new RecyclerViewAdapterViewStudents(studentList,ViewStudentsList.this,status);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            recyclerView.setAdapter(studentsAdapter);
+                            studentsAdapter.notifyDataSetChanged();
+                        }
                         dialogInterface.dismiss();
-                        ref.addListenerForSingleValueEvent(ViewStudentsList.this);
                     }
                 });
 
@@ -154,77 +173,55 @@ public class ViewStudentsList extends Activity implements ValueEventListener, Ad
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                generateStatistics(studentList);
                 Intent intent = new Intent(view.getContext(), StatisticsActivity.class);
                 view.getContext().startActivity(intent);
             }
         });
         recyclerView.setVisibility(View.GONE);
-        progressBar = findViewById(R.id.studentListProgressBar);
-        progressBar.setVisibility(View.VISIBLE);
-        studentsAdapter =new RecyclerViewAdapterViewStudents(studentList,this);
+
+        studentsAdapter = new RecyclerViewAdapterViewStudents(studentList, this, status);
         RecyclerView.LayoutManager manager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(studentsAdapter);
     }
 
+    private void getApplicationsFromDb() {
 
-    @Override
-    public void onDataChange(@NonNull DataSnapshot snapshot) {
+        loadingbar.setTitle("Fetching Students");
+        loadingbar.setMessage("Please wait while we update your list");
+        loadingbar.setCanceledOnTouchOutside(true);
+        loadingbar.show();
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                Constants.HttpConstants.GET_APPLICATIONS_URL + companyID,
+                null,
+                this::parseResponse,
+                error -> {
+                    Log.i("Error", "JSON OBJECT REQUEST ERROR");
+                    loadingbar.dismiss();
+                }
+        );
+
+        HttpUtils.addRequestToHttpQueue(jsonObjectRequest, ViewStudentsList.this);
+
+    }
+
+    private void parseResponse(JSONObject jsonObject) {
         studentList.clear();
 
-        GenericTypeIndicator<Map<String, ApplicationForm>> t = new GenericTypeIndicator<Map<String, ApplicationForm>>() {
-        };
-        Map<String, ApplicationForm> students = snapshot.getValue(t);
+        StudentApplicationList studentApplicationList = new Gson().fromJson(jsonObject.toString(), StudentApplicationList.class);
+        studentList.addAll(studentApplicationList.getStudentApplicationsDto());
 
-        if (students == null)
+        Log.i("StudentList", studentList.toString());
+
+        if (studentList.isEmpty()) {
             Toast.makeText(this, "No Applicants Yet! Stay Tuned!", Toast.LENGTH_SHORT).show();
-        else {
-
-            for (Map.Entry<String, ApplicationForm> entry : students.entrySet()) {
-                ApplicationForm applicationForm = entry.getValue();
-
-                if (applicationForm != null) {
-
-                    if (status != null && visited && !status.equals("All Students")) {
-                        if (applicationForm.getOverallStatus().equals(status))
-                            studentList.add(new ApplicationForm(applicationForm.getStudentMailID(),applicationForm.getStudentPRN(),applicationForm.getStudentName(),applicationForm.getStudentBranch(),applicationForm.getCompanyName(),applicationForm.getCompanyId(),applicationForm.getFormStatusList(),applicationForm.getOverallStatus()));
-                    } else {
-                        if(!visited)
-                        {
-                            switch (applicationForm.getOverallStatus()) {
-                                case "In Process":
-                                    inProcessCount +=1;
-                                    break;
-                                case "Placed":
-                                    placedCount +=1;
-                                    break;
-                                case "Not Placed":
-                                    notPlacedCount +=1;
-                                    break;
-                                case "Hold":
-                                    onHoldCount +=1;
-                                    break;
-                            }
-                        }
-                        studentList.add(new ApplicationForm(applicationForm.getStudentMailID(), applicationForm.getStudentPRN(), applicationForm.getStudentName(), applicationForm.getStudentBranch(), applicationForm.getCompanyName(), applicationForm.getCompanyId(), applicationForm.getFormStatusList(), applicationForm.getOverallStatus()));
-                    }
-                }
-            }
-            if(!visited) {
-                statistics = new Statistics(placedCount, notPlacedCount, inProcessCount, onHoldCount);
-                SharedPrefHelper.saveObjectEntryinSharedPreferences(this.getApplicationContext(),"stat",statistics);
-//                Intent intent = new Intent("stat_intent").putExtra("statistics",statistics);
-//                LocalBroadcastManager.getInstance(this.getParent().getBaseContext()).sendBroadcast(intent);
-            }
-            Log.i("placedCount",String.valueOf(statistics.getPlacedCount()));
-            Log.i("notPlacedCount",String.valueOf(statistics.getNotPlacedCount()));
-            Log.i("inProcessCount",String.valueOf(statistics.getInProcessCount()));
-            Log.i("onHoldCount",String.valueOf(statistics.getOnHoldCount()));
-            visited = true;
         }
 
-        if (progressBar != null) {
-            progressBar.setVisibility(View.GONE);
+        if (loadingbar != null) {
+            loadingbar.dismiss();
         }
 
         if (recyclerView != null && studentsAdapter != null) {
@@ -234,10 +231,39 @@ public class ViewStudentsList extends Activity implements ValueEventListener, Ad
         }
     }
 
-    @Override
-    public void onCancelled(@NonNull DatabaseError error) {
 
+    public void generateStatistics(List<StudentApplicationDto> studentApplicationDtos) {
+
+        for (StudentApplicationDto student : studentApplicationDtos) {
+
+            if (student != null) {
+
+                switch (student.getOverallStatus()) {
+                    case "In Process":
+                        inProcessCount += 1;
+                        break;
+                    case "Placed":
+                        placedCount += 1;
+                        break;
+                    case "Not Placed":
+                        notPlacedCount += 1;
+                        break;
+                    case "Hold":
+                        onHoldCount += 1;
+                        break;
+                }
+            }
+        }
+        statistics = new Statistics(placedCount, notPlacedCount, inProcessCount, onHoldCount);
+        SharedPrefHelper.saveObjectEntryinSharedPreferences(this.getApplicationContext(), "stat", statistics);
+//                Intent intent = new Intent("stat_intent").putExtra("statistics",statistics);
+//                LocalBroadcastManager.getInstance(this.getParent().getBaseContext()).sendBroadcast(intent);
+        Log.i("placedCount", String.valueOf(statistics.getPlacedCount()));
+        Log.i("notPlacedCount", String.valueOf(statistics.getNotPlacedCount()));
+        Log.i("inProcessCount", String.valueOf(statistics.getInProcessCount()));
+        Log.i("onHoldCount", String.valueOf(statistics.getOnHoldCount()));
     }
+
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

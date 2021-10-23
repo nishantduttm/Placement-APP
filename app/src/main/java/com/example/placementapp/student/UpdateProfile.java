@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,7 +96,9 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
     private EditText sem7;
     private EditText sem8;
 
-    private boolean check;
+    private ProgressDialog loadingbar;
+
+    private boolean adminLoggedIn = false;
 
     private Button save;
     private Button back;
@@ -131,7 +134,7 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
             for(Map.Entry<String,Double> entry : map.entrySet())
             {
                 semResults.get(entry.getKey()).setText(String.valueOf(entry.getValue()));
-                if (check) {
+                if (adminLoggedIn) {
                     EditText text = semResults.get(entry.getKey());
                     text.setFocusable(false);
                     text.setFocusableInTouchMode(false);
@@ -147,6 +150,12 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_update_profile, container, false);
+
+        loadingbar = new ProgressDialog(getContext());
+        loadingbar.setTitle("Fetching Student Details");
+        loadingbar.setMessage("Please wait while we update your feed");
+        loadingbar.setCanceledOnTouchOutside(true);
+        loadingbar.show();
 
         nameHeadingView = v.findViewById(R.id.userName);
         nameView = v.findViewById(R.id.FullNameValue);
@@ -179,22 +188,18 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
         percentage.setFocusableInTouchMode(false);
         percentage.setClickable(false);
 
-        check = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(), Constants.SharedPrefConstants.KEY_TYPE)
+        adminLoggedIn = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(), Constants.SharedPrefConstants.KEY_TYPE)
                 .equals(Constants.UserTypes.ADMIN);
 
         storeSemInList(v);
 
-        if (SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(), Constants.SharedPrefConstants.KEY_TYPE)
-                .equals(Constants.UserTypes.ADMIN)) {
+        if (adminLoggedIn) {
             Bundle bundle = getArguments();
             user = (UserDto) bundle.getSerializable("profileDetails");
 
-            user_name = user.getName();
-            branch = user.getBranch();
-            mailId = user.getEmail();
-            prn = user.getPrn();
+            Log.i("UserDto",user.toString());
 
-            setValuesInProfile();
+            HttpUtils.addRequestToHttpQueue(constructHttpRequest(url, user.getPrn()), getContext());
 
             save.setVisibility(View.GONE);
             back.setVisibility(View.VISIBLE);
@@ -216,10 +221,15 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
             uploadCv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent();
-                    i.setAction(Intent.ACTION_GET_CONTENT);
-                    i.setType("application/pdf");
-                    startActivityForResult(i, 1);
+                    final Intent galleryIntent = new Intent();
+                    galleryIntent.setType("application/pdf");
+                    galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+
+                    // Chooser of filesystem options.
+                    final Intent chooserIntent = Intent.createChooser(galleryIntent, "Select Source");
+
+                    // Add the camera options.
+                    startActivityForResult(chooserIntent, 1888);
                 }
             });
 
@@ -236,26 +246,9 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
             mobileView.setClickable(false);
 
         } else {
-            user_name = SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(), Constants.SharedPrefConstants.KEY_NAME);
-            branch = SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(), Constants.SharedPrefConstants.KEY_BRANCH);
-            mailId = SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(), Constants.SharedPrefConstants.KEY_MAIL);
             prn = SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(), Constants.SharedPrefConstants.KEY_PRN);
 
-            divView.setFocusable(false);
-            divView.setFocusableInTouchMode(false);
-            divView.setClickable(false);
-
             HttpUtils.addRequestToHttpQueue(constructHttpRequest(url, prn), getContext());
-        }
-
-        if (user_name != null && branch != null && mailId != null && prn != null) {
-            nameHeadingView.setText(user_name);
-            nameView.setText(user_name);
-            branchView.setText(branch);
-            prnView.setText(prn);
-            mailView.setText(mailId);
-        } else {
-            Toast.makeText(v.getContext(), "Error Fetching Data..! Retry Again..!", Toast.LENGTH_SHORT).show();
         }
 
         save.setOnClickListener(this);
@@ -272,6 +265,7 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
                 this::processResponse,
                 error -> {
                     Log.i("Error", "HTTP Error");
+                    loadingbar.dismiss();
                 }
         );
     }
@@ -316,6 +310,7 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
         if (jsonObject != null) {
             user = new Gson().fromJson(jsonObject.toString(), UserDto.class);
             setValuesInProfile();
+            loadingbar.dismiss();
         }
     }
 

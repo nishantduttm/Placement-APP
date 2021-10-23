@@ -1,6 +1,7 @@
 package com.example.placementapp.admin.fragments;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -53,6 +54,10 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
     private EditText salary;
     private EditText venue;
     private EditText companyDescription;
+
+    private ProgressDialog loadingbar;
+
+    private NotificationDto notificationDto;
 
     private TextView date;
 
@@ -136,6 +141,12 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         myAnim.setInterpolator(interpolator);
         v.startAnimation(myAnim);
 
+        loadingbar = new ProgressDialog(getContext());
+        loadingbar.setTitle("Sending Notification");
+        loadingbar.setMessage("Please wait while we send your notification");
+        loadingbar.setCanceledOnTouchOutside(true);
+        loadingbar.show();
+
         String companyNamevalue = companyName.getText().toString();
         String venueValue = venue.getText().toString();
         String salaryValue = salary.getText().toString();
@@ -148,8 +159,9 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
             RadioButton radioButton = this.getView().findViewById(radioGroup.getCheckedRadioButtonId());
             TOPIC = "/topics/" + radioButton.getText();
 
-            NotificationDto notificationDto = new NotificationDto(companyNamevalue, radioButton.getText().toString(), dateValue, salaryValue, venueValue, companyDescriptionValue);
-            new SendNotifyRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, notificationDto);
+            notificationDto = new NotificationDto(companyNamevalue, radioButton.getText().toString(), dateValue, salaryValue, venueValue, companyDescriptionValue);
+
+            persistInDatabase(notificationDto);
         }
     }
 
@@ -182,39 +194,6 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         return isValid;
     }
 
-    private class SendNotifyRunner extends AsyncTask<NotificationDto, String, AtomicReference<Constants.StatusEnum>> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected AtomicReference<Constants.StatusEnum> doInBackground(NotificationDto... notifications) {
-            NotificationDto notificationBean = notifications[0];
-            persistInDatabase(notificationBean);
-
-            if (isNotificationDataSaved) {
-                NOTIFICATION_TITLE = notificationBean.getCompanyName();
-                NOTIFICATION_MESSAGE = "Placement Drive Scheduled";
-
-                JSONObject notification = new JSONObject();
-                JSONObject notificationBody = new JSONObject();
-                try {
-                    notificationBody.put("title", NOTIFICATION_TITLE);
-                    notificationBody.put("message", NOTIFICATION_MESSAGE);
-
-                    notification.put("to", TOPIC);
-                    notification.put("data", notificationBody);
-                } catch (JSONException e) {
-                    Log.e(TAG, "onCreate: " + e.getMessage());
-                }
-                return sendNotification(notification);
-            }
-            AtomicReference<Constants.StatusEnum> responseCode = new AtomicReference<>();
-            responseCode.set(Constants.StatusEnum.FAILURE);
-            return responseCode;
-        }
-    }
 
     private void persistInDatabase(NotificationDto notificationBean) {
         try {
@@ -248,14 +227,39 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
             return;
         }
         try {
-            isNotificationDataSaved = Constants.HttpConstants.SUCCESS.equals(resp.getString("statusCode"));
+
+            if(resp.getString("statusCode").equals(Constants.HttpConstants.SUCCESS)) {
+
+                NOTIFICATION_TITLE = notificationDto.getCompanyName();
+                NOTIFICATION_MESSAGE = "Placement Drive Scheduled";
+
+                JSONObject notification = new JSONObject();
+                JSONObject notificationBody = new JSONObject();
+                try {
+                    notificationBody.put("title", NOTIFICATION_TITLE);
+                    notificationBody.put("message", NOTIFICATION_MESSAGE);
+
+                    notification.put("to", TOPIC);
+                    notification.put("data", notificationBody);
+                } catch (JSONException e) {
+                    Log.e(TAG, "onCreate: " + e.getMessage());
+                }
+                sendNotification(notification);
+                loadingbar.dismiss();
+            }
+            else {
+                Toast.makeText(getContext(), "Notification Could not be saved", Toast.LENGTH_SHORT).show();
+                loadingbar.dismiss();
+            }
+
         } catch (Exception e) {
             Log.e("Notification Status", "Notification Could not be saved");
+            loadingbar.dismiss();
         }
     }
 
-    private AtomicReference<Constants.StatusEnum> sendNotification(JSONObject notification) {
-        AtomicReference<Constants.StatusEnum> responseCode = new AtomicReference<>();
+    private void sendNotification(JSONObject notification) {
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Constants.FirebaseConstants.FCM_API, notification,
                 response -> {
                     Toast.makeText(getContext(), "Notification Sent Successfully", Toast.LENGTH_SHORT).show();
@@ -276,7 +280,6 @@ public class SendNotificationFragment extends Fragment implements View.OnClickLi
         };
 
         HttpUtils.addRequestToHttpQueue(jsonObjectRequest,getContext());
-        return responseCode;
     }
 
     @Override

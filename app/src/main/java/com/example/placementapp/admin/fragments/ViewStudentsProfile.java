@@ -1,6 +1,7 @@
 package com.example.placementapp.admin.fragments;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.placementapp.Adapters.RecyclerViewAdapterViewNotifcation;
+import com.example.placementapp.Adapters.RecyclerViewAdapterViewStudents;
 import com.example.placementapp.Adapters.RecyclerViewAdapterViewStudentsProfile;
 import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
@@ -26,6 +28,7 @@ import com.example.placementapp.helper.SharedPrefHelper;
 import com.example.placementapp.pojo.ApplicationForm;
 import com.example.placementapp.pojo.Notification;
 import com.example.placementapp.pojo.NotificationsList;
+import com.example.placementapp.pojo.StudentApplicationList;
 import com.example.placementapp.pojo.StudentUser;
 import com.example.placementapp.pojo.UserDto;
 import com.example.placementapp.pojo.UserDtoList;
@@ -58,6 +61,7 @@ import org.json.JSONObject;
 public class ViewStudentsProfile extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private static final List<String> list;
+    private ProgressDialog loadingbar;
 
     static {
         list = new ArrayList<>();
@@ -73,11 +77,11 @@ public class ViewStudentsProfile extends Fragment implements AdapterView.OnItemS
 
     private RecyclerView recyclerView;
     private RecyclerViewAdapterViewStudentsProfile profileAdapter;
-    private ProgressBar progressBar;
     private SwipeRefreshLayout notificationRefresh;
 
+
     private TextView branchText;
-    private String branch = "ALL";
+    private String branch = "All";
 
     String userType;
     String userPRN;
@@ -98,24 +102,18 @@ public class ViewStudentsProfile extends Fragment implements AdapterView.OnItemS
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_view_students_profile, container, false);
 
+        loadingbar = new ProgressDialog(v.getContext());
+
         studentsProfileList = new ArrayList<>();
 
         userType = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(), Constants.SharedPrefConstants.KEY_TYPE);
 
+        recyclerView = v.findViewById(R.id.view_students_profile_recycler_view);
+        recyclerView.setVisibility(View.GONE);
+
         if (userType.equals(Constants.UserTypes.ADMIN)) {
             initializeViewForAdmin(inflater, container, v);
         }
-
-        recyclerView = v.findViewById(R.id.view_students_profile_recycler_view);
-        recyclerView.setVisibility(View.GONE);
-        progressBar = v.findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
-        profileAdapter = new RecyclerViewAdapterViewStudentsProfile(studentsProfileList, this, userType);
-        RecyclerView.LayoutManager manager = new GridLayoutManager(getContext(), 1);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(profileAdapter);
-
-        //getDataFromCache(ref);
 
         return v;
     }
@@ -125,6 +123,9 @@ public class ViewStudentsProfile extends Fragment implements AdapterView.OnItemS
         TextView selectBranchText = v.findViewById(R.id.studentBranchTextView);
         selectBranchText.setVisibility(View.VISIBLE);
         branchText.setVisibility(View.VISIBLE);
+
+        getStudentsFromDb();
+
         branchText.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
             View v1 = inflater.inflate(R.layout.spinner_dialog, container, false);
@@ -140,9 +141,13 @@ public class ViewStudentsProfile extends Fragment implements AdapterView.OnItemS
                     branchText.setText(spinner.getSelectedItem().toString());
                     branch = spinner.getSelectedItem().toString();
                 }
+                if (recyclerView != null) {
+                    profileAdapter = new RecyclerViewAdapterViewStudentsProfile(studentsProfileList,ViewStudentsProfile.this,branch);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    recyclerView.setAdapter(profileAdapter);
+                    profileAdapter.notifyDataSetChanged();
+                }
                 dialogInterface.dismiss();
-                //getDataFromCache(ref);
-                new ViewStudentsProfile.ViewStudentsProfileTaskRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Constants.HttpConstants.GET_USERS_URL, branch);
             });
 
             builder.setNegativeButton("Dismiss", (dialogInterface, i) -> dialogInterface.dismiss());
@@ -151,79 +156,58 @@ public class ViewStudentsProfile extends Fragment implements AdapterView.OnItemS
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
         });
-        new ViewStudentsProfile.ViewStudentsProfileTaskRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Constants.HttpConstants.GET_USERS_URL, branch);
+
+        recyclerView.setVisibility(View.GONE);
+
+        profileAdapter = new RecyclerViewAdapterViewStudentsProfile(studentsProfileList,ViewStudentsProfile.this,branch);
+        RecyclerView.LayoutManager manager = new GridLayoutManager(v.getContext(), 1);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(profileAdapter);
     }
 
+    private void getStudentsFromDb() {
+        loadingbar.setTitle("Fetching Students");
+        loadingbar.setMessage("Please wait while we update your list");
+        loadingbar.setCanceledOnTouchOutside(true);
+        loadingbar.show();
 
-    public class ViewStudentsProfileTaskRunner extends AsyncTask<String, String, List<UserDto>> {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                Constants.HttpConstants.GET_ALL_USERS_URL,
+                null,
+                this::parseResponse,
+                error -> {
+                    Log.i("Error", "JSON OBJECT REQUEST ERROR");
+                    loadingbar.dismiss();
+                }
+        );
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        @Override
-        protected List<UserDto> doInBackground(String... urls) {
-            String url = urls[0];
-            String branch = urls[1];
-            studentsProfileList.clear();
-            // TODO make call to Web server
-            if (StringUtils.isBlank(url) || StringUtils.isBlank(branch)) {
-                Log.e("Error", "No Url/branch to make Http Call");
-                showToast("No Students Yet! Stay Tuned!");
-                return null;
-            }
-            HttpUtils.addRequestToHttpQueue(constructHttpRequest(url, branch), getContext());
-            return null;
-        }
-
-        private Request<?> constructHttpRequest(String url, String branch) {
-            url = url + branch;
-            return new JsonObjectRequest(
-                    Request.Method.GET,
-                    url,
-                    null,
-                    this::populateStudentsList,
-                    error -> {
-                        Log.e("Error", "HTTP Call failed: ");
-                    }
-            );
-        }
-
-        private void populateStudentsList(JSONObject jsonObject) {
-            if (jsonObject == null)
-                return;
-            Log.i("Object",jsonObject.toString());
-            studentsProfileList.addAll(new Gson().fromJson(jsonObject.toString(), UserDtoList.class).getUsers());
-            if (studentsProfileList.isEmpty()) {
-                Log.i("Data",studentsProfileList.toString());
-                showToast("No Students Yet! Stay Tuned!");
-            }
-            else {
-                displayList();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<UserDto> users) {
-           /* if (!notificationList.isEmpty()) {
-                notificationCache.cleanUp();
-                notificationCache.put(NOTIFICATIONS_CACHE_KEY + branch, notificationList);
-            }*/
-            displayList();
-        }
-
+        HttpUtils.addRequestToHttpQueue(jsonObjectRequest, getContext());
     }
 
-    private void displayList() {
-        progressBar.setVisibility(View.GONE);
+    private void parseResponse(JSONObject jsonObject) {
+        studentsProfileList.clear();
+
+        UserDtoList userDtoList = new Gson().fromJson(jsonObject.toString(), UserDtoList.class);
+        studentsProfileList.addAll(userDtoList.getUsers());
+
+        Log.i("ProfileList", studentsProfileList.toString());
+
+        if (studentsProfileList.isEmpty()) {
+            Toast.makeText(getContext(), "No Students Yet! Stay Tuned!", Toast.LENGTH_SHORT).show();
+        }
+
+        if (loadingbar != null) {
+            loadingbar.dismiss();
+        }
+
         if (recyclerView != null && profileAdapter != null) {
             recyclerView.setVisibility(View.VISIBLE);
             recyclerView.setAdapter(profileAdapter);
             profileAdapter.notifyDataSetChanged();
         }
     }
+
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -238,9 +222,4 @@ public class ViewStudentsProfile extends Fragment implements AdapterView.OnItemS
 
     }
 
-    private void showToast(String toastMsg) {
-        if (this.getActivity() != null) {
-            this.getActivity().runOnUiThread(() -> Toast.makeText(this.getContext(), toastMsg, Toast.LENGTH_SHORT).show());
-        }
-    }
 }

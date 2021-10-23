@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.placementapp.Animation.MyBounceInterpolator;
 import com.example.placementapp.R;
@@ -27,6 +28,7 @@ import com.example.placementapp.admin.fragments.ViewStudentsList;
 import com.example.placementapp.pojo.ApplicationForm;
 import com.example.placementapp.pojo.Notification;
 import com.example.placementapp.pojo.Statistics;
+import com.example.placementapp.pojo.StudentApplicationDto;
 import com.example.placementapp.student.StudentApplicationStatusActivity;
 
 import java.util.ArrayList;
@@ -40,10 +42,22 @@ import androidx.recyclerview.widget.RecyclerView;
 public class RecyclerViewAdapterViewStudents extends RecyclerView.Adapter<RecyclerViewAdapterViewStudents.MyViewHolder> implements View.OnClickListener {
 
     private Context context;
-    private List<ApplicationForm> studentList;
+    private List<StudentApplicationDto> studentList;
 
-    public RecyclerViewAdapterViewStudents(List<ApplicationForm> studentList,Context context) {
-        this.studentList = studentList;
+    public RecyclerViewAdapterViewStudents(List<StudentApplicationDto> studentList, Context context, String status) {
+        List<StudentApplicationDto> temp = new ArrayList<>();
+        if(!status.equals("All Students")) {
+            for (StudentApplicationDto student : studentList) {
+                if (student.getOverallStatus().equals(status))
+                    temp.add(student);
+            }
+        }
+        else
+        {
+            temp = studentList;
+        }
+
+        this.studentList = temp;
         this.context = context;
     }
 
@@ -58,10 +72,11 @@ public class RecyclerViewAdapterViewStudents extends RecyclerView.Adapter<Recycl
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        ApplicationForm applicationForm = (ApplicationForm) studentList.get(position);
+        StudentApplicationDto studentApplicationDto = (StudentApplicationDto) studentList.get(position);
+
         holder.cardView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_scale_animation));
-        holder.studentName.setText(applicationForm.getStudentName());
-        holder.statusView.setText(applicationForm.getOverallStatus());
+        holder.studentName.setText(studentApplicationDto.getName());
+        holder.statusView.setText(studentApplicationDto.getOverallStatus());
 
         holder.itemView.setTag(position);
 
@@ -77,15 +92,15 @@ public class RecyclerViewAdapterViewStudents extends RecyclerView.Adapter<Recycl
     @Override
     public void onClick(View view) {
 
-          int pos = (int) view.getTag();
-          Intent intent = new Intent(view.getContext(), StudentStatus.class);
-          intent.putExtra("details", studentList.get(pos));
-          view.getContext().startActivity(intent);
-}
+        int pos = (int) view.getTag();
+        Intent intent = new Intent(view.getContext(), StudentStatus.class);
+        intent.putExtra("details", studentList.get(pos));
+        view.getContext().startActivity(intent);
+    }
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView studentName,statusTextView,statusView;
+        TextView studentName, statusTextView, statusView;
         CardView cardView;
 
         public MyViewHolder(View itemView) {

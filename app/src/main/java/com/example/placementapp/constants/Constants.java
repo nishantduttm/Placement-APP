@@ -45,6 +45,7 @@ public abstract class Constants {
         public static final String GET_NOTIFICATIONS_URL = "https://placement-server.herokuapp.com/rest/notification/get-notifications?branch=";
         public static final String GET_NOTIFICATION_DETAILS_URL = "https://placement-server.herokuapp.com/rest/notification/get-notification?id=";
         public static final String GET_USERS_URL = "https://placement-server.herokuapp.com/rest/user/get-users?branch=";
+        public static final String GET_ALL_USERS_URL = "https://placement-server.herokuapp.com/rest/user/get-all-users";
         public static final String GET_SPECIFIC_USER_URL = "https://placement-server.herokuapp.com/rest/user/get-user?prn=";
         public static final String UPDATE_USER_PROFILE_URL = "https://placement-server.herokuapp.com/rest/user/update-profile";
         public static final String SUBMIT_QUESTION_URL = "https://placement-server.herokuapp.com/rest/question/submit-question";
@@ -52,6 +53,7 @@ public abstract class Constants {
         public static final String SUBMIT_ANSWER_URL = "https://placement-server.herokuapp.com/rest/answer/submit-answer";
         public static final String GET_ANSWERS_URL = "https://placement-server.herokuapp.com/rest/answer/get-answers?questionId=";
         public static final String SAVE_APPLICATION_URL = "https://placement-server.herokuapp.com/rest/application/save-application";
+        public static final String GET_APPLICATIONS_URL = "https://placement-server.herokuapp.com/rest/application/get-applications?notificationId=";
 
 
         public static final String KEY_STATUS_CODE = "statusCode";

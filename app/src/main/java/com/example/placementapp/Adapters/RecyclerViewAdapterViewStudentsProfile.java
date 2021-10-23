@@ -31,6 +31,7 @@ import com.example.placementapp.admin.fragments.ViewStudentsProfile;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.pojo.Notification;
 import com.example.placementapp.pojo.NotificationDto;
+import com.example.placementapp.pojo.StudentApplicationDto;
 import com.example.placementapp.pojo.StudentUser;
 import com.example.placementapp.pojo.UserDto;
 import com.example.placementapp.student.UpdateProfile;
@@ -50,7 +51,7 @@ public class RecyclerViewAdapterViewStudentsProfile extends RecyclerView.Adapter
     private RelativeLayout hiddenView;
     private List<MyViewHolder> myViewHolders = new ArrayList<>();
     private ImageButton imgButton;
-    private String userType;
+    private String branch;
 
     private String url = Constants.HttpConstants.GET_SPECIFIC_USER_URL;
 
@@ -59,10 +60,21 @@ public class RecyclerViewAdapterViewStudentsProfile extends RecyclerView.Adapter
         this.studentsProfileList = studentsProfileList;
     }
 
-    public RecyclerViewAdapterViewStudentsProfile(List<UserDto> studentsProfileList, ViewStudentsProfile fragment, String userType) {
-        this.studentsProfileList = studentsProfileList;
+    public RecyclerViewAdapterViewStudentsProfile(List<UserDto> studentsProfileList, ViewStudentsProfile fragment, String branch) {
+        List<UserDto> temp = new ArrayList<>();
+        if(!branch.equals("All")) {
+            for (UserDto user : studentsProfileList) {
+                if (user.getBranch().equals(branch))
+                    temp.add(user);
+            }
+        }
+        else
+        {
+            temp = studentsProfileList;
+        }
+
+        this.studentsProfileList = temp;
         this.fragment = fragment;
-        this.userType = userType;
     }
 
     @NonNull
@@ -95,7 +107,20 @@ public class RecyclerViewAdapterViewStudentsProfile extends RecyclerView.Adapter
 
         int pos = (int) view.getTag();
 
-        HttpUtils.addRequestToHttpQueue(constructHttpRequest(url, studentsProfileList.get(pos)), fragment.getContext());
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("profileDetails",studentsProfileList.get(pos));
+
+        Fragment frag = new UpdateProfile();
+        frag.setArguments(bundle);
+
+
+        FragmentManager manager = fragment.getActivity().getSupportFragmentManager();
+        FragmentTransaction trans = manager.beginTransaction();
+
+        trans.replace(R.id.activity_main_frame_layout,frag);
+        trans.setCustomAnimations(R.anim.fade_in,R.anim.fade_out);
+        trans.commit();
+
 
 //        holder.applicationsButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -117,50 +142,22 @@ public class RecyclerViewAdapterViewStudentsProfile extends RecyclerView.Adapter
 //        });
     }
 
-    private JsonObjectRequest constructHttpRequest(String url, UserDto userDto) {
-        try {
-            url = url + userDto.getPrn();
-
-            return new JsonObjectRequest(
-                    Request.Method.GET,
-                    url,
-                    null,
-                    this::getResponse,
-                    null
-            );
-        } catch (RuntimeException e) {
-            Log.i("Error", "Http Error");
-        }
-        return null;
-    }
-
-    private void getResponse(JSONObject jsonObject) {
-        if (jsonObject != null) {
-            UserDto userDto = new Gson().fromJson(jsonObject.toString(), UserDto.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("profileDetails",userDto);
-
-            Fragment frag = new UpdateProfile();
-            frag.setArguments(bundle);
-
-
-            FragmentManager manager = fragment.getActivity().getSupportFragmentManager();
-            FragmentTransaction trans = manager.beginTransaction();
-
-            trans.replace(R.id.activity_main_frame_layout,frag);
-            trans.setCustomAnimations(R.anim.fade_in,R.anim.fade_out);
-            trans.commit();
-        }
-    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView companyName;
         CardView cardView;
+        TextView statusTextView;
+        TextView statusText;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.base_cardview);
             companyName = itemView.findViewById(R.id.companyNameView);
+            statusTextView = itemView.findViewById(R.id.statusTextView);
+            statusText = itemView.findViewById(R.id.statusView);
+
+            statusText.setVisibility(View.GONE);
+            statusTextView.setVisibility(View.GONE);
         }
     }
 }
