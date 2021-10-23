@@ -54,12 +54,14 @@ public abstract class Constants {
         public static final String GET_ANSWERS_URL = "https://placement-server.herokuapp.com/rest/answer/get-answers?questionId=";
         public static final String SAVE_APPLICATION_URL = "https://placement-server.herokuapp.com/rest/application/save-application";
         public static final String GET_APPLICATIONS_URL = "https://placement-server.herokuapp.com/rest/application/get-applications?notificationId=";
-
+        public static final String GET_MY_APPLICATIONS_URL = "https://placement-server.herokuapp.com/rest/application/get-my-applications?prn=";
+        public static final String GET_APPLICATION_COUNT_URL = "https://placement-server.herokuapp.com/rest/application/get-application-count?prn=";
 
         public static final String KEY_STATUS_CODE = "statusCode";
         public static final String USER_REGISTERED = "201";
         public static final String EXISTING_USER = "301";
         public static final String SUCCESS = "200";
         public static final String FAILURE = "305";
+
     }
 }

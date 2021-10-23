@@ -18,6 +18,33 @@ public class UserDto implements Serializable {
     private String mobile;
     private String userType;
     private String year;
+    private String sscPercentage;
+    private String hscPercentage;
+    private String noOfBacklogs;
+
+    public String getSscPercentage() {
+        return sscPercentage;
+    }
+
+    public void setSscPercentage(String sscPercentage) {
+        this.sscPercentage = sscPercentage;
+    }
+
+    public String getHscPercentage() {
+        return hscPercentage;
+    }
+
+    public void setHscPercentage(String hscPercentage) {
+        this.hscPercentage = hscPercentage;
+    }
+
+    public String getNoOfBacklogs() {
+        return noOfBacklogs;
+    }
+
+    public void setNoOfBacklogs(String noOfBacklogs) {
+        this.noOfBacklogs = noOfBacklogs;
+    }
 
     public boolean isLoginSuccessful() {
         return loginSuccessful;
@@ -121,6 +148,9 @@ public class UserDto implements Serializable {
         sb.append(", mobile='").append(mobile).append('\'');
         sb.append(", userType='").append(userType).append('\'');
         sb.append(", year='").append(year).append('\'');
+        sb.append(", sscPercentage='").append(sscPercentage).append('\'');
+        sb.append(", hscPercentage='").append(hscPercentage).append('\'');
+        sb.append(", noOfBacklogs='").append(noOfBacklogs).append('\'');
         sb.append('}');
         return sb.toString();
     }

@@ -27,6 +27,7 @@ import com.example.placementapp.admin.fragments.ViewNotificationList;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.pojo.Notification;
 import com.example.placementapp.pojo.NotificationDto;
+import com.example.placementapp.pojo.StudentApplicationDto;
 import com.example.placementapp.student.StudentApplicationStatusActivity;
 import com.example.placementapp.utils.HttpUtils;
 import com.google.gson.Gson;
@@ -50,8 +51,7 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
     private ViewNotificationList fragment;
     private RelativeLayout hiddenView;
     private List<MyViewHolder> myViewHolders = new ArrayList<>();
-    private ImageButton imgButton;
-    private String userType;
+
     private String url = Constants.HttpConstants.GET_NOTIFICATION_DETAILS_URL;
 
     public RecyclerViewAdapterViewNotifcation(Context context, List<NotificationDto> notificationList) {
@@ -59,10 +59,23 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
         this.notificationList = notificationList;
     }
 
-    public RecyclerViewAdapterViewNotifcation(List<NotificationDto> notificationList, ViewNotificationList fragment, String userType) {
-        this.notificationList = notificationList;
+    public RecyclerViewAdapterViewNotifcation(List<NotificationDto> notificationList, ViewNotificationList fragment, String branch) {
         this.fragment = fragment;
-        this.userType = userType;
+
+        List<NotificationDto> temp = new ArrayList<>();
+        if(!branch.equals("ALL")) {
+            for (NotificationDto notificationDto : notificationList) {
+                if (notificationDto.getCompanyBranch().equals(branch))
+                    temp.add(notificationDto);
+            }
+        }
+        else
+        {
+            temp = notificationList;
+        }
+
+        this.notificationList = temp;
+
     }
 
     @NonNull
@@ -97,25 +110,6 @@ public class RecyclerViewAdapterViewNotifcation extends RecyclerView.Adapter<Rec
 
         HttpUtils.addRequestToHttpQueue(constructHttpRequest(url, notificationList.get(pos)), fragment.getContext());
 
-
-//        holder.applicationsButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Animation myAnim = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.bounce_animation);
-//                MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 10);
-//                myAnim.setInterpolator(interpolator);
-//                view.startAnimation(myAnim);
-//
-//                if (userType.equals("1")) {
-//                    new Handler().postDelayed(() -> {
-//                        Intent i = new Intent(view.getContext(), StudentApplicationStatusActivity.class);
-//                        i.putExtra("companyName", notificationList.get(pos).getCompanyName());
-//                        i.putExtra("companyID", notificationList.get(pos).getTime());
-//                        view.getContext().startActivity(i);
-//                    }, 1000);
-//                }
-//            }
-//        });
     }
 
     private JsonObjectRequest constructHttpRequest(String url, NotificationDto notificationDto) {

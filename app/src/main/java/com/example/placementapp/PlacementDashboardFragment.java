@@ -1,7 +1,9 @@
 package com.example.placementapp;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,17 +11,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.placementapp.activities.DashboardActivity;
+import com.example.placementapp.admin.fragments.ViewStudentsList;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
 import com.example.placementapp.helper.SharedPrefHelper;
+import com.example.placementapp.pojo.ApplicationCountDto;
 import com.example.placementapp.pojo.ApplicationForm;
 import com.example.placementapp.pojo.Notification;
+import com.example.placementapp.utils.HttpUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -31,9 +39,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class PlacementDashboardFragment extends Fragment implements ValueEventListener {
+import org.json.JSONObject;
 
-    private DatabaseReference statusRef;
+public class PlacementDashboardFragment extends Fragment{
 
     private TextView appliedCompaniesView;
     private TextView inProcessCompaniesView;
@@ -42,6 +50,10 @@ public class PlacementDashboardFragment extends Fragment implements ValueEventLi
     private TextView onHoldCompaniesView;
     private ProgressBar dashboardProgressBar;
     private TextView nameTextView;
+
+    String userPrn = null;
+    
+    private ProgressDialog loadingbar;
 
     public PlacementDashboardFragment() {
     }
@@ -58,93 +70,61 @@ public class PlacementDashboardFragment extends Fragment implements ValueEventLi
         placedCompaniesView = v.findViewById(R.id.placedCompaniesView);
         notPlacedCompaniesView = v.findViewById(R.id.notPlacedCompaniesView);
         onHoldCompaniesView = v.findViewById(R.id.onHoldCompaniesView);
-        dashboardProgressBar = v.findViewById(R.id.dashboardProgressBar);
+        
+        loadingbar = new ProgressDialog(getContext());
 
-        String userID = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(),Constants.SharedPrefConstants.KEY_PRN);
+        userPrn = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(),Constants.SharedPrefConstants.KEY_PRN);
 
-        statusRef = FirebaseHelper.getFirebaseReference(Constants.FirebaseConstants.PATH_APPILED_COMPANIES + userID);
-        statusRef.addValueEventListener(this);
+        getApplicationStatusCount();
+        
         return v;
     }
 
-    public class StatusDetailsThreadFetcher extends AsyncTask<DataSnapshot,String,List<Integer>>
-    {
-        @Override
-        protected void onPreExecute() {
-            dashboardProgressBar.setVisibility(View.VISIBLE);
-        }
+    private void getApplicationStatusCount() {
 
-        @Override
-        protected List<Integer> doInBackground(DataSnapshot... snapshots) {
-            DataSnapshot snapshot = snapshots[0];
-            List<Integer> list = new ArrayList<>(Arrays.asList(0,0,0,0,0));
-            int appliedCount = 0;
-            int placedCount = 0;
-            int notPlacedCount = 0;
-            int inProcessCount = 0;
-            int onHoldCount = 0;
+        loadingbar.setTitle("Loading...");
+        loadingbar.setMessage("Please wait while we update your dashboard");
+        loadingbar.setCanceledOnTouchOutside(true);
+        loadingbar.show();
 
-            Map<String, ApplicationForm> forms = snapshot.getValue(new GenericTypeIndicator<Map<String, ApplicationForm>>() {
-            });
-            if(forms == null)
-                showToast("No Applications Yet!");
-            else
-            {
-                for (Map.Entry<String,ApplicationForm> entry : forms.entrySet())
-                {
-                    ApplicationForm form = entry.getValue();
-                    if(form != null)
-                    {
-                        switch (form.getOverallStatus()) {
-                            case "In Process":
-                                inProcessCount +=1;
-                                list.set(1, inProcessCount);
-                                break;
-                            case "Placed":
-                                placedCount +=1;
-                                list.set(2, placedCount);
-                                break;
-                            case "Not Placed":
-                                notPlacedCount +=1;
-                                list.set(3, notPlacedCount);
-                                break;
-                            case "Hold":
-                                onHoldCount +=1;
-                                list.set(4, onHoldCount);
-                                break;
-                        }
-                        appliedCount +=1;
-                        list.set(0, appliedCount);
-                    }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                Constants.HttpConstants.GET_APPLICATION_COUNT_URL + userPrn,
+                null,
+                this::parseResponse,
+                error -> {
+                    Log.i("Error","JSON Error");
+                    loadingbar.dismiss();
                 }
+        );
+
+        HttpUtils.addRequestToHttpQueue(jsonObjectRequest,getContext());
+    }
+
+    private void parseResponse(JSONObject jsonObject) {
+        ApplicationCountDto applicationCountDto = new Gson().fromJson(jsonObject.toString(),ApplicationCountDto.class);
+        if(applicationCountDto != null) {
+
+            int placedCount = applicationCountDto.getPlacedCount();
+            int notPlacedCount = applicationCountDto.getNotPlacedCount();
+            int inProcessCount = applicationCountDto.getInProcessCount();
+            int onHoldCount = applicationCountDto.getOnHoldCount();
+
+            int appliedCount = placedCount + notPlacedCount + inProcessCount + onHoldCount;
+
+            if(appliedCount == 0) {
+                Toast.makeText(getContext(), "No Applications Filled yet", Toast.LENGTH_SHORT).show();
             }
-            return list;
+
+            appliedCompaniesView.setText(String.valueOf(appliedCount));
+            inProcessCompaniesView.setText(String.valueOf(inProcessCount));
+            placedCompaniesView.setText(String.valueOf(placedCount));
+            notPlacedCompaniesView.setText(String.valueOf(notPlacedCount));
+            onHoldCompaniesView.setText(String.valueOf(onHoldCount));
+
         }
-
-        @Override
-        protected void onPostExecute(List<Integer> resultList) {
-            dashboardProgressBar.setVisibility(View.GONE);
-            appliedCompaniesView.setText(String.valueOf(resultList.get(0)));
-            inProcessCompaniesView.setText(String.valueOf(resultList.get(1)));
-            placedCompaniesView.setText(String.valueOf(resultList.get(2)));
-            notPlacedCompaniesView.setText(String.valueOf(resultList.get(3)));
-            onHoldCompaniesView.setText(String.valueOf(resultList.get(4)));
-        }
+        loadingbar.dismiss();
     }
 
-    @Override
-    public void onDataChange(@NonNull DataSnapshot snapshot) {
-        new StatusDetailsThreadFetcher().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,snapshot);
-    }
 
-    @Override
-    public void onCancelled(@NonNull DatabaseError error) {
-
-    }
-
-    private void showToast(String toastMsg) {
-        if (this.getActivity() != null) {
-            this.getActivity().runOnUiThread(() -> Toast.makeText(this.getContext(), toastMsg, Toast.LENGTH_SHORT).show());
-        }
-    }
 }

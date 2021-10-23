@@ -158,7 +158,7 @@
                             android:id="@+id/ClassNameValue"
                             android:layout_marginLeft="15sp"
                             android:layout_weight="3"
-                            android:text="YEAR"
+                            android:text="-----"
                             android:gravity="center"
                             android:textSize="18sp"
                             android:visibility="visible"/>
@@ -199,7 +199,7 @@
                             android:layout_marginLeft="15sp"
                             android:gravity="center"
                             android:layout_marginRight="10dp"
-                            android:text="DIV"
+                            android:text="-----"
                             android:textSize="18sp"
                             android:visibility="visible"/>
 

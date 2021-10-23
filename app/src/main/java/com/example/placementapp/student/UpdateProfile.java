@@ -74,6 +74,9 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
     private String year;
     private String div;
     private String mobile;
+    private String sscPercentageString;
+    private String hscPercentageString;
+    private String noOfBacklogsString;
     private String cvUrl;
 
     //Widgets
@@ -95,6 +98,9 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
     private EditText sem6;
     private EditText sem7;
     private EditText sem8;
+    private EditText sscPercentage;
+    private EditText hscPercentage;
+    private EditText noOfBacklogs;
 
     private ProgressDialog loadingbar;
 
@@ -127,6 +133,12 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
             divView.setText(String.valueOf(user.getDivision()));
         if (user.getMobile() != null)
             mobileView.setText(user.getMobile());
+        if (user.getSscPercentage() != null)
+            sscPercentage.setText(user.getSscPercentage());
+        if (user.getHscPercentage() != null)
+            hscPercentage.setText(user.getHscPercentage());
+        if (user.getNoOfBacklogs() != null)
+            noOfBacklogs.setText(user.getNoOfBacklogs());
         if (user.getSemResults() != null) {
 
             Map<String,Double> map = user.getSemResults();
@@ -142,6 +154,18 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
                 }
             }
         }
+        if(user.getBranch()!= null) branchView.setText(user.getBranch());
+
+        if(user.getName()!= null)
+        {
+            nameView.setText(user.getName());
+            nameHeadingView.setText(user.getName());
+        }
+
+        if(user.getPrn()!= null) prnView.setText(user.getPrn());
+
+        if(user.getEmail()!= null) mailView.setText(user.getEmail());
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -178,7 +202,9 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
         sem6 = v.findViewById(R.id.SgpaSem6Value);
         sem7 = v.findViewById(R.id.SgpaSem7Value);
         sem8 = v.findViewById(R.id.SgpaSem8Value);
-
+        hscPercentage = v.findViewById(R.id.twelvePercentageValue);
+        sscPercentage = v.findViewById(R.id.tenthPercentageValue);
+        noOfBacklogs = v.findViewById(R.id.noOfBacklogsValue);
 
         cgpa.setFocusable(false);
         cgpa.setFocusableInTouchMode(false);
@@ -196,8 +222,6 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
         if (adminLoggedIn) {
             Bundle bundle = getArguments();
             user = (UserDto) bundle.getSerializable("profileDetails");
-
-            Log.i("UserDto",user.toString());
 
             HttpUtils.addRequestToHttpQueue(constructHttpRequest(url, user.getPrn()), getContext());
 
@@ -244,6 +268,18 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
             mobileView.setFocusable(false);
             mobileView.setFocusableInTouchMode(false);
             mobileView.setClickable(false);
+
+            sscPercentage.setFocusable(false);
+            sscPercentage.setFocusableInTouchMode(false);
+            sscPercentage.setClickable(false);
+
+            hscPercentage.setFocusable(false);
+            hscPercentage.setFocusableInTouchMode(false);
+            hscPercentage.setClickable(false);
+
+            noOfBacklogs.setFocusable(false);
+            noOfBacklogs.setFocusableInTouchMode(false);
+            noOfBacklogs.setClickable(false);
 
         } else {
             prn = SharedPrefHelper.getEntryfromSharedPreferences(this.getContext(), Constants.SharedPrefConstants.KEY_PRN);
@@ -309,6 +345,7 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
     private void processResponse(JSONObject jsonObject) {
         if (jsonObject != null) {
             user = new Gson().fromJson(jsonObject.toString(), UserDto.class);
+            Log.i("UserDtoFromDB",user.toString());
             setValuesInProfile();
             loadingbar.dismiss();
         }
@@ -335,13 +372,22 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
         myAnim.setInterpolator(interpolator);
         view.startAnimation(myAnim);
 
+        loadingbar = new ProgressDialog(getContext());
+        loadingbar.setTitle("Updating Student Profile");
+        loadingbar.setMessage("Please wait while we update your feed");
+        loadingbar.setCanceledOnTouchOutside(true);
+        loadingbar.show();
+
         year = yearView.getText().toString();
         div = divView.getText().toString();
         mobile = mobileView.getText().toString();
+        sscPercentageString = sscPercentage.getText().toString();
+        hscPercentageString = hscPercentage.getText().toString();
+        noOfBacklogsString = noOfBacklogs.getText().toString();
 
         boolean flag = true;
 
-        if (StringUtils.isNotBlank(year) && StringUtils.isNotBlank(div) && StringUtils.isNotBlank(mobile)) {
+        if (StringUtils.isNotBlank(year) && StringUtils.isNotBlank(div) && StringUtils.isNotBlank(mobile) && StringUtils.isNotBlank(sscPercentageString) && StringUtils.isNotBlank(hscPercentageString) && StringUtils.isNotBlank(noOfBacklogsString)) {
             if (!year.matches("[A-Z]{2}")) {
                 yearView.setError("Capital Letters Only(FE,SE,TE,BE)");
                 Toast.makeText(view.getContext(), "Invalid Year Format", Toast.LENGTH_SHORT).show();
@@ -369,6 +415,9 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
                     jsonObject.put("division", div);
                     jsonObject.put("year", year);
                     jsonObject.put("mobile", mobile);
+                    jsonObject.put("sscPercentage", sscPercentageString);
+                    jsonObject.put("hscPercentage", hscPercentageString);
+                    jsonObject.put("noOfBacklogs", noOfBacklogsString);
                     jsonObject.put("cvUrl", cvUrl);
 
                     JSONObject mapObject = new JSONObject();
@@ -396,8 +445,18 @@ public class UpdateProfile extends Fragment implements View.OnClickListener {
             if (!StringUtils.isNotBlank(mobileView.getText().toString())) {
                 mobileView.setError("Cannot Be Blank");
             }
+            if (!StringUtils.isNotBlank(sscPercentage.getText().toString())) {
+                sscPercentage.setError("Cannot Be Blank");
+            }
+            if (!StringUtils.isNotBlank(hscPercentage.getText().toString())) {
+                hscPercentage.setError("Cannot Be Blank");
+            }
+            if (!StringUtils.isNotBlank(noOfBacklogs.getText().toString())) {
+                noOfBacklogs.setError("Cannot Be Blank");
+            }
             Toast.makeText(view.getContext(), "These field cannot be empty", Toast.LENGTH_SHORT).show();
         }
+        loadingbar.dismiss();
     }
 
     private Request<?> constructRequest(JSONObject jsonObject) {

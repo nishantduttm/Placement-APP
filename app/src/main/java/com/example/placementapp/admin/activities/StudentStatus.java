@@ -107,7 +107,7 @@ public class StudentStatus extends AppCompatActivity implements ValueEventListen
                     public void onClick(View v) {
                         Intent intent = new Intent(v.getContext(), StudentApplicationStatusActivity.class);
                         intent.putExtra("companyName",studentStatusForm.getCompanyName());
-                        intent.putExtra("companyId", studentStatusForm.getNotificationId());
+                        intent.putExtra("companyID", studentStatusForm.getNotificationId());
                         v.getContext().startActivity(intent);
                     }
                 });

@@ -1,6 +1,7 @@
 package com.example.placementapp.admin.fragments;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.placementapp.Adapters.RecyclerViewAdapterViewNotifcation;
+import com.example.placementapp.Adapters.RecyclerViewAdapterViewStudents;
 import com.example.placementapp.R;
 import com.example.placementapp.constants.Constants;
 import com.example.placementapp.helper.FirebaseHelper;
@@ -57,6 +59,8 @@ public class ViewNotificationList extends Fragment implements AdapterView.OnItem
 
     Set<Long> myApplication;
 
+    private ProgressDialog loadingbar;
+
     static {
         list = new ArrayList<>();
         list.add("Choose a Stream");
@@ -71,7 +75,7 @@ public class ViewNotificationList extends Fragment implements AdapterView.OnItem
 
     private RecyclerView recyclerView;
     private RecyclerViewAdapterViewNotifcation notificationAdapter;
-    private ProgressBar progressBar;
+
 
     private TextView branchText;
     private String branch = "ALL";
@@ -97,8 +101,9 @@ public class ViewNotificationList extends Fragment implements AdapterView.OnItem
 
         notificationList = new ArrayList<>();
         myApplication = new HashSet<>();
-        progressBar = v.findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
+
+        loadingbar = new ProgressDialog(getContext());
+
         userType = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(), Constants.SharedPrefConstants.KEY_TYPE);
         if (userType.equals(Constants.UserTypes.ADMIN)) {
             initializeViewForAdmin(inflater, container, v);
@@ -108,13 +113,11 @@ public class ViewNotificationList extends Fragment implements AdapterView.OnItem
         }
         recyclerView = v.findViewById(R.id.recycler_view);
         recyclerView.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-        notificationAdapter = new RecyclerViewAdapterViewNotifcation(notificationList, this, userType);
+
+        notificationAdapter = new RecyclerViewAdapterViewNotifcation(notificationList, this, branch);
         RecyclerView.LayoutManager manager = new GridLayoutManager(getContext(), 1);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(notificationAdapter);
-
-        //getDataFromCache(ref);
 
         return v;
     }
@@ -139,10 +142,14 @@ public class ViewNotificationList extends Fragment implements AdapterView.OnItem
                     branchText.setText(spinner.getSelectedItem().toString());
                     branch = spinner.getSelectedItem().toString();
                 }
-                dialogInterface.dismiss();
+                if (recyclerView != null) {
+                    notificationAdapter = new RecyclerViewAdapterViewNotifcation(notificationList,ViewNotificationList.this,branch);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    recyclerView.setAdapter(notificationAdapter);
+                    notificationAdapter.notifyDataSetChanged();
+                }
 
-                // TODO Get Data from Web service call for selected Filter
-                new ViewNotificationTaskRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Constants.HttpConstants.GET_NOTIFICATIONS_URL, branch);
+                dialogInterface.dismiss();
             });
 
             builder.setNegativeButton("Dismiss", (dialogInterface, i) -> dialogInterface.dismiss());
@@ -152,7 +159,7 @@ public class ViewNotificationList extends Fragment implements AdapterView.OnItem
             alertDialog.show();
         });
         // TODO Get All notifications for Admin From Server
-        new ViewNotificationTaskRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Constants.HttpConstants.GET_NOTIFICATIONS_URL, branch);
+        HttpUtils.addRequestToHttpQueue(constructHttpRequest(Constants.HttpConstants.GET_NOTIFICATIONS_URL, branch), getContext());
     }
 
     private void initializeViewForStudent(View v) {
@@ -160,76 +167,56 @@ public class ViewNotificationList extends Fragment implements AdapterView.OnItem
         notificationText.setVisibility(View.VISIBLE);
         branch = SharedPrefHelper.getEntryfromSharedPreferences(v.getContext(), Constants.SharedPrefConstants.KEY_BRANCH);
         // TODO Make call to server with student specific branch
-        new ViewNotificationTaskRunner().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Constants.HttpConstants.GET_NOTIFICATIONS_URL, branch);
+        HttpUtils.addRequestToHttpQueue(constructHttpRequest(Constants.HttpConstants.GET_NOTIFICATIONS_URL, "ALL"), getContext());
+
     }
 
-    public class ViewNotificationTaskRunner extends AsyncTask<String, String, List<Notification>> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
 
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        @Override
-        protected List<Notification> doInBackground(String... urls) {
-            String url = urls[0];
-            String branch = urls[1];
-            notificationList.clear();
-            // TODO make call to Web server
-            if (StringUtils.isBlank(url) || StringUtils.isBlank(branch)) {
-                Log.e("Error", "No Url/branch to make Http Call");
-                showToast("No Notifications Yet! Stay Tuned!");
-                return null;
-            }
-            HttpUtils.addRequestToHttpQueue(constructHttpRequest(url, branch), getContext());
-            return null;
-        }
+    private Request<?> constructHttpRequest(String url, String branch) {
+        loadingbar.setTitle("Fetching Companies");
+        loadingbar.setMessage("Please wait while we update your list");
+        loadingbar.setCanceledOnTouchOutside(true);
+        loadingbar.show();
 
-        private Request<?> constructHttpRequest(String url, String branch) {
-            url = url + branch;
-            return new JsonObjectRequest(
-                    Request.Method.GET,
-                    url,
-                    null,
-                    this::populateNotificationsList,
-                    error -> {
-                        Log.e("Error", "HTTP Call failed: ");
-                    }
-            );
-        }
+        url = url + branch;
+        return new JsonObjectRequest(
+                Request.Method.GET,
+                url,
+                null,
+                this::populateNotificationsList,
+                error -> {
+                    Log.e("Error", "HTTP Call failed: ");
+                    loadingbar.dismiss();
+                }
+        );
+    }
 
-        private void populateNotificationsList(JSONObject jsonObject) {
-            if (jsonObject == null)
-                return;
-            Log.i("Object",jsonObject.toString());
-            notificationList.addAll(new Gson().fromJson(jsonObject.toString(), NotificationsList.class).getNotifications());
-            if (notificationList.isEmpty()) {
-                Log.i("Data",notificationList.toString());
-                showToast("No Notifications Yet! Stay Tuned!");
-            }
-            else {
-                displayList();
-            }
-        }
+    private void populateNotificationsList(JSONObject jsonObject) {
+        if (jsonObject == null)
+            return;
+        Log.i("Object", jsonObject.toString());
+        notificationList.clear();
+        notificationList.addAll(new Gson().fromJson(jsonObject.toString(), NotificationsList.class).getNotifications());
+        Log.i("NotificationList",notificationList.toString());
 
-        @Override
-        protected void onPostExecute(List<Notification> notifications) {
-           /* if (!notificationList.isEmpty()) {
-                notificationCache.cleanUp();
-                notificationCache.put(NOTIFICATIONS_CACHE_KEY + branch, notificationList);
-            }*/
+        if (notificationList.isEmpty()) {
+            Log.i("Data", notificationList.toString());
+            showToast("No Notifications Yet! Stay Tuned!");
+            loadingbar.dismiss();
+        } else {
             displayList();
         }
-
     }
 
+
     private void displayList() {
-        progressBar.setVisibility(View.GONE);
-        if (recyclerView != null && notificationAdapter != null) {
-            recyclerView.setVisibility(View.VISIBLE);
-            recyclerView.setAdapter(notificationAdapter);
-            notificationAdapter.notifyDataSetChanged();
-        }
+        if (loadingbar != null)
+            loadingbar.dismiss();
+
+        notificationAdapter = new RecyclerViewAdapterViewNotifcation(notificationList,ViewNotificationList.this,branch);
+        recyclerView.setVisibility(View.VISIBLE);
+        recyclerView.setAdapter(notificationAdapter);
+
     }
 
     @Override

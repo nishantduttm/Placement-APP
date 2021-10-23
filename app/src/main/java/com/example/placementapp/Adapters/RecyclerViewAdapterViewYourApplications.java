@@ -24,6 +24,7 @@ import com.example.placementapp.admin.activities.StudentStatus;
 import com.example.placementapp.admin.fragments.ViewNotificationList;
 import com.example.placementapp.pojo.ApplicationForm;
 import com.example.placementapp.pojo.Notification;
+import com.example.placementapp.pojo.StudentApplicationDto;
 import com.example.placementapp.student.StudentApplicationStatusActivity;
 import com.example.placementapp.student.ViewYourApplicationsList;
 
@@ -38,16 +39,16 @@ import androidx.recyclerview.widget.RecyclerView;
 public class RecyclerViewAdapterViewYourApplications extends RecyclerView.Adapter<RecyclerViewAdapterViewYourApplications.MyViewHolder> implements View.OnClickListener {
 
     private Context context;
-    private List<ApplicationForm> applicationFormList;
+    private List<StudentApplicationDto> applicationFormList;
     private ViewYourApplicationsList fragment;
 
 
-    public RecyclerViewAdapterViewYourApplications(Context context, List<ApplicationForm> applicationFormList) {
+    public RecyclerViewAdapterViewYourApplications(Context context, List<StudentApplicationDto> applicationFormList) {
         this.context = context;
         this.applicationFormList = applicationFormList;
     }
 
-    public RecyclerViewAdapterViewYourApplications(List<ApplicationForm> applicationFormList, ViewYourApplicationsList fragment) {
+    public RecyclerViewAdapterViewYourApplications(List<StudentApplicationDto> applicationFormList, ViewYourApplicationsList fragment) {
         this.applicationFormList = applicationFormList;
         this.fragment = fragment;
     }
@@ -63,10 +64,10 @@ public class RecyclerViewAdapterViewYourApplications extends RecyclerView.Adapte
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        ApplicationForm applicationForm = (ApplicationForm) applicationFormList.get(position);
+        StudentApplicationDto studentApplicationDto = (StudentApplicationDto) applicationFormList.get(position);
         holder.cardView.setAnimation(AnimationUtils.loadAnimation(fragment.getContext(), R.anim.fade_scale_animation));
-        holder.companyName.setText(applicationForm.getCompanyName());
-        holder.statusView.setText(applicationForm.getOverallStatus());
+        holder.companyName.setText(studentApplicationDto.getCompanyName());
+        holder.statusView.setText(studentApplicationDto.getOverallStatus());
 
         holder.itemView.setTag(position);
 
